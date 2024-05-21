@@ -1,0 +1,63 @@
+<!-- app/views/client_profiles/_form.html.erb -->
+<%= form_with(model: client_profile, local: true) do |form| %>
+  <% if client_profile.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(client_profile.errors.count, "error") %> prohibited this client_profile from being saved:</h2>
+
+      <ul>
+        <% client_profile.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :first_name %>
+    <%= form.text_field :first_name %>
+  </div>
+
+  <div class="field">
+    <%= form.label :middle_name %>
+    <%= form.text_field :middle_name %>
+  </div>
+
+  <div class="field">
+    <%= form.label :last_name %>
+    <%= form.text_field :last_name %>
+  </div>
+
+  <div class="field">
+    <%= form.label :ssn_last4 %>
+    <%= form.text_field :ssn_last4 %>
+  </div>
+
+  <div class="field">
+    <%= form.label :address %>
+    <%= form.text_area :address %>
+  </div>
+
+  <div class="field">
+    <%= form.label :email %>
+    <%= form.email_field :email %>
+  </div>
+
+  <div class="field">
+    <%= form.label :phone %>
+    <%= form.telephone_field :phone %>
+  </div>
+
+  <div class="field">
+    <%= form.label :id_document %>
+    <%= form.file_field :id_document %>
+  </div>
+
+  <div class="field">
+    <%= form.label :utility_bill %>
+    <%= form.file_field :utility_bill %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit %>
+  </div>
+<% end %>

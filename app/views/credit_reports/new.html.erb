@@ -1,0 +1,22 @@
+<%= form_with(model: [@client, @credit_report], local: true) do |form| %>
+  <% if @credit_report.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@credit_report.errors.count, "error") %> prohibited this credit report from being saved:</h2>
+
+      <ul>
+        <% @credit_report.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :document %>
+    <%= form.file_field :document %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit 'Upload Credit Report' %>
+  </div>
+<% end %>

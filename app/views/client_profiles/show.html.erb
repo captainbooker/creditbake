@@ -1,0 +1,45 @@
+<!-- app/views/client_profiles/show.html.erb -->
+<p>
+  <strong>First name:</strong>
+  <%= @client_profile.first_name %>
+</p>
+
+<p>
+  <strong>Middle name:</strong>
+  <%= @client_profile.middle_name %>
+</p>
+
+<p>
+  <strong>Last name:</strong>
+  <%= @client_profile.last_name %>
+</p>
+
+<p>
+  <strong>Last 4 of SSN:</strong>
+  <%= @client_profile.ssn_last4 %>
+</p>
+
+<p>
+  <strong>Address:</strong>
+  <%= @client_profile.address %>
+</p>
+
+<p>
+  <strong>Email:</strong>
+  <%= @client_profile.email %>
+</p>
+
+<p>
+  <strong>Phone:</strong>
+  <%= @client_profile.phone %>
+</p>
+
+<p>
+  <strong>ID Document:</strong>
+  <%= link_to 'Download', url_for(@client_profile.id_document) if @client_profile.id_document.attached? %>
+</p>
+
+<p>
+  <strong>Utility Bill:</strong>
+  <%= link_to 'Download', url_for(@client_profile.utility_bill) if @client_profile.utility_bill.attached? %>
+</p>
