@@ -25,6 +25,22 @@ class CreditReportsController < ApplicationController
     end
   end
 
+  def import
+    service = params[:service]
+    username = params[:username]
+    password = params[:password]
+    security_question = params[:security_question]
+
+    case service
+    when 'identityiq'
+      import_identityiq_credit_report(username, password, security_question)
+    when 'creditdyno'
+      import_credit_dyno_credit_report(username, password, security_question)
+    else
+      redirect_to new_credit_report_path, alert: 'Invalid service selected.'
+    end
+  end
+
   def show
   end
 
@@ -39,7 +55,65 @@ class CreditReportsController < ApplicationController
   end
 
   def credit_report_params
-    params.require(:credit_report).permit(:document)
+    params.require(:credit_report).permit(:document, :service, :username, :password, :security_question)
+  end
+
+  def import_identityiq_credit_report(username, password, security_question)
+    service = IdentityiqService.new(username, password, security_question)
+    credit_report_path = service.fetch_credit_report
+
+    if credit_report_path
+      @credit_report = current_user.credit_reports.build(
+        document: File.open(credit_report_path),
+        username: username,
+        password: password,
+        security_question: security_question
+      )
+      
+
+      if @credit_report.save
+        html_parser_service = HtmlParserService.new(@credit_report.document)
+        document_content = html_parser_service.extract_content
+
+        # Process the parsed content and save the parsed data into Dispute model
+        process_parsed_content(document_content, @credit_report)
+
+        redirect_to root_path, notice: 'Credit report successfully imported and parsed.'
+      else
+        redirect_to new_credit_report_path, alert: 'Failed to save the credit report.'
+      end
+    else
+      redirect_to new_credit_report_path, alert: 'Failed to import credit report.'
+    end
+  end
+
+  def import_credit_dyno_credit_report(username, password, security_question)
+    service = CreditDynoService.new(username, password, security_question)
+    credit_report_path = service.fetch_credit_report
+
+    if credit_report_path
+      @credit_report = current_user.credit_reports.build(
+        document: File.open(credit_report_path),
+        username: username,
+        password: password,
+        security_question: security_question
+      )
+      
+
+      if @credit_report.save
+        html_parser_service = HtmlParserService.new(@credit_report.document)
+        document_content = html_parser_service.extract_content
+
+        # Process the parsed content and save the parsed data into Dispute model
+        process_parsed_content(document_content, @credit_report)
+
+        redirect_to root_path, notice: 'Credit report successfully imported and parsed.'
+      else
+        redirect_to new_credit_report_path, alert: 'Failed to save the credit report.'
+      end
+    else
+      redirect_to new_credit_report_path, alert: 'Failed to import credit report.'
+    end
   end
 
   def extract_inquiries(content)

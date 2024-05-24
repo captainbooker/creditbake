@@ -21,6 +21,7 @@ Rails.application.routes.draw do
   get 'letters', to: 'dashboards#letters', as: 'letters'
   post 'create_attack', to: 'dashboards#create_attack', as: 'create_attack'
   patch 'disputing/save_challenges', to: 'dashboards#save_challenges', as: 'save_challenges'
+  post 'import_credit_report', to: 'credit_reports#import', as: 'import_credit_report'
 
   authenticated :user do
     root 'pages#dashboard', as: :authenticated_root

@@ -38,6 +38,8 @@ gem 'pdf-reader'
 gem 'docsplit'
 gem "ruby-openai"
 gem 'prawn'
+gem 'mechanize'
+
 
 
 gem 'dotenv', groups: [:development, :test]
