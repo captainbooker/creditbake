@@ -1,0 +1,139 @@
+<!-- app/views/dashboards/disputing.html.erb -->
+<div class="mx-auto max-w-screen-2xl p-4 md:p-6 2xl:p-10">
+  <div class="mx-auto max-w-270">
+    <!-- Breadcrumb Start -->
+    <div class="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+      <h2 class="text-title-md2 font-bold text-black dark:text-white">Dispute Page</h2>
+      <nav>
+        <ol class="flex items-center gap-2">
+          <li>
+            <a class="font-medium" href="<%= root_path %>">Dashboard /</a>
+          </li>
+          <li class="font-medium text-primary">Disputes</li>
+        </ol>
+      </nav>
+    </div>
+    <!-- Breadcrumb End -->
+
+    <!-- Credit Report Upload Section Start -->
+    <div class="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark mb-8">
+      <div class="border-b border-stroke px-7 py-4 dark:border-strokedark">
+        <h3 class="font-medium text-black dark:text-white">Upload Credit Report</h3>
+      </div>
+      <div class="p-7">
+        <%= form_with model: [current_user, CreditReport.new], local: true, html: { multipart: true } do |f| %>
+          <div class="mb-4">
+            <%= f.label :document, "Credit Report Document", class: "block text-sm font-medium text-black dark:text-white" %>
+            <%= f.file_field :document, class: "w-full mt-2 p-2 border border-stroke dark:border-strokedark rounded" %>
+          </div>
+          <div class="flex justify-end mt-4">
+            <%= f.submit "Upload", class: "px-6 py-2 font-medium text-gray bg-primary rounded hover:bg-opacity-90" %>
+          </div>
+        <% end %>
+      </div>
+    </div>
+    <!-- Credit Report Upload Section End -->
+
+    <!-- Disputes Form Start -->
+    <%= form_with url: save_challenges_path, method: :patch do %>
+      <%= hidden_field_tag :authenticity_token, form_authenticity_token %>
+
+      <!-- Inquiries Section Start -->
+      <div class="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark mb-8">
+        <div class="border-b border-stroke px-7 py-4 dark:border-strokedark">
+          <h3 class="font-medium text-black dark:text-white">Inquiries</h3>
+          <div data-controller="tabs">
+            <div class="flex space-x-4">
+              <button data-tabs-target="all" data-action="tabs#select" class="text-sm font-medium">All</button>
+              <button data-tabs-target="experian" data-action="tabs#select" class="text-sm font-medium">Experian</button>
+              <button data-tabs-target="equifax" data-action="tabs#select" class="text-sm font-medium">Equifax</button>
+              <button data-tabs-target="transunion" data-action="tabs#select" class="text-sm font-medium">Transunion</button>
+              <button data-action="tabs#selectAllInquiries" class="text-sm font-medium text-primary">Select All</button>
+            </div>
+          </div>
+        </div>
+        <div class="p-7">
+          <div class="grid grid-cols-4 gap-4" data-tabs-target="content">
+            <% @inquiries.each do |inquiry| %>
+              <div class="border rounded p-4 <%= 'border-red-500' if inquiry.challenge %>">
+                <label>
+                  <input type="checkbox" name="inquiry_ids[]" value="<%= inquiry.id %>" <%= 'checked' if inquiry.challenge %>>
+                  <div class="inline-block ml-2">
+                    <p class="inline"><%= inquiry.inquiry_name %></p>
+                    <p><%= inquiry.inquiry_date %></p>
+                  </div>
+                </label>
+              </div>
+            <% end %>
+          </div>
+        </div>
+      </div>
+      <!-- Inquiries Section End -->
+
+      <!-- Accounts Section Start -->
+      <div class="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
+        <div class="border-b border-stroke px-7 py-4 dark:border-strokedark">
+          <h3 class="font-medium text-black dark:text-white">Accounts</h3>
+          <div data-controller="tabs">
+            <div class="flex space-x-4">
+              <button data-tabs-target="all" data-action="tabs#select" class="text-sm font-medium">All</button>
+              <button data-tabs-target="experian" data-action="tabs#select" class="text-sm font-medium">Experian</button>
+              <button data-tabs-target="equifax" data-action="tabs#select" class="text-sm font-medium">Equifax</button>
+              <button data-tabs-target="transunion" data-action="tabs#select" class="text-sm font-medium">Transunion</button>
+              <button data-action="tabs#selectAllAccounts" class="text-sm font-medium text-primary">Select All</button>
+            </div>
+          </div>
+        </div>
+        <div class="p-7">
+          <div class="grid grid-cols-3 gap-4" data-tabs-target="content">
+            <% @accounts.each do |account| %>
+              <div class="border rounded p-4 cursor-pointer account-card <%= 'border-red-500' if account.challenge %>" data-id="<%= account.id %>">
+                <input type="hidden" name="account_ids[]" value="<%= account.id %>" <%= 'disabled' unless account.challenge %>>
+                <div>
+                  <p><%= account.account_number %></p>
+                  <p><%= account.account_type %></p>
+                  <p><%= account.account_type_detail %></p>
+                  <p><%= account.account_status %></p>
+                  <p><%= account.bureau_details.map(&:balance_owed).join(', ') %></p>
+                  <p><%= account.bureau_details.map(&:high_credit).join(', ') %></p>
+                  <p><%= account.bureau_details.map(&:credit_limit).join(', ') %></p>
+                  <p><%= account.bureau_details.map(&:past_due_amount).join(', ') %></p>
+                  <p><%= account.bureau_details.map(&:payment_status).join(', ') %></p>
+                  <p><%= account.bureau_details.map(&:date_opened).join(', ') %></p>
+                  <p><%= account.bureau_details.map(&:date_of_last_payment).join(', ') %></p>
+                  <p><%= account.bureau_details.map(&:last_reported).join(', ') %></p>
+                </div>
+              </div>
+            <% end %>
+          </div>
+        </div>
+      </div>
+      <!-- Accounts Section End -->
+
+      <!-- Next Button -->
+      <div class="flex justify-end mt-6">
+        <button type="submit" class="px-6 py-2 font-medium text-gray bg-primary rounded hover:bg-opacity-90">Next</button>
+      </div>
+    <% end %>
+    <!-- Disputes Form End -->
+  </div>
+</div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    document.querySelectorAll('.account-card').forEach(card => {
+      card.addEventListener('click', function() {
+        const hiddenInput = card.querySelector('input[type="hidden"]');
+        if (card.classList.contains('selected')) {
+          card.classList.remove('selected');
+          card.style.borderColor = '';
+          hiddenInput.disabled = true;
+        } else {
+          card.classList.add('selected');
+          card.style.borderColor = 'red';
+          hiddenInput.disabled = false;
+        }
+      });
+    });
+  });
+</script>

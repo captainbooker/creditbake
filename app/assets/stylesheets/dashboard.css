@@ -247,7 +247,7 @@
    *
   */
   
-  @font-face {
+  /* @font-face {
     font-family: "Satoshi";
     src: url(src/fonts/Satoshi-Light.woff2) format("woff2"),
       url(src/fonts/Satoshi-Light.woff) format("woff"),
@@ -345,7 +345,7 @@
     font-weight: 900;
     font-display: swap;
     font-style: italic;
-  }
+  } */
   
   /*!***************************************************************************************************************************************************************************!*\
     !*** css ./node_modules/css-loader/dist/cjs.js!./node_modules/postcss-loader/dist/cjs.js??ruleSet[1].rules[1].use[2]!./node_modules/jsvectormap/dist/css/jsvectormap.css ***!
@@ -5365,10 +5365,10 @@
     background-size: 20px;
   }
   .custom-input-date-1::-webkit-calendar-picker-indicator {
-    background-image: url(src/images/icon/icon-calendar.svg);
+    /* background-image: url(src/images/icon/icon-calendar.svg); */
   }
   .custom-input-date-2::-webkit-calendar-picker-indicator {
-    background-image: url(src/images/icon/icon-arrow-down.svg);
+    /* background-image: url(src/images/icon/icon-arrow-down.svg); */
   }
   
   [x-cloak] {

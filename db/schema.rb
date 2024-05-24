@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2024_05_21_014440) do
+ActiveRecord::Schema.define(version: 2024_05_23_220934) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -23,6 +23,8 @@ ActiveRecord::Schema.define(version: 2024_05_21_014440) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.boolean "challenge", default: false, null: false
+    t.bigint "user_id", null: false
+    t.index ["user_id"], name: "index_accounts_on_user_id"
   end
 
   create_table "active_storage_attachments", force: :cascade do |t|
@@ -91,10 +93,12 @@ ActiveRecord::Schema.define(version: 2024_05_21_014440) do
   end
 
   create_table "credit_reports", force: :cascade do |t|
-    t.bigint "client_id", null: false
+    t.bigint "client_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.bigint "user_id"
     t.index ["client_id"], name: "index_credit_reports_on_client_id"
+    t.index ["user_id"], name: "index_credit_reports_on_user_id"
   end
 
   create_table "disputes", force: :cascade do |t|
@@ -147,6 +151,20 @@ ActiveRecord::Schema.define(version: 2024_05_21_014440) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.boolean "challenge", default: false, null: false
+    t.bigint "user_id", null: false
+    t.index ["user_id"], name: "index_inquiries_on_user_id"
+  end
+
+  create_table "letters", force: :cascade do |t|
+    t.string "name"
+    t.string "bureau"
+    t.text "experian_document"
+    t.text "transunion_document"
+    t.text "equifax_document"
+    t.bigint "user_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["user_id"], name: "index_letters_on_user_id"
   end
 
   create_table "roles", force: :cascade do |t|
@@ -168,6 +186,14 @@ ActiveRecord::Schema.define(version: 2024_05_21_014440) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.string "phone_number"
+    t.string "first_name"
+    t.string "last_name"
+    t.string "street_address"
+    t.string "city"
+    t.string "state"
+    t.string "postal_code"
+    t.string "country"
+    t.string "ssn_last4"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
@@ -180,12 +206,15 @@ ActiveRecord::Schema.define(version: 2024_05_21_014440) do
     t.index ["user_id"], name: "index_users_roles_on_user_id"
   end
 
+  add_foreign_key "accounts", "users"
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "bureau_details", "accounts"
   add_foreign_key "client_profiles", "clients"
   add_foreign_key "clients", "users"
   add_foreign_key "credit_reports", "clients"
+  add_foreign_key "credit_reports", "users"
   add_foreign_key "disputes", "clients"
   add_foreign_key "disputes", "credit_reports"
+  add_foreign_key "inquiries", "users"
 end

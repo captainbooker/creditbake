@@ -1,0 +1,114 @@
+<div class="mx-auto max-w-screen-2xl p-4 md:p-6 2xl:p-10">
+  <!-- Breadcrumb Start -->
+  <div class="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+    <h2 class="text-title-md2 font-bold text-black dark:text-white">Pro Tables</h2>
+    <nav>
+      <ol class="flex items-center gap-2">
+        <li><a class="font-medium" href="index.html">Dashboard /</a></li>
+        <li class="font-medium text-primary">Pro Tables</li>
+      </ol>
+    </nav>
+    <div class="relative">
+      <button class="px-6 py-2 font-medium text-white bg-black rounded hover:bg-opacity-90" id="create-attack-button">
+        Create Attack
+      </button>
+      <div class="absolute right-0 mt-2 w-48 bg-white border border-gray-300 rounded shadow-lg hidden" id="attack-dropdown">
+        <ul>
+          <% (1..7).each do |round| %>
+            <li>
+              <button class="block w-full px-4 py-2 text-left text-black hover:bg-gray-200" data-round="<%= round %>">
+                Round <%= round %>
+              </button>
+            </li>
+          <% end %>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="overflow-hidden rounded-[10px]">
+    <div class="max-w-full overflow-x-auto">
+      <div class="min-w-[1170px]">
+        <!-- table header start -->
+        <div class="grid grid-cols-12 bg-[#F9FAFB] px-5 py-4 dark:bg-meta-4 lg:px-7.5 2xl:px-11">
+          <div class="col-span-3">
+            <h5 class="font-medium text-[#637381] dark:text-bodydark">NAME</h5>
+          </div>
+          <div class="col-span-3">
+            <h5 class="font-medium text-[#637381] dark:text-bodydark">FILE COUNT</h5>
+          </div>
+          <div class="col-span-3">
+            <h5 class="font-medium text-[#637381] dark:text-bodydark">CREATED AT</h5>
+          </div>
+          <div class="col-span-3">
+            <h5 class="font-medium text-[#637381] dark:text-bodydark">FILES</h5>
+          </div>
+        </div>
+        <!-- table header end -->
+
+        <!-- table body start -->
+        <div class="bg-white dark:bg-boxdark">
+          <% @letters.each do |letter| %>
+            <div class="grid grid-cols-12 border-t border-[#EEEEEE] px-5 py-4 dark:border-strokedark lg:px-7.5 2xl:px-11">
+              <div class="col-span-3">
+                <p class="text-[#637381] dark:text-bodydark"><%= letter.name %></p>
+              </div>
+              <div class="col-span-3">
+                <p class="text-[#637381] dark:text-bodydark"><%= [letter.experian_pdf, letter.transunion_pdf, letter.equifax_pdf].compact.count %></p>
+              </div>
+              <div class="col-span-3">
+                <p class="text-[#637381] dark:text-bodydark"><%= letter.created_at.strftime("%Y-%m-%d %H:%M:%S") %></p>
+              </div>
+              <div class="col-span-3">
+                <div class="flex flex-col space-y-2">
+                  <% if letter.experian_pdf.attached? %>
+                    <%= link_to 'Download Experian PDF', rails_blob_path(letter.experian_pdf, disposition: 'attachment'), class: "text-white bg-black px-2 py-1 rounded hover:bg-opacity-90" %>
+                  <% end %>
+                  <% if letter.transunion_pdf.attached? %>
+                    <%= link_to 'Download TransUnion PDF', rails_blob_path(letter.transunion_pdf, disposition: 'attachment'), class: "text-white bg-black px-2 py-1 rounded hover:bg-opacity-90" %>
+                  <% end %>
+                  <% if letter.equifax_pdf.attached? %>
+                    <%= link_to 'Download Equifax PDF', rails_blob_path(letter.equifax_pdf, disposition: 'attachment'), class: "text-white bg-black px-2 py-1 rounded hover:bg-opacity-90" %>
+                  <% end %>
+                </div>
+              </div>
+            </div>
+          <% end %>
+        </div>
+        <!-- table body end -->
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    const attackButton = document.getElementById('create-attack-button');
+    const attackDropdown = document.getElementById('attack-dropdown');
+
+    attackButton.addEventListener('click', function() {
+      attackDropdown.classList.toggle('hidden');
+    });
+
+    document.addEventListener('click', function(event) {
+      if (!attackButton.contains(event.target) && !attackDropdown.contains(event.target)) {
+        attackDropdown.classList.add('hidden');
+      }
+    });
+
+    attackDropdown.querySelectorAll('button[data-round]').forEach(button => {
+      button.addEventListener('click', function() {
+        const round = this.getAttribute('data-round');
+        const form = document.createElement('form');
+        form.method = 'post';
+        form.action = '<%= create_attack_path %>';
+        form.innerHTML = `
+          <input type="hidden" name="_method" value="post">
+          <input type="hidden" name="round" value="${round}">
+          <input type="hidden" name="${document.querySelector('meta[name=csrf-param]').content}" value="${document.querySelector('meta[name=csrf-token]').content}">
+        `;
+        document.body.appendChild(form);
+        form.submit();
+      });
+    });
+  });
+</script>

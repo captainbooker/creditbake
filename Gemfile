@@ -37,6 +37,8 @@ gem 'blind_index'
 gem 'pdf-reader'
 gem 'docsplit'
 gem "ruby-openai"
+gem 'prawn'
+
 
 gem 'dotenv', groups: [:development, :test]
 group :development, :test do
@@ -57,5 +59,3 @@ end
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
 gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
-
-gem "tailwindcss-rails", "~> 2.5"
