@@ -100,6 +100,7 @@ ActiveRecord::Schema.define(version: 2024_05_24_074349) do
     t.string "username"
     t.string "password"
     t.string "security_question"
+    t.string "service"
     t.index ["client_id"], name: "index_credit_reports_on_client_id"
     t.index ["user_id"], name: "index_credit_reports_on_user_id"
   end

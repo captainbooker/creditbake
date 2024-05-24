@@ -1,10 +1,12 @@
 # app/services/identityiq_service.rb
 class IdentityiqService
   BASE_URL = 'https://member.identityiq.com'
+  attr_reader :username, :password, :security_question, :service
 
-  def initialize(username, password, security_question)
+  def initialize(username, password, security_question, service)
     @username = username
     @password = password
+    @service = service
     @security_question = security_question
     @agent = Mechanize.new
   end
@@ -29,6 +31,7 @@ class IdentityiqService
     # Assuming that the credit report is accessible at a specific URL after login
     # Replace '/path-to-credit-report' with the actual path
     report_page = @agent.get("#{BASE_URL}/CreditReport.aspx")
+    report_page.body
     # Logic to extract and save the credit report from the report_page
     # For example, downloading a PDF or parsing HTML data
   end

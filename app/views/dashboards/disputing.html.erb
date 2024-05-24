@@ -16,6 +16,27 @@
     <!-- Breadcrumb End -->
 
     <!-- Credit Report Upload Section Start -->
+    <%
+=begin%>
+ <div class="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark mb-8">
+      <div class="border-b border-stroke px-7 py-4 dark:border-strokedark">
+        <h3 class="font-medium text-black dark:text-white">Upload Credit Report</h3>
+      </div>
+      <div class="p-7">
+        <%= form_with model: [current_user, CreditReport.new], local: true, html: { multipart: true } do |f| %>
+          <div class="mb-4">
+            <%= f.label :document, "Credit Report Document", class: "block text-sm font-medium text-black dark:text-white" %>
+            <%= f.file_field :document, class: "w-full mt-2 p-2 border border-stroke dark:border-strokedark rounded" %>
+          </div>
+          <div class="flex justify-end mt-4">
+            <%= f.submit "Upload", class: "px-6 py-2 font-medium text-gray bg-primary rounded hover:bg-opacity-90" %>
+          </div>
+        <% end %>
+      </div>
+    </div> 
+<%
+=end%>
+
     <div class="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark mb-8">
       <div class="border-b border-stroke px-7 py-4 dark:border-strokedark">
         <h3 class="font-medium text-black dark:text-white">Import Credit Report</h3>

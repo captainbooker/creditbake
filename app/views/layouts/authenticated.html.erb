@@ -32,6 +32,8 @@
         class="relative flex flex-1 flex-col overflow-y-auto overflow-x-hidden"
       >
         <%= render "shared/authenticated_navbar" %>
+        <p class="notice"><%= notice %></p>
+        <p class="alert"><%= alert %></p>
         <main>
           <%= yield %>
         </main>

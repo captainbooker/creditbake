@@ -51,9 +51,11 @@ module OpenaiPromptable
 
   def round_1_prompt(inquiries, accounts, bureau)
     <<-PROMPT
-      You are a credit repair expert using Metro 2 compliance standards so please use metro 2 codes in the letter. Draft a detailed dispute letter to the #{bureau.capitalize} regarding the inquiries below. Highlight the inaccuracies in the inquiry and request its immediate removal, citing relevant Metro 2 compliance regulations. The letter should be professional, concise, and emphasize the need for accurate reporting
-
-      user info for address: 
+      You are a credit repair expert using Metro 2 compliance standards, so please use Metro 2 codes in the letter. Draft a detailed dispute letter to the #{bureau.capitalize} regarding the inquiries below. Highlight the inaccuracies in the inquiry and request its immediate removal, citing relevant Metro 2 compliance regulations. The letter should be professional, concise, and emphasize the need for accurate reporting.
+  
+      Important: Do not include any introductory phrases like "Letter for Round Round 1" or "Bureau: #{bureau.capitalize}" at the beginning of the letter. Start directly with the user's name and address.
+  
+      User info for address:
       first_name: #{current_user.first_name}
       last_name: #{current_user.last_name}
       street_address: #{current_user.street_address}
@@ -62,16 +64,14 @@ module OpenaiPromptable
       postal_code: #{current_user.postal_code}
       country: #{current_user.country}
       current_date: #{Date.today.strftime("%B %d, %Y")}
-
+  
       Inquiries:
       #{format_inquiries(inquiries, bureau)}
-
-      Use metro 2 codes for the accounts below to dispute the complaince. Highlight the inaccuracies in the account information and request its immediate removal, citing relevant Metro 2 compliance regulations. The letter should be professional, concise, and emphasize the need for accurate reporting. Be sure to use FCRA as well
-
+  
+      Use Metro 2 codes for the accounts below to dispute the compliance. Highlight the inaccuracies in the account information and request its immediate removal, citing relevant Metro 2 compliance regulations. The letter should be professional, concise, and emphasize the need for accurate reporting. Be sure to use FCRA as well.
+  
       Accounts:
       #{format_accounts(accounts, bureau)}
-
-      Please only user the name and address in the header. Nothing else is to be added
     PROMPT
   end
 
