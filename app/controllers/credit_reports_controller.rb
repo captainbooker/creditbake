@@ -1,9 +1,20 @@
 # app/controllers/credit_reports_controller.rb
 class CreditReportsController < ApplicationController
-  before_action :set_credit_report, only: [:show]
+  before_action :set_credit_report, only: [:show, :download]
 
   def new
     @credit_report = CreditReport.new
+  end
+
+  def show
+  end
+
+  def download
+    if @credit_report.document.attached?
+      redirect_to rails_blob_path(@credit_report.document, disposition: "attachment")
+    else
+      redirect_to @credit_report, alert: 'No document attached to this credit report.'
+    end
   end
 
   def create
@@ -39,7 +50,7 @@ class CreditReportsController < ApplicationController
   private
 
   def set_credit_report
-    @credit_report = current_user.credit_report
+    @credit_report = current_user.credit_reports.find(params[:id])
   end
 
   def credit_report_params
@@ -76,18 +87,21 @@ class CreditReportsController < ApplicationController
   end
 
   def parse_credit_report(credit_report)
-    case credit_report.service
-    when 'identityiq'
-      parser = IdentityIQParserService.new(credit_report.document.download)
-    when 'creditdyno'
-      parser = CreditDynoParserService.new(credit_report.document.download)
-    else
-      raise 'Unknown credit report service'
-    end
-
-    document_content = parser.extract_content
-    process_parsed_content(document_content, credit_report)
+    document_content = credit_report.document.download
+    
+    parser = case credit_report.service
+             when 'identityiq'
+               IdentityIQParserService.new(document_content)
+             when 'creditdyno'
+               CreditDynoParserService.new(document_content)
+             else
+               raise 'Unknown credit report service'
+             end
+  
+    content = parser.extract_content
+    process_parsed_content(content, credit_report)
   end
+  
 
   def process_parsed_content(content, credit_report)
     inquiries = content[:inquiries]

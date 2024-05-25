@@ -240,6 +240,8 @@ GEM
     responders (3.0.1)
       actionpack (>= 5.0)
       railties (>= 5.0)
+    rexml (3.2.8)
+      strscan (>= 3.0.9)
     rolify (6.0.1)
     ruby-openai (7.0.1)
       event_stream_parser (>= 0.3.0, < 2.0.0)
@@ -247,6 +249,7 @@ GEM
       faraday-multipart (>= 1)
     ruby-rc4 (0.1.5)
     rubyntlm (0.6.3)
+    rubyzip (2.3.2)
     sass-rails (6.0.0)
       sassc-rails (~> 2.1, >= 2.1.1)
     sassc (2.4.0)
@@ -257,6 +260,10 @@ GEM
       sprockets (> 3.0)
       sprockets-rails
       tilt
+    selenium-webdriver (4.11.0)
+      rexml (~> 3.2, >= 3.2.5)
+      rubyzip (>= 1.2.2, < 3.0)
+      websocket (~> 1.0)
     semantic_range (3.0.0)
     spring (4.2.1)
     sprockets (4.2.1)
@@ -266,6 +273,7 @@ GEM
       actionpack (>= 5.2)
       activesupport (>= 5.2)
       sprockets (>= 3.0.0)
+    strscan (3.1.0)
     thor (1.3.1)
     tilt (2.3.0)
     timeout (0.4.1)
@@ -291,6 +299,7 @@ GEM
       semantic_range (>= 2.3.0)
     webrick (1.8.1)
     webrobots (0.1.2)
+    websocket (1.2.9)
     websocket-driver (0.7.6)
       websocket-extensions (>= 0.1.0)
     websocket-extensions (0.1.5)
@@ -321,6 +330,7 @@ DEPENDENCIES
   rolify
   ruby-openai
   sass-rails (>= 6)
+  selenium-webdriver (~> 4.4)
   spring
   turbolinks (~> 5)
   tzinfo-data

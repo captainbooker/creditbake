@@ -1,0 +1,5 @@
+<% if @credit_report.document.attached? %>
+  <%= link_to 'Download Credit Report', download_credit_report_path(@credit_report), class: 'btn btn-primary' %>
+<% else %>
+  <p>No document attached to this credit report.</p>
+<% end %>

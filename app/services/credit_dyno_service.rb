@@ -6,9 +6,10 @@ class CreditDynoService
   def initialize(username, password, security_question, service)
     @username = username
     @password = password
-    @security_question = security_question
     @service = service
-    @agent = Mechanize.new
+    @security_question = security_question
+    @driver = Selenium::WebDriver.for :chrome
+    @wait = Selenium::WebDriver::Wait.new(timeout: 20)
   end
 
   def fetch_credit_report
@@ -19,20 +20,17 @@ class CreditDynoService
   private
 
   def login
-    login_page = @agent.get("#{BASE_URL}/customer_login.asp")
-    login_form = login_page.form_with(id: 'CFForm_1') do |form|
-      form.username = @username
-      form.password = @password
-    end
-    @agent.submit(login_form)
+    @driver.navigate.to("#{BASE_URL}/customer_login.asp")
+    @driver.find_element(name: 'username').send_keys(@username)
+    @driver.find_element(name: 'password').send_keys(@password)
+    @driver.find_element(:tag_name, 'button').click
   end
 
   def navigate_to_credit_report
-    # Assuming that the credit report is accessible at a specific URL after login
-    # Replace '/path-to-credit-report' with the actual path
-    report_page = @agent.get("#{BASE_URL}/cp6/mcc_creditreports_v2.asp")
-    report_page.body
-    # Logic to extract and save the credit report from the report_page
-    # For example, downloading a PDF or parsing HTML data
+    @driver.navigate.to("#{BASE_URL}/cp6/mcc_creditreports_v2.asp")
+
+    # Get the HTML content
+    html_content = @driver.page_source
+    html_content
   end
 end
