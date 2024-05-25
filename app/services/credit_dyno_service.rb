@@ -1,4 +1,4 @@
-# app/services/identityiq_service.rb
+
 class CreditDynoService
   BASE_URL = 'https://creditdyno.com/'
   attr_reader :username, :password, :security_question, :service
