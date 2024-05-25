@@ -19,7 +19,7 @@ Rails.application.routes.draw do
   delete 'users/:id/delete_id_document', to: 'users#delete_id_document', as: 'delete_id_document_user'
   delete 'users/:id/delete_utility_bill', to: 'users#delete_utility_bill', as: 'delete_utility_bill_user'
 
-  get 'disputing', to: 'dashboards#disputing', as: 'disputing'
+  get 'challenge', to: 'dashboards#disputing', as: 'challenge'
   get 'letters', to: 'dashboards#letters', as: 'letters'
   post 'create_attack', to: 'dashboards#create_attack', as: 'create_attack'
   patch 'disputing/save_challenges', to: 'dashboards#save_challenges', as: 'save_challenges'
