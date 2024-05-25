@@ -2,6 +2,9 @@ class DashboardsController < ApplicationController
   include OpenaiPromptable
   before_action :authenticate_user!
 
+  def index
+  end
+
   def disputing
     @inquiries = current_user.inquiries
     @accounts = current_user.accounts

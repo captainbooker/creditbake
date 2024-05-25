@@ -8,6 +8,8 @@
 
   <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %>
   <%= javascript_pack_tag 'application', 'data-turbolinks-track': 'reload' %>
+  <script src="//unpkg.com/alpinejs" defer></script>
+
 
 </head>
 <body>
@@ -32,8 +34,7 @@
         class="relative flex flex-1 flex-col overflow-y-auto overflow-x-hidden"
       >
         <%= render "shared/authenticated_navbar" %>
-        <p class="notice"><%= notice %></p>
-        <p class="alert"><%= alert %></p>
+        <%= render 'shared/flash_message' %>
         <main>
           <%= yield %>
         </main>

@@ -1,8 +1,6 @@
 Rails.application.routes.draw do
   devise_for :admin_users, ActiveAdmin::Devise.config
   ActiveAdmin.routes(self)
-  # Root route
-  root 'users#settings'
 
   # Devise routes for user authentication
   devise_for :users
@@ -24,10 +22,11 @@ Rails.application.routes.draw do
   post 'create_attack', to: 'dashboards#create_attack', as: 'create_attack'
   patch 'disputing/save_challenges', to: 'dashboards#save_challenges', as: 'save_challenges'
   post 'import_credit_report', to: 'credit_reports#import', as: 'import_credit_report'
+  post 'credit_reports/download_all_files', to: 'credit_reports#download_all_files', as: 'download_all_files'
   
 
   authenticated :user do
-    root 'pages#dashboard', as: :authenticated_root
+    root 'dashboards#index', as: :authenticated_root
   end
 
   unauthenticated do

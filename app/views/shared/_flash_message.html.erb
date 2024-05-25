@@ -1,0 +1,19 @@
+<% flash.each do |key, message| %>
+  <div class="w-full mb-4 border-l-4 <%= flash_class(key) %> p-4 shadow-md rounded-md dark:bg-[#1B1B24] dark:bg-opacity-30">
+    <div class="flex items-center">
+      <div class="mr-4 flex h-6 w-6 items-center justify-center rounded-full <%= key == 'notice' ? 'bg-[#34D399]' : key == 'alert' ? 'bg-[#F87171]' : 'bg-warning' %>">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="<%= flash_icon(key) %>" fill="white" stroke="white"></path>
+        </svg>
+      </div>
+      <div class="flex-1">
+        <h5 class="text-md font-semibold <%= key == 'notice' ? 'text-black dark:text-[#34D399]' : key == 'alert' ? 'text-[#B45454]' : 'text-[#9D5425]' %>">
+          <%= key.capitalize %>
+        </h5>
+        <p class="text-sm <%= key == 'notice' ? 'text-body' : key == 'alert' ? 'text-[#CD5D5D]' : 'text-[#D0915C]' %>">
+          <%= message %>
+        </p>
+      </div>
+    </div>
+  </div>
+<% end %>

@@ -9,22 +9,41 @@ class CreditReportsController < ApplicationController
   def show
   end
 
-  def download
-    if @credit_report.document.attached?
-      redirect_to rails_blob_path(@credit_report.document, disposition: "attachment")
-    else
-      redirect_to @credit_report, alert: 'No document attached to this credit report.'
-    end
-  end
+  # def download
+  #   if @credit_report.document.attached?
+  #     redirect_to rails_blob_path(@credit_report.document, disposition: "attachment")
+  #   else
+  #     redirect_to @credit_report, alert: 'No document attached to this credit report.'
+  #   end
+  # end
 
   def create
     @credit_report = current_user.credit_reports.build(credit_report_params)
 
     if @credit_report.save
       parse_credit_report(@credit_report)
-      redirect_to root_path, notice: 'Credit report successfully uploaded and parsed.'
+      redirect_to authenticated_root_path, notice: 'Credit report successfully uploaded and parsed.'
     else
       render :new
+    end
+  end
+
+  def download_all_files
+    letter = Letter.find(params[:letter_id])
+    files = [letter.experian_pdf, letter.transunion_pdf, letter.equifax_pdf].compact
+
+    if files.any?
+      zip_data = Zip::OutputStream.write_buffer do |zip|
+        files.each do |file|
+          zip.put_next_entry(file.filename.to_s)
+          zip.write(file.download)
+        end
+      end
+
+      zip_data.rewind
+      send_data zip_data.read, filename: "letter_files.zip", type: 'application/zip'
+    else
+      redirect_back fallback_location: root_path, alert: 'No files to download'
     end
   end
 
@@ -77,7 +96,7 @@ class CreditReportsController < ApplicationController
 
       if @credit_report.save
         parse_credit_report(@credit_report)
-        redirect_to root_path, notice: 'Credit report successfully imported and parsed.'
+        redirect_to authenticated_root_path, notice: 'Credit report successfully imported and parsed.'
       else
         redirect_to new_credit_report_path, alert: 'Failed to save the credit report.'
       end

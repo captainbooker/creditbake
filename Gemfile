@@ -41,6 +41,7 @@ gem 'prawn'
 gem 'mechanize'
 gem 'selenium-webdriver', '~> 4.4'
 gem 'activeadmin'
+gem 'zip'
 
 
 gem 'dotenv', groups: [:development, :test]
