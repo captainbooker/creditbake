@@ -350,7 +350,6 @@ GEM
       websocket-extensions (>= 0.1.0)
     websocket-extensions (0.1.5)
     zeitwerk (2.6.14)
-    zip (2.0.2)
 
 PLATFORMS
   arm64-darwin-21
@@ -377,6 +376,7 @@ DEPENDENCIES
   rails (~> 6.1.7, >= 6.1.7.7)
   rolify
   ruby-openai
+  rubyzip (~> 2.3)
   sass-rails (>= 6)
   selenium-webdriver (~> 4.4)
   spring
@@ -384,7 +384,6 @@ DEPENDENCIES
   tzinfo-data
   web-console (>= 4.1.0)
   webpacker (~> 5.0)
-  zip
 
 RUBY VERSION
    ruby 3.1.4p223

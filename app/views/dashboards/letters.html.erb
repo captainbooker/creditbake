@@ -5,7 +5,7 @@
     <nav>
       <ol class="flex items-center gap-2">
         <li><a class="font-medium" href="index.html">Dashboard /</a></li>
-        <li class="font-medium text-primary">Pro Tables</li>
+        <li class="font-medium text-primary">Challenge Letters</li>
       </ol>
     </nav>
     <div class="relative">
@@ -56,7 +56,7 @@
                 <p class="text-[#637381] dark:text-bodydark"><%= [letter.experian_pdf, letter.transunion_pdf, letter.equifax_pdf].compact.count %></p>
               </div>
               <div class="col-span-3">
-                <p class="text-[#637381] dark:text-bodydark"><%= letter.created_at.strftime("%Y-%m-%d %H:%M:%S") %></p>
+                <p class="text-[#637381] dark:text-bodydark"><%= letter.created_at.strftime("%m/%d/%Y") %></p>
               </div>
               <div class="col-span-3">
                 <div class="flex justify-end">

@@ -1,4 +1,5 @@
-# app/controllers/credit_reports_controller.rb
+require 'zip'
+
 class CreditReportsController < ApplicationController
   before_action :set_credit_report, only: [:show, :download]
 
@@ -31,7 +32,7 @@ class CreditReportsController < ApplicationController
   def download_all_files
     letter = Letter.find(params[:letter_id])
     files = [letter.experian_pdf, letter.transunion_pdf, letter.equifax_pdf].compact
-
+  
     if files.any?
       zip_data = Zip::OutputStream.write_buffer do |zip|
         files.each do |file|
@@ -39,14 +40,14 @@ class CreditReportsController < ApplicationController
           zip.write(file.download)
         end
       end
-
+  
       zip_data.rewind
-      send_data zip_data.read, filename: "letter_files.zip", type: 'application/zip'
+      send_data zip_data.read, filename: "#{letter.name}_challenge_letter_#{Date.today}.zip", type: 'application/zip'
     else
-      redirect_back fallback_location: root_path, alert: 'No files to download'
+      redirect_back fallback_location: letters_path, alert: 'No files to download'
     end
   end
-
+  
   def import
     service = params[:service]
     username = params[:username]

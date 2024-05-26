@@ -7,13 +7,13 @@ class DashboardsController < ApplicationController
 
   def disputing
     @inquiries = current_user.inquiries
-    @accounts = current_user.accounts
-  end
+    @accounts = current_user.accounts.includes(:bureau_details)
+  end  
 
   def save_challenges
     Inquiry.where(id: params[:inquiry_ids], user_id: current_user.id).update_all(challenge: true) if params[:inquiry_ids].present?
     Account.where(id: params[:account_ids], user_id: current_user.id).update_all(challenge: true) if params[:account_ids].present?
-    redirect_to letters_path, notice: 'Challenges saved successfully.'
+    redirect_to letters_path, notice: 'Challenged items saved successfully.'
   end
 
   def letters
@@ -41,7 +41,7 @@ class DashboardsController < ApplicationController
 
     generate_pdfs(letter)
 
-    redirect_to disputing_path, notice: 'Attack created successfully and letters saved.'
+    redirect_to letters_path, notice: 'Attack created successfully and letters saved.'
   end
 
   private
@@ -55,11 +55,27 @@ class DashboardsController < ApplicationController
   def generate_pdf(letter, document_field, pdf_attachment)
     document_content = letter.send(document_field)
     bureau_name = document_field.split('_').first.capitalize
+    user = current_user
     pdf = Prawn::Document.new do
-      text "Letter for Round #{letter.name}", size: 20, style: :bold
-      move_down 20
-      text "Bureau: #{bureau_name}", size: 16, style: :bold
       text document_content
+      if user.id_document.attached?
+        text "ID Document:"
+        id_document_path = Rails.root.join("tmp/#{user.id_document.filename}")
+        File.open(id_document_path, 'wb') do |file|
+          file.write(user.id_document.download)
+        end
+        image id_document_path, width: 500, height: 300
+      end
+      
+      # Add Utility Bill if attached
+      if user.utility_bill.attached?
+        text "Utility Bill:"
+        utility_bill_path = Rails.root.join("tmp/#{user.utility_bill.filename}")
+        File.open(utility_bill_path, 'wb') do |file|
+          file.write(user.utility_bill.download)
+        end
+        image utility_bill_path, width: 500, height: 300
+      end
     end
 
     pdf_path = Rails.root.join("tmp/#{bureau_name}_letter_#{letter.id}.pdf")

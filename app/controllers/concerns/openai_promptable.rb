@@ -53,8 +53,6 @@ module OpenaiPromptable
     <<-PROMPT
       You are a credit repair expert using Metro 2 compliance standards, so please use Metro 2 codes in the letter. Draft a detailed dispute letter to the #{bureau.capitalize} regarding the inquiries below. Highlight the inaccuracies in the inquiry and request its immediate removal, citing relevant Metro 2 compliance regulations. The letter should be professional, concise, and emphasize the need for accurate reporting.
   
-      Important: Do not include any introductory phrases like "Letter for Round Round 1" or "Bureau: #{bureau.capitalize}" at the beginning of the letter. Start directly with the user's name and address.
-  
       User info for address:
       first_name: #{current_user.first_name}
       last_name: #{current_user.last_name}
@@ -68,7 +66,7 @@ module OpenaiPromptable
       Inquiries:
       #{format_inquiries(inquiries, bureau)}
   
-      Use Metro 2 codes for the accounts below to dispute the compliance. Highlight the inaccuracies in the account information and request its immediate removal, citing relevant Metro 2 compliance regulations. The letter should be professional, concise, and emphasize the need for accurate reporting. Be sure to use FCRA as well.
+      Use Metro 2 codes for the accounts below to dispute the compliance. Highlight the inaccuracies in the account information and request its immediate removal, citing relevant Metro 2 compliance regulations. The letter should be professional, concise, and emphasize the need for accurate reporting. Be sure to use FCRA as well and I should only be contacted at the address provided.
   
       Accounts:
       #{format_accounts(accounts, bureau)}
@@ -77,7 +75,17 @@ module OpenaiPromptable
 
   def round_2_prompt(inquiries, accounts, bureau)
     <<-PROMPT
-      This is a round 2 Metro 2 compliance dispute letter for the #{bureau.capitalize} bureau. We have the following inquiries and accounts that need to be disputed.
+    You are a credit repair expert using Metro 2 compliance standards, so please use Metro 2 codes in the letter. Draft a follow-up dispute letter to the #{bureau.capitalize} regarding the inquiries and accounts provided. Reference the previous dispute letter sent and emphasize the lack of response or correction. Reiterate the inaccuracies and request immediate removal, citing relevant Metro 2 compliance regulations and potential consequences of non-compliance.
+
+      User info for address:
+      first_name: #{current_user.first_name}
+      last_name: #{current_user.last_name}
+      street_address: #{current_user.street_address}
+      city: #{current_user.city}
+      state: #{current_user.state}
+      postal_code: #{current_user.postal_code}
+      country: #{current_user.country}
+      current_date: #{Date.today.strftime("%B %d, %Y")}
 
       Inquiries:
       #{format_inquiries(inquiries, bureau)}
@@ -85,13 +93,23 @@ module OpenaiPromptable
       Accounts:
       #{format_accounts(accounts, bureau)}
 
-      Please ensure the credit bureaus remove any inaccurate information immediately and use Metro 2 compliance and FCRA.
+      Please ensure the credit bureaus remove any inaccurate information immediately and use Metro 2 compliance and FCRA and I should only be contacted at the address provided.
     PROMPT
   end
 
   def round_3_prompt(inquiries, accounts, bureau)
     <<-PROMPT
-      This is a round 3 Metro 2 compliance dispute letter for the #{bureau.capitalize} bureau. We have the following inquiries and accounts that need to be disputed.
+      This is a Metro 2 compliance dispute letter, so please use Metro 2 codes in the letter followed by previous challnege letters for the #{bureau.capitalize} bureau. We have the following inquiries and accounts that need to be disputed using metro 2 and FCRA. The credit bureau has failed to investigate/comply to remove inquiries and accounts per FCRA.
+
+      User info for address:
+      first_name: #{current_user.first_name}
+      last_name: #{current_user.last_name}
+      street_address: #{current_user.street_address}
+      city: #{current_user.city}
+      state: #{current_user.state}
+      postal_code: #{current_user.postal_code}
+      country: #{current_user.country}
+      current_date: #{Date.today.strftime("%B %d, %Y")}
 
       Inquiries:
       #{format_inquiries(inquiries, bureau)}
@@ -99,13 +117,23 @@ module OpenaiPromptable
       Accounts:
       #{format_accounts(accounts, bureau)}
 
-      Please ensure the credit bureaus remove any inaccurate information immediately and use Metro 2 compliance and FCRA.
+      Please ensure the credit bureaus remove any inaccurate information immediately and use Metro 2 compliance and FCRA and I should only be contacted at the address provided.
     PROMPT
   end
 
   def round_4_prompt(inquiries, accounts, bureau)
     <<-PROMPT
-      This is a round 4 Metro 2 compliance dispute letter for the #{bureau.capitalize} bureau. We have the following inquiries and accounts that need to be disputed.
+    You are a credit repair expert using Metro 2 compliance standards, so please use Metro 2 codes in the letter. Draft a detailed dispute letter to the #{bureau.capitalize} regarding the inquiries and accounts provided. Request that they reinvestigate and comply with metro 2 and fcra. Be unique with letter and threaten to complain and file a law suit if accounts and inquires are not removed. Include detailed evidence and documentation supporting the inaccuracies. Emphasize the importance of compliance with Metro 2 regulations and request immediate removal of the inaccurate inquiry
+
+      User info for address:
+      first_name: #{current_user.first_name}
+      last_name: #{current_user.last_name}
+      street_address: #{current_user.street_address}
+      city: #{current_user.city}
+      state: #{current_user.state}
+      postal_code: #{current_user.postal_code}
+      country: #{current_user.country}
+      current_date: #{Date.today.strftime("%B %d, %Y")}
 
       Inquiries:
       #{format_inquiries(inquiries, bureau)}
@@ -113,13 +141,23 @@ module OpenaiPromptable
       Accounts:
       #{format_accounts(accounts, bureau)}
 
-      Please ensure the credit bureaus remove any inaccurate information immediately and use Metro 2 compliance and FCRA.
+      Please ensure the credit bureaus remove any inaccurate information immediately and use Metro 2 compliance and FCRA and I should only be contacted at the address provided.
     PROMPT
   end
 
   def round_5_prompt(inquiries, accounts, bureau)
     <<-PROMPT
-      This is a round 5 Metro 2 compliance dispute letter for the #{bureau.capitalize} bureau. We have the following inquiries and accounts that need to be disputed.
+    You are a credit repair expert using Metro 2 compliance standards, so please use Metro 2 codes in the letter. Draft a strongly worded dispute letter to the #{bureau.capitalize} regarding the inquires and accounts provided. Set a firm deadline for action. State that failure to address the inaccuracies within the specified time frame will result in further action, including complaints to regulatory authorities.
+
+      User info for address:
+      first_name: #{current_user.first_name}
+      last_name: #{current_user.last_name}
+      street_address: #{current_user.street_address}
+      city: #{current_user.city}
+      state: #{current_user.state}
+      postal_code: #{current_user.postal_code}
+      country: #{current_user.country}
+      current_date: #{Date.today.strftime("%B %d, %Y")}
 
       Inquiries:
       #{format_inquiries(inquiries, bureau)}
@@ -127,13 +165,23 @@ module OpenaiPromptable
       Accounts:
       #{format_accounts(accounts, bureau)}
 
-      Please ensure the credit bureaus remove any inaccurate information immediately and use Metro 2 compliance and FCRA.
+      Please ensure the credit bureaus remove any inaccurate information immediately and use Metro 2 compliance and FCRA and I should only be contacted at the address provided.
     PROMPT
   end
 
   def round_6_prompt(inquiries, accounts, bureau)
     <<-PROMPT
-      This is a round 6 Metro 2 compliance dispute letter for the #{bureau.capitalize} bureau. We have the following inquiries and accounts that need to be disputed.
+    You are a credit repair expert using Metro 2 compliance standards, so please use Metro 2 codes in the letter. Draft a final warning dispute letter to the #{bureau.capitalize} regarding an inquiries and accounts provided. Emphasize that this is the final attempt to resolve the issue amicably. State clearly that failure to correct the inaccuracies will result in legal action and formal complaints to regulatory authorities.
+
+      User info for address:
+      first_name: #{current_user.first_name}
+      last_name: #{current_user.last_name}
+      street_address: #{current_user.street_address}
+      city: #{current_user.city}
+      state: #{current_user.state}
+      postal_code: #{current_user.postal_code}
+      country: #{current_user.country}
+      current_date: #{Date.today.strftime("%B %d, %Y")}
 
       Inquiries:
       #{format_inquiries(inquiries, bureau)}
@@ -141,13 +189,23 @@ module OpenaiPromptable
       Accounts:
       #{format_accounts(accounts, bureau)}
 
-      Please ensure the credit bureaus remove any inaccurate information immediately and use Metro 2 compliance and FCRA.
+      Please ensure the credit bureaus remove any inaccurate information immediately and use Metro 2 compliance and FCRA and I should only be contacted at the address provided.
     PROMPT
   end
 
   def round_7_prompt(inquiries, accounts, bureau)
     <<-PROMPT
-      This is a round 7 Metro 2 compliance dispute letter for the #{bureau.capitalize} bureau. We have the following inquiries and accounts that need to be disputed.
+    You are a credit repair expert using Metro 2 compliance standards, so please use Metro 2 codes in the letter. Draft a letter to the #{bureau.capitalize} regarding an inquiries and accounts provided, initiating legal action and filing formal complaints to regulatory authorities. Reference detail the lack of response or correction. State the legal actions being taken and include copies of the complaints filed with regulatory authorities.
+
+      User info for address:
+      first_name: #{current_user.first_name}
+      last_name: #{current_user.last_name}
+      street_address: #{current_user.street_address}
+      city: #{current_user.city}
+      state: #{current_user.state}
+      postal_code: #{current_user.postal_code}
+      country: #{current_user.country}
+      current_date: #{Date.today.strftime("%B %d, %Y")}
 
       Inquiries:
       #{format_inquiries(inquiries, bureau)}
@@ -155,7 +213,7 @@ module OpenaiPromptable
       Accounts:
       #{format_accounts(accounts, bureau)}
 
-      Please ensure the credit bureaus remove any inaccurate information immediately and use Metro 2 compliance and FCRA.
+      Please ensure the credit bureaus remove any inaccurate information immediately and use Metro 2 compliance and FCRA and I should only be contacted at the address provided.
     PROMPT
   end
 

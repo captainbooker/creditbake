@@ -3,22 +3,20 @@
   <div class="mx-auto max-w-270">
     <!-- Breadcrumb Start -->
     <div class="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-      <h2 class="text-title-md2 font-bold text-black dark:text-white">Dispute Page</h2>
+      <h2 class="text-title-md2 font-bold text-black dark:text-white">Challenge Overview</h2>
       <nav>
         <ol class="flex items-center gap-2">
           <li>
             <a class="font-medium" href="<%= authenticated_root_path %>">Dashboard /</a>
           </li>
-          <li class="font-medium text-primary">Disputes</li>
+          <li class="font-medium text-primary">Challenges</li>
         </ol>
       </nav>
     </div>
     <!-- Breadcrumb End -->
 
     <!-- Credit Report Upload Section Start -->
-    <%
-=begin%>
- <div class="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark mb-8">
+    <div class="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark mb-8">
       <div class="border-b border-stroke px-7 py-4 dark:border-strokedark">
         <h3 class="font-medium text-black dark:text-white">Upload Credit Report</h3>
       </div>
@@ -33,45 +31,13 @@
           </div>
         <% end %>
       </div>
-    </div> 
-<%
-=end%>
-
-    <div class="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark mb-8">
-      <div class="border-b border-stroke px-7 py-4 dark:border-strokedark">
-        <h3 class="font-medium text-black dark:text-white">Import Credit Report</h3>
-      </div>
-      <div class="p-7">
-        <%= form_with url: import_credit_report_path, method: :post, local: true, html: { id: 'credit-report-form' } do |f| %>
-          <div class="mb-4">
-            <%= f.label :service, "Credit Monitoring Service", class: "block text-sm font-medium text-black dark:text-white" %>
-            <%= f.select :service, options_for_select([['IdentityIQ', 'identityiq'], ['Credit Dyno', 'creditdyno']]), {}, class: "w-full mt-2 p-2 border border-stroke dark:border-strokedark rounded" %>
-          </div>
-          <div class="mb-4">
-            <%= f.label :username, "Username", class: "block text-sm font-medium text-black dark:text-white" %>
-            <%= f.text_field :username, class: "w-full mt-2 p-2 border border-stroke dark:border-strokedark rounded" %>
-          </div>
-          <div class="mb-4">
-            <%= f.label :password, "Password", class: "block text-sm font-medium text-black dark:text-white" %>
-            <%= f.password_field :password, class: "w-full mt-2 p-2 border border-stroke dark:border-strokedark rounded" %>
-          </div>
-          <div class="mb-4">
-            <%= f.label :security_question, "Security Question", class: "block text-sm font-medium text-black dark:text-white" %>
-            <%= f.text_field :security_question, class: "w-full mt-2 p-2 border border-stroke dark:border-strokedark rounded" %>
-          </div>
-          <div class="flex justify-end mt-4">
-            <%= f.submit "Import Credit Report", class: "px-6 py-2 font-medium text-gray bg-primary rounded hover:bg-opacity-90", id: 'import-button' %>
-          </div>
-        <% end %>
-      </div>
     </div>
     <!-- Credit Report Upload Section End -->
 
     <!-- Disputes Form Start -->
     <%= form_with url: save_challenges_path, method: :patch do %>
       <%= hidden_field_tag :authenticity_token, form_authenticity_token %>
-
-      <!-- Inquiries Section Start -->
+      
       <div class="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark mb-8">
         <div class="border-b border-stroke px-7 py-4 dark:border-strokedark">
           <h3 class="font-medium text-black dark:text-white">Inquiries</h3>
@@ -86,14 +52,18 @@
           </div>
         </div>
         <div class="p-7">
-          <div class="grid grid-cols-4 gap-4" data-tabs-target="content">
+          <div class="grid grid-cols-1 sm:grid-cols-4 lg:grid-cols-4 gap-4" data-tabs-target="content">
             <% @inquiries.each do |inquiry| %>
               <div class="border rounded p-4 <%= 'border-red-500' if inquiry.challenge %>">
-                <label>
-                  <input type="checkbox" name="inquiry_ids[]" value="<%= inquiry.id %>" <%= 'checked' if inquiry.challenge %>>
-                  <div class="inline-block ml-2">
-                    <p class="inline"><%= inquiry.inquiry_name %></p>
-                    <p><%= inquiry.inquiry_date %></p>
+                <label class="flex items-center">
+                  <input type="checkbox" name="inquiry_ids[]" value="<%= inquiry.id %>" class="form-checkbox h-4 w-4 checked:bg-sky-700 peer" <%= 'checked' if inquiry.challenge %>>
+                  <div class="ml-2">
+                    <p class="font-medium text-black dark:text-white"><%= inquiry.inquiry_name %></p>
+                    <% if inquiry.inquiry_date.present? %>
+                      <button class="inline-flex rounded-full bg-[#EFEFEF] px-3 py-1 text-sm font-medium text-[#212B36] hover:bg-opacity-90">
+                        <%= inquiry.inquiry_date.strftime("%b %d, %Y") %>
+                      </button>
+                    <% end %>
                   </div>
                 </label>
               </div>
@@ -118,7 +88,7 @@
           </div>
         </div>
         <div class="p-7">
-          <div class="grid grid-cols-3 gap-4" data-tabs-target="content">
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4" data-tabs-target="content">
             <% @accounts.each do |account| %>
               <div class="border rounded p-4 cursor-pointer account-card <%= 'border-red-500' if account.challenge %>" data-id="<%= account.id %>">
                 <input type="hidden" name="account_ids[]" value="<%= account.id %>" <%= 'disabled' unless account.challenge %>>
