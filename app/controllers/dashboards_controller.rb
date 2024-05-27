@@ -21,8 +21,21 @@ class DashboardsController < ApplicationController
   end
 
   def create_attack
+    # This method will now only be called after successful payment via success callback
     round = params[:round].to_i
 
+    if params[:payment_success] != 'true'
+      redirect_to letters_path, alert: 'Payment required.'
+      return
+    end
+    
+    create_attack_logic(round)
+    redirect_to letters_path, notice: 'Attack created successfully and letters saved.'
+  end
+
+  private
+
+  def create_attack_logic(round)
     inquiries = current_user.inquiries.where(challenge: true)
     accounts = current_user.accounts.where(challenge: true)
 
@@ -40,11 +53,7 @@ class DashboardsController < ApplicationController
     )
 
     generate_pdfs(letter)
-
-    redirect_to letters_path, notice: 'Attack created successfully and letters saved.'
   end
-
-  private
 
   def generate_pdfs(letter)
     generate_pdf(letter, 'experian_document', :experian_pdf)

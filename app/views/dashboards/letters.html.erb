@@ -75,46 +75,45 @@
 </div>
 
 <script>
-  document.addEventListener("DOMContentLoaded", function() {
-    const attackButton = document.getElementById('create-attack-button');
-    const attackDropdown = document.getElementById('attack-dropdown');
+document.addEventListener("DOMContentLoaded", function() {
+  const attackButton = document.getElementById('create-attack-button');
+  const attackDropdown = document.getElementById('attack-dropdown');
 
-    attackButton.addEventListener('click', function() {
-      attackDropdown.classList.toggle('hidden');
-    });
+  attackButton.addEventListener('click', function() {
+    attackDropdown.classList.toggle('hidden');
+  });
 
-    document.addEventListener('click', function(event) {
-      if (!attackButton.contains(event.target) && !attackDropdown.contains(event.target)) {
-        attackDropdown.classList.add('hidden');
-      }
-    });
+  document.addEventListener('click', function(event) {
+    if (!attackButton.contains(event.target) && !attackDropdown.contains(event.target)) {
+      attackDropdown.classList.add('hidden');
+    }
+  });
 
-    attackDropdown.querySelectorAll('button[data-round]').forEach(button => {
-      button.addEventListener('click', function() {
-        const round = this.getAttribute('data-round');
-        const form = document.createElement('form');
-        form.method = 'post';
-        form.action = '<%= create_attack_path %>';
-        form.innerHTML = `
-          <input type="hidden" name="_method" value="post">
-          <input type="hidden" name="round" value="${round}">
-          <input type="hidden" name="${document.querySelector('meta[name=csrf-param]').content}" value="${document.querySelector('meta[name=csrf-token]').content}">
-        `;
-        document.body.appendChild(form);
-        form.submit();
+  attackDropdown.querySelectorAll('button[data-round]').forEach(button => {
+    button.addEventListener('click', function() {
+      var round = this.getAttribute('data-round');
+      fetch('/lemon_squeezy_payments/create', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').content
+        },
+        body: JSON.stringify({ round: round }),
+      })
+      .then(function(response) {
+        return response.json();
+      })
+      .then(function(data) {
+        if (data.checkout_url) {
+          window.location.href = data.checkout_url;
+        } else {
+          console.error('No checkout URL returned');
+        }
+      })
+      .catch(function(error) {
+        console.error('Error:', error);
       });
     });
   });
-
-  function downloadAllFiles(letterId) {
-    const form = document.createElement('form');
-    form.method = 'post';
-    form.action = '<%= download_all_files_path %>';
-    form.innerHTML = `
-      <input type="hidden" name="letter_id" value="${letterId}">
-      <input type="hidden" name="${document.querySelector('meta[name=csrf-param]').content}" value="${document.querySelector('meta[name=csrf-token]').content}">
-    `;
-    document.body.appendChild(form);
-    form.submit();
-  }
+});
 </script>

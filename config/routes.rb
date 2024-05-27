@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  get 'stripe_payments/create'
   devise_for :admin_users, ActiveAdmin::Devise.config
   ActiveAdmin.routes(self)
 
@@ -19,12 +20,15 @@ Rails.application.routes.draw do
 
   get 'challenge', to: 'dashboards#disputing', as: 'challenge'
   get 'letters', to: 'dashboards#letters', as: 'letters'
-  post 'create_attack', to: 'dashboards#create_attack', as: 'create_attack'
+  get 'create_attack', to: 'dashboards#create_attack', as: 'create_attack'
   patch 'disputing/save_challenges', to: 'dashboards#save_challenges', as: 'save_challenges'
   post 'import_credit_report', to: 'credit_reports#import', as: 'import_credit_report'
   post 'credit_reports/download_all_files', to: 'credit_reports#download_all_files', as: 'download_all_files'
-  
 
+  post 'lemon_squeezy_payments/create', to: 'lemon_squeezy_payments#create'
+  get 'success', to: 'dashboards#success', as: 'success'
+  get 'cancel', to: 'dashboards#cancel', as: 'cancel'
+  
   authenticated :user do
     root 'dashboards#index', as: :authenticated_root
   end
