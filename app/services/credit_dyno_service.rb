@@ -19,8 +19,11 @@ class CreditDynoService
     driver
   end
 
-  def self.get_page_html(driver)
-    element = driver.find_element(:tag_name, 'body')
+  def self.get_arr_container_html(driver)
+    wait = Selenium::WebDriver::Wait.new(timeout: 10) 
+    element = wait.until { driver.find_element(class: 'arr-container-legacy-sizing').displayed? }
+    element = driver.find_element(class: 'arr-container-legacy-sizing')
     element.attribute("outerHTML")
   end
 end
+
