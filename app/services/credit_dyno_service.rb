@@ -21,9 +21,12 @@ class CreditDynoService
 
   def self.get_arr_container_html(driver)
     wait = Selenium::WebDriver::Wait.new(timeout: 10) 
-    element = wait.until { driver.find_element(class: 'arr-container-legacy-sizing').displayed? }
-    element = driver.find_element(class: 'arr-container-legacy-sizing')
-    element.attribute("outerHTML")
+    driver.navigate.to("#{BASE_URL}/cp6/mcc_creditreports_v2.asp")
+    array_credit_report = driver.find_element( :css, 'array-credit-report[reportkey="2b8efe89-2024-47b2-b9c1-d045da7d3f34"]')
+    shadow_root = driver.execute_script('return arguments[0].shadowRoot', array_credit_report)
+    element_inside_shadow = shadow_root.find_element(:class, 'arr-container-legacy-sizing')
+
+    # Retrieve the outerHTML of the element
+    element_html = element_inside_shadow.attribute("outerHTML")
   end
 end
-
