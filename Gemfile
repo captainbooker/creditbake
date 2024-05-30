@@ -38,12 +38,12 @@ gem 'pdf-reader'
 gem 'docsplit'
 gem "ruby-openai"
 gem 'prawn'
+gem 'mini_magick'
 gem 'mechanize'
 gem 'selenium-webdriver', '~> 4.4'
 gem 'activeadmin'
 gem 'rubyzip', '~> 2.3'
 gem 'lemonsqueezy'
-
 
 gem 'dotenv', groups: [:development, :test]
 group :development, :test do

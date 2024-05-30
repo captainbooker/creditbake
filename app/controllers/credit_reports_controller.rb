@@ -58,7 +58,11 @@ class CreditReportsController < ApplicationController
     when 'identityiq'
       import_credit_report(IdentityiqService.new(username, password, security_question, service))
     when 'creditdyno'
-      import_credit_report(CreditDynoService.new(username, password, security_question, service))
+      driver = CreditDynoService.login(username, password, security_question, service)
+      driver = CreditDynoService.navigate_to_credit_reports(driver)
+      html_content = CreditDynoService.get_arr_container_html(driver)
+
+      import_credit_report(html_content, username, password, security_question, service)
     else
       redirect_to new_credit_report_path, alert: 'Invalid service selected.'
     end
@@ -77,8 +81,8 @@ class CreditReportsController < ApplicationController
     params.require(:credit_report).permit(:document, :service, :username, :password, :security_question)
   end
 
-  def import_credit_report(service)
-    html_content = service.fetch_credit_report
+  def import_credit_report(html, username, password, security_question, service)
+    html_content = html
 
     if html_content
       # Use StringIO to create an in-memory file-like object
@@ -88,16 +92,16 @@ class CreditReportsController < ApplicationController
       document_io.content_type = 'text/html'
 
       @credit_report = current_user.credit_reports.build(
-        username: service.username,
-        password: service.password,
-        security_question: service.security_question,
-        service: service.service
+        username: username,
+        password: password,
+        security_question: security_question,
+        service: service
       )
       @credit_report.document.attach(io: document_io, filename: document_io.original_filename, content_type: document_io.content_type)
 
       if @credit_report.save
         parse_credit_report(@credit_report)
-        redirect_to authenticated_root_path, notice: 'Credit report successfully imported and parsed.'
+        redirect_to challenge_path, notice: 'Credit report successfully imported and parsed.'
       else
         redirect_to new_credit_report_path, alert: 'Failed to save the credit report.'
       end
@@ -121,42 +125,41 @@ class CreditReportsController < ApplicationController
     content = parser.extract_content
     process_parsed_content(content, credit_report)
   end
-  
 
   def process_parsed_content(content, credit_report)
     inquiries = content[:inquiries]
     accounts = content[:accounts]
-
+  
     inquiries.each do |inquiry_attrs|
+      inquiry_attrs[:user] = current_user
       Inquiry.create!(inquiry_attrs)
     end
-
+  
     accounts.each do |account_attrs|
       next if account_attrs[:account_number].nil?
-
-      account = Account.create!(
+  
+      account = Account.find_or_create_by!(
         account_number: account_attrs[:account_number],
-        account_type: account_attrs[:account_type],
-        account_type_detail: account_attrs[:account_type_detail],
-        account_status: account_attrs[:account_status],
-        user: current_user
-      )
-
-      %i[transunion experian equifax].each do |bureau|
-        if account_attrs[:"#{bureau}_balance_owed"].present?
-          BureauDetail.create!(
-            account: account,
-            bureau: bureau,
-            balance_owed: account_attrs[:"#{bureau}_balance_owed"],
-            high_credit: account_attrs[:"#{bureau}_high_credit"],
-            credit_limit: account_attrs[:"#{bureau}_credit_limit"],
-            past_due_amount: account_attrs[:"#{bureau}_past_due_amount"],
-            payment_status: account_attrs[:"#{bureau}_payment_status"],
-            date_opened: account_attrs[:"#{bureau}_date_opened"],
-            date_of_last_payment: account_attrs[:"#{bureau}_date_of_last_payment"],
-            last_reported: account_attrs[:"#{bureau}_last_reported"]
-          )
-        end
+        user_id: credit_report.user_id
+      ) do |acc|
+        acc.account_type = account_attrs[:account_type]
+        acc.account_status = account_attrs[:account_status]
+      end
+  
+      account_attrs[:bureau_details].each do |bureau, details|
+        next unless [:transunion, :experian, :equifax].include?(bureau)
+  
+        BureauDetail.create!(
+          account: account,
+          bureau: bureau,
+          balance_owed: details[:high_balance],
+          high_credit: details[:high_credit],
+          credit_limit: details[:credit_limit],
+          past_due_amount: details[:past_due_amount],
+          payment_status: details[:payment_status],
+          date_opened: details[:date_opened],
+          date_of_last_payment: details[:date_of_last_payment]
+        )
       end
     end
   end

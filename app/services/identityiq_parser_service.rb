@@ -29,8 +29,7 @@ class IdentityIQParserService
         inquiry_name: cells[0].text.strip,
         type_of_business: cells[1].text.strip,
         inquiry_date: cells[2].text.strip,
-        credit_bureau: cells[3].text.strip,
-        user: current_user
+        credit_bureau: cells[3].text.strip
       }
     end
     inquiries

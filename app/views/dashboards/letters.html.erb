@@ -116,4 +116,16 @@ document.addEventListener("DOMContentLoaded", function() {
     });
   });
 });
+
+function downloadAllFiles(letterId) {
+  const form = document.createElement('form');
+  form.method = 'post';
+  form.action = '<%= download_all_files_path %>';
+  form.innerHTML = `
+    <input type="hidden" name="letter_id" value="${letterId}">
+    <input type="hidden" name="${document.querySelector('meta[name=csrf-param]').content}" value="${document.querySelector('meta[name=csrf-token]').content}">
+  `;
+  document.body.appendChild(form);
+  form.submit();
+}
 </script>

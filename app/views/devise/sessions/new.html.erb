@@ -1,3 +1,79 @@
+<div class="relative z-10 overflow-hidden pt-[120px] pb-[60px] md:pt-[130px] lg:pt-[160px] dark:bg-dark">
+  <div
+    class="absolute bottom-0 left-0 w-full h-px bg-gradient-to-r from-stroke/0 via-stroke dark:via-dark-3 to-stroke/0">
+  </div>
+  <div class="container">
+    <div class="flex flex-wrap items-center -mx-4">
+      <div class="w-full px-4">
+        <div class="text-center">
+          <h1 class="mb-4 text-3xl font-bold text-dark dark:text-white sm:text-4xl md:text-[40px] md:leading-[1.2]">
+            Sign In Page</h1>
+          <p class="mb-5 text-base text-body-color dark:text-dark-6">
+            There are many variations of passages of Lorem Ipsum available.
+          </p>
+
+          <ul class="flex items-center justify-center gap-[10px]">
+            <li>
+              <a href="index.html"
+                class="flex items-center gap-[10px] text-base font-medium text-dark dark:text-white">
+                Home
+              </a>
+            </li>
+            <li>
+              <a href="javascript:void(0)" class="flex items-center gap-[10px] text-base font-medium text-body-color">
+                <span class="text-body-color dark:text-dark-6"> / </span>
+                Sign In
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<section class="bg-[#F4F7FF] py-14 lg:py-20 dark:bg-dark">
+  <div class="container">
+    <div class="flex flex-wrap -mx-4">
+      <div class="w-full px-4">
+        <div class="wow fadeInUp relative mx-auto max-w-[525px] overflow-hidden rounded-lg bg-white dark:bg-dark-2 py-14 px-8 text-center sm:px-12 md:px-[60px]" data-wow-delay=".15s">
+          <div class="mb-10 text-center">
+            <a href="javascript:void(0)" class="mx-auto inline-block max-w-[160px]">
+              <img src="assets/images/logo/logo.svg" alt="logo" class="dark:hidden" />
+              <img src="assets/images/logo/logo-white.svg" alt="logo" class="hidden dark:block" />
+            </a>
+          </div>
+
+          <%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
+            <div class="mb-[22px]">
+              <%= f.email_field :email, autofocus: true, autocomplete: "email", placeholder: "Email", class: "w-full px-5 py-3 text-base transition bg-transparent border rounded-md outline-none border-stroke dark:border-dark-3 text-body-color dark:text-dark-6 placeholder:text-dark-6 focus:border-primary dark:focus:border-primary focus-visible:shadow-none" %>
+            </div>
+            <div class="mb-[22px]">
+              <%= f.password_field :password, autocomplete: "current-password", placeholder: "Password", class: "w-full px-5 py-3 text-base transition bg-transparent border rounded-md outline-none border-stroke dark:border-dark-3 text-body-color dark:text-dark-6 placeholder:text-dark-6 focus:border-primary dark:focus:border-primary focus-visible:shadow-none" %>
+            </div>
+            <div class="mb-9">
+              <%= f.submit "Sign In", class: "w-full px-5 py-3 text-base text-white transition duration-300 ease-in-out border rounded-md cursor-pointer border-primary bg-primary hover:bg-blue-dark" %>
+            </div>
+          <% end %>
+
+
+          <a href="<%= new_password_path(resource_name) %>" class="inline-block mb-2 text-base text-dark dark:text-white hover:text-primary dark:hover:text-primary">
+            Forget Password?
+          </a>
+          <p class="text-base text-body-secondary">
+            Not a member yet?
+            <a href="<%= new_registration_path(resource_name) %>" class="text-primary hover:underline">
+              Sign Up
+            </a>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+
 <h2>Log in</h2>
 
 <%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2024_05_25_150727) do
+ActiveRecord::Schema.define(version: 2024_05_30_022309) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -24,6 +24,7 @@ ActiveRecord::Schema.define(version: 2024_05_25_150727) do
     t.datetime "updated_at", precision: 6, null: false
     t.boolean "challenge", default: false, null: false
     t.bigint "user_id", null: false
+    t.string "creditor_name"
     t.index ["user_id"], name: "index_accounts_on_user_id"
   end
 
@@ -182,6 +183,7 @@ ActiveRecord::Schema.define(version: 2024_05_25_150727) do
     t.datetime "updated_at", precision: 6, null: false
     t.boolean "challenge", default: false, null: false
     t.bigint "user_id", null: false
+    t.string "address"
     t.index ["user_id"], name: "index_inquiries_on_user_id"
   end
 

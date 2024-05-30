@@ -1,3 +1,6 @@
+require 'prawn'
+require 'mini_magick'
+
 class DashboardsController < ApplicationController
   include OpenaiPromptable
   before_action :authenticate_user!
@@ -61,34 +64,64 @@ class DashboardsController < ApplicationController
     generate_pdf(letter, 'equifax_document', :equifax_pdf)
   end
 
+  def save_attachment_to_temp(attachment)
+    attachment_path = Rails.root.join("tmp/#{attachment.filename}")
+    File.open(attachment_path, 'wb') do |file|
+      file.write(attachment.download)
+    end
+    attachment_path
+  end
+  
+  def add_image_to_pdf(image_path, pdf, title)
+    pdf.start_new_page
+    pdf.text title
+    pdf.image image_path, width: 500, height: 400, position: :center
+  end
+
+  def convert_pdf_to_image(pdf_path)
+    image_path = pdf_path.sub('.pdf', '.png')
+    MiniMagick::Tool::Convert.new do |convert|
+      convert.density(300)
+      convert.quality(200)
+      convert << pdf_path << image_path
+    end
+    image_path
+  end
+
+  def file_mime_type(path)
+    `file --brief --mime-type #{path}`.strip
+  end
+
   def generate_pdf(letter, document_field, pdf_attachment)
     document_content = letter.send(document_field)
     bureau_name = document_field.split('_').first.capitalize
     user = current_user
-    pdf = Prawn::Document.new do
-      text document_content
-      if user.id_document.attached?
-        text "ID Document:"
-        id_document_path = Rails.root.join("tmp/#{user.id_document.filename}")
-        File.open(id_document_path, 'wb') do |file|
-          file.write(user.id_document.download)
-        end
-        image id_document_path, width: 500, height: 300
-      end
-      
-      # Add Utility Bill if attached
-      if user.utility_bill.attached?
-        text "Utility Bill:"
-        utility_bill_path = Rails.root.join("tmp/#{user.utility_bill.filename}")
-        File.open(utility_bill_path, 'wb') do |file|
-          file.write(user.utility_bill.download)
-        end
-        image utility_bill_path, width: 500, height: 300
-      end
-    end
 
     pdf_path = Rails.root.join("tmp/#{bureau_name}_letter_#{letter.id}.pdf")
-    pdf.render_file(pdf_path)
+
+    Prawn::Document.generate(pdf_path) do |pdf|
+      pdf.text document_content
+
+      # Add ID Document (always an image) if attached
+      if user.id_document.attached?
+        id_document_path = save_attachment_to_temp(user.id_document)
+        add_image_to_pdf(id_document_path, pdf, "ID Document:")
+      end
+
+      # Add Utility Bill (can be image or PDF) if attached
+      if user.utility_bill.attached?
+        utility_bill_path = save_attachment_to_temp(user.utility_bill)
+        case file_mime_type(utility_bill_path)
+        when 'application/pdf'
+          image_path = convert_pdf_to_image(utility_bill_path)
+          add_image_to_pdf(image_path, pdf, "Utility Bill:")
+        when 'image/jpeg', 'image/png'
+          add_image_to_pdf(utility_bill_path, pdf, "Utility Bill:")
+        else
+          Rails.logger.error "Unsupported file type: #{file_mime_type(utility_bill_path)}"
+        end
+      end
+    end
 
     letter.send(pdf_attachment).attach(io: File.open(pdf_path), filename: "#{bureau_name}_letter_#{letter.id}.pdf", content_type: 'application/pdf')
   end

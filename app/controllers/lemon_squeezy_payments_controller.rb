@@ -5,7 +5,7 @@ class LemonSqueezyPaymentsController < ApplicationController
     checkout_session = LemonSqueezy::Checkout.create(
       store_id: ENV["lemon_squeezy_store_id"], # Your store ID
       variant_id: ENV["lemon_squeezy_product_id"], # Your product's variant ID
-      custom_price: 1599, # Price in cents,
+      custom_price: 2499, # Price in cents,
       product_options: {redirect_url: create_attack_url(round: round, payment_success: "true")}
     )
 

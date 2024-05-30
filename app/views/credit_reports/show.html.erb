@@ -1,5 +1,17 @@
-<% if @credit_report.document.attached? %>
-  <%= link_to 'Download Credit Report', download_credit_report_path(@credit_report), class: 'btn btn-primary' %>
-<% else %>
-  <p>No document attached to this credit report.</p>
-<% end %>
+<div class="mx-auto max-w-screen-2xl p-4 md:p-6 2xl:p-10">
+  <div class="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark mb-8">
+    <div class="border-b border-stroke px-7 py-4 dark:border-strokedark">
+      <h3 class="font-medium text-black dark:text-white">Credit Report</h3>
+    </div>
+    <div class="p-7">
+      <p>Username: <%= @credit_report.username %></p>
+      <p>Service: <%= @credit_report.service %></p>
+
+      <% if @credit_report.document.attached? %>
+        <%= link_to 'Download Document', rails_blob_path(@credit_report.document, disposition: 'attachment'), class: 'px-6 py-2 font-medium text-white bg-black rounded hover:bg-opacity-90' %>
+      <% else %>
+        <p>No document attached.</p>
+      <% end %>
+    </div>
+  </div>
+</div>

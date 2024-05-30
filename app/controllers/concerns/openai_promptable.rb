@@ -225,7 +225,7 @@ module OpenaiPromptable
 
   def format_accounts(accounts, bureau)
     accounts.select { |account| account[:bureau].include?(bureau.downcase) }
-            .map { |account| "- Account Number: #{account[:number]}, Bureau: #{bureau.capitalize}" }
+            .map { |account| "- Account Number: #{account[:number]}xxxx, Bureau: #{bureau.capitalize}" }
             .join("\n")
   end
 end
