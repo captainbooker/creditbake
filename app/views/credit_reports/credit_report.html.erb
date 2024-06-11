@@ -1,28 +1,76 @@
-<div class="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark mb-8">
-  <div class="border-b border-stroke px-7 py-4 dark:border-strokedark">
-    <h3 class="font-medium text-black dark:text-white">Import Credit Report</h3>
-  </div>
-  <div class="p-7">
-    <%= form_with url: import_credit_report_path, method: :post, local: true, html: { id: 'credit-report-form' } do |f| %>
-      <div class="mb-4">
-        <%= f.label :service, "Credit Monitoring Service", class: "block text-sm font-medium text-black dark:text-white" %>
-        <%= f.select :service, options_for_select([['IdentityIQ', 'identityiq'], ['Credit Dyno', 'creditdyno']]), {}, class: "w-full mt-2 p-2 border border-stroke dark:border-strokedark rounded" %>
+<div class="mx-auto max-w-screen-3xl p-4 md:p-6 2xl:p-10 custom-background-color">
+  <div class="mx-auto max-w-270">
+    <div class="mb-12 text-3xl mt-4">
+      <h3 class="font-semibold text-black">Import Credit Report</h3>
+    </div>
+    <div class="border border-gray-300 rounded-lg p-6 shadow-md mb-8">
+      <%= form_with url: import_credit_report_path, method: :post, local: true, html: { id: 'credit-report-form' } do |f| %>
+        <div class="mb-12 text-xl mt-4">
+          <h3 class="font-normal text-black">Credit Monitoring Credentials</h3>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+          <div>
+            <%= f.label :service, "Credit Monitoring Service", class: "block text-sm font-medium text-gray-700 mb-1" %>
+            <%= f.select :service, options_for_select([['IdentityIQ', 'identityiq'], ['Credit Dyno', 'creditdyno']]), {}, class: "w-full mt-1 p-3 border rounded-lg bg-gray-100 text-gray-500" %>
+          </div>
+          <div>
+            <%= f.label :username, "User Name", class: "block text-sm font-medium text-gray-700 mb-1" %>
+            <%= f.text_field :username, placeholder: "Enter Your Name", class: "w-full mt-1 p-3 border rounded-lg bg-gray-100 text-gray-500" %>
+          </div>
+          <div>
+            <%= f.label :security_question, "Security Question", class: "block text-sm font-medium text-gray-700 mb-1" %>
+            <%= f.text_field :security_question, placeholder: "Select Security Question", class: "w-full mt-1 p-3 border rounded-lg bg-gray-100 text-gray-500" %>
+          </div>
+          <div>
+            <%= f.label :password, "Password", class: "block text-sm font-medium text-gray-700 mb-1" %>
+            <div class="relative">
+              <%= f.password_field :password, placeholder: "Enter Your Password", class: "w-full mt-1 p-3 border rounded-lg bg-gray-100 text-gray-500 pr-10" %>
+              <span class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-500">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 01-6 0 3 3 0 016 0z" />
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.455 5 12 5c4.545 0 8.268 2.943 9.542 7-.342 1.022-.888 1.974-1.605 2.767M15 12a3 3 0 01-6 0" />
+                </svg>
+              </span>
+            </div>
+          </div>
+          <div class="text-center md:col-span-2">
+            <%= f.submit "Import Credit Report", class: "px-6 py-3 bg-blue-500 text-white font-medium rounded-lg hover:bg-blue-600 transition duration-300" %>
+          </div>
+        </div>
+      <% end %>
+    </div>
+    
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <!-- Previous Credit Reports Section -->
+      <div class="p-6 mb-8">
+        <div class="mb-8 text-xl mt-4">
+          <h3 class="font-normal text-black">Previous Credit Reports</h3>
+        </div>
+        <% current_user.credit_reports.each do |report| %>
+          <div class="border rounded-lg p-4 mb-2 bg-white">
+            <div class="flex justify-between">
+              <div>
+                <p class="font-semibold text-black"><%= report.created_at.strftime("%B %d, %Y") %> Credit Report</p>
+                <p class="text-gray-500">Added On <%= report.created_at.strftime("%B %d, %Y") %></p>
+              </div>
+            </div>
+          </div>
+        <% end %>
       </div>
-      <div class="mb-4">
-        <%= f.label :username, "Username", class: "block text-sm font-medium text-black dark:text-white" %>
-        <%= f.text_field :username, class: "w-full mt-2 p-2 border border-stroke dark:border-strokedark rounded" %>
+
+      <!-- Tips Section -->
+      <div class="border border-gray-300 rounded-lg p-6 shadow-md mb-8">
+        <div class="flex items-center mb-4">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-yellow-500 mr-2" viewBox="0 0 20 20" fill="currentColor">
+            <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.721-1.36 3.486 0l6.267 11.14C18.771 15.597 17.943 17 16.528 17H3.472c-1.415 0-2.243-1.403-1.482-2.761l6.267-11.14zM11 13a1 1 0 10-2 0 1 1 0 002 0zm-1-4a1 1 0 00-.8.4l-1 1.5a1 1 0 001.6 1.2l.2-.3V13a1 1 0 002 0V8.618l.4.6a1 1 0 001.6-1.2l-1-1.5A1 1 0 0010 9z" clip-rule="evenodd" />
+          </svg>
+          <h3 class="font-normal text-black">Tips to Improve Credit Report</h3>
+        </div>
+        <ul class="list-disc list-inside text-gray-700">
+          <li>Lorem Ipsum Dolor Sit Ament</li>
+          <li>Lorem Ipsum Dolor Sit Ament</li>
+        </ul>
       </div>
-      <div class="mb-4">
-        <%= f.label :password, "Password", class: "block text-sm font-medium text-black dark:text-white" %>
-        <%= f.password_field :password, class: "w-full mt-2 p-2 border border-stroke dark:border-strokedark rounded" %>
-      </div>
-      <div class="mb-4">
-        <%= f.label :security_question, "Security Question", class: "block text-sm font-medium text-black dark:text-white" %>
-        <%= f.text_field :security_question, class: "w-full mt-2 p-2 border border-stroke dark:border-strokedark rounded" %>
-      </div>
-      <div class="flex justify-end mt-4">
-        <%= f.submit "Import Credit Report", class: "px-6 py-2 font-medium text-gray bg-primary rounded hover:bg-opacity-90", id: 'import-button' %>
-      </div>
-    <% end %>
+    </div>
   </div>
 </div>

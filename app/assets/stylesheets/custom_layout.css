@@ -3128,3 +3128,11 @@ body {
 .bg-primary {
   background-color: #059DE2;
 }
+
+.white-text {
+  color: white;
+}
+
+.custom-background-color {
+  background-color: #fcfcfc;
+}

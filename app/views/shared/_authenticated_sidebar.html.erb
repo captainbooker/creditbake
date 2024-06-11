@@ -1,77 +1,77 @@
 <!-- app/views/layouts/_sidebar.html.erb -->
-<div class="w-64 bg-white h-screen p-4 flex flex-col overflow-y-auto">
-    <div class="flex items-center justify-center mb-6">
-        <%= image_tag "creditbake-logo.png", alt: "CreditBake Logo", class: "h-10" %>
+<div class="w-64 custom-background-color h-screen p-4 flex flex-col overflow-y-auto border-r border-gray-200">
+  <div class="flex items-center justify-center mb-6">
+    <%= image_tag "creditbake-logo.png", alt: "CreditBake Logo", class: "h-6 mb-6" %>
+  </div>
+  <div class="space-y-2">
+    <%= link_to authenticated_root_path, class: "flex items-center space-x-3 py-2 px-4 rounded-lg #{'bg-blue-500 text-white' if current_page?(authenticated_root_path)} hover:bg-blue-100 hover:text-blue-500 transition duration-300" do %>
+      <span class="material-icons">dashboard</span>
+      <span class="font-medium">Dashboard</span>
+    <% end %>
+    <%= link_to credit_report_path, class: "flex items-center space-x-3 py-2 px-4 rounded-lg #{'bg-blue-500 text-white' if current_page?(credit_report_path)} hover:bg-blue-100 hover:text-blue-500 transition duration-300" do %>
+      <span class="material-icons">cloud_upload</span>
+      <span class="font-medium">Import Credit Report</span>
+    <% end %>
+    <%= link_to letters_path, class: "flex items-center space-x-3 py-2 px-4 rounded-lg #{'bg-blue-500 text-white' if current_page?(letters_path)} hover:bg-blue-100 hover:text-blue-500 transition duration-300" do %>
+      <span class="material-icons">description</span>
+      <span class="font-medium">Letters</span>
+    <% end %>
+    <%= link_to challenge_path, class: "flex items-center space-x-3 py-2 px-4 rounded-lg #{'bg-blue-500 text-white' if current_page?(challenge_path)} hover:bg-blue-100 hover:text-blue-500 transition duration-300" do %>
+      <span class="material-icons">star</span>
+      <span class="font-medium">Challenge</span>
+    <% end %>
+    <%= link_to user_settings_path, class: "flex items-center space-x-3 py-2 px-4 rounded-lg #{'bg-blue-500 text-white' if current_page?(user_settings_path)} hover:bg-blue-100 hover:text-blue-500 transition duration-300" do %>
+      <span class="material-icons">settings</span>
+      <span class="font-medium">Settings</span>
+    <% end %>
+    <%= link_to destroy_user_session_path, method: :delete, class: "flex items-center space-x-3 py-2 px-4 rounded-lg hover:bg-blue-100 hover:text-blue-500 transition duration-300 text-gray-700" do %>
+      <span class="material-icons">power_settings_new</span>
+      <span class="font-medium">Logout</span>
+    <% end %>
+  </div>
+  <div class="mt-auto">
+    <div class="bg-blue-100 text-blue-600 p-4 rounded-lg mb-6 text-center">
+      <div class="flex items-center justify-center mb-4">
+        <span class="material-icons text-4xl">stars</span>
+      </div>
+      <h3 class="text-lg font-semibold">CreditBake PRO</h3>
+      <p class="text-sm">Get All Dashboards And 300+ UI Elements</p>
+      <button class="mt-4 bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600 transition duration-300">Get Started With PRO</button>
     </div>
-    <div class="space-y-2">
-        <%= link_to authenticated_root_path, class: "flex items-center space-x-3 py-2 px-4 rounded #{'bg-blue-500 text-white' if current_page?(authenticated_root_path)} hover:bg-blue-100 hover:text-white" do %>
-            <span class="material-icons">dashboard</span>
-            <span>Dashboard</span>
-        <% end %>
-        <%= link_to credit_report_path, class: "flex items-center space-x-3 py-2 px-4 rounded #{'bg-blue-500 text-white' if current_page?(challenge_path)} hover:bg-blue-100 hover:text-white" do %>
-            <span class="material-icons">star</span>
-            <span>Import Credit Report</span>
-        <% end %>
-        <%= link_to challenge_path, class: "flex items-center space-x-3 py-2 px-4 rounded #{'bg-blue-500 text-white' if current_page?(challenge_path)} hover:bg-blue-100 hover:text-white" do %>
-            <span class="material-icons">star</span>
-            <span>Challenge</span>
-        <% end %>
-        <%= link_to letters_path, class: "flex items-center space-x-3 py-2 px-4 rounded #{'bg-blue-500 text-white' if current_page?(letters_path)} hover:bg-blue-100 hover:text-white" do %>
-            <span class="material-icons">description</span>
-            <span>Letters</span>
-        <% end %>
-        <%= link_to user_settings_path, class: "flex items-center space-x-3 py-2 px-4 rounded #{'bg-blue-500 text-white' if current_page?(user_settings_path)} hover:bg-blue-100 hover:text-white" do %>
-            <span class="material-icons">settings</span>
-            <span>Settings</span>
-        <% end %>
-        <%= link_to destroy_user_session_path, method: :delete, class: "flex items-center space-x-3 py-2 px-4 rounded hover:bg-blue-100 hover:text-white text-gray-700" do %>
-            <span class="material-icons">power_settings_new</span>
-            <span>Logout</span>
-        <% end %>
+    <div class="bg-gray-100 p-4 rounded-lg mb-4">
+      <div class="text-gray-600 text-sm">Your Balance</div>
+      <div class="flex items-center justify-between mt-2">
+        <div class="text-lg font-semibold">$20.23</div>
+        <div class="flex items-center text-green-500">
+          <span class="material-icons text-sm">arrow_upward</span>
+          <span>23.12%</span>
+        </div>
+        <div class="flex items-center text-red-500">
+          <span class="material-icons text-sm">arrow_downward</span>
+          <span>23.12%</span>
+        </div>
+      </div>
+      <div class="flex justify-between mt-2 text-sm">
+        <div class="text-gray-600">Pending Credits</div>
+        <div>$0.12</div>
+      </div>
+      <div class="flex justify-between mt-2 text-sm">
+        <div class="text-gray-600">Free Attack Credits</div>
+        <div>5</div>
+      </div>
     </div>
-    <div class="mt-auto">
-        <div class="bg-blue-100 text-blue-600 p-4 rounded mb-6 text-center">
-            <div class="flex items-center justify-center mb-4">
-                <span class="material-icons text-4xl">stars</span>
-            </div>
-            <h3 class="text-lg font-semibold">CreditBake PRO</h3>
-            <p class="text-sm">Get All Dashboards And 300+ UI Elements</p>
-            <button class="mt-4 bg-blue-500 text-white py-2 px-4 rounded">Get Started With PRO</button>
+    <div class="flex items-center space-x-4 p-2 relative group">
+      <%= image_tag "creditbake-logo.png", alt: "Profile Picture", class: "h-10 w-10 rounded-full" %>
+      <div>
+        <div class="font-semibold">Darren Booker</div>
+        <div class="text-gray-600 text-sm">Admin</div>
+      </div>
+      <div class="relative">
+        <button class="material-icons group-hover:block hidden">more_vert</button>
+        <div class="absolute right-0 mt-2 w-48 bg-white border rounded-lg shadow-lg py-1 hidden group-hover:block">
+          <%= link_to 'Logout', destroy_user_session_path, method: :delete, class: "block px-4 py-2 text-gray-700 hover:bg-gray-100" %>
         </div>
-        <div class="bg-gray-100 p-4 rounded mb-4">
-            <div class="text-gray-600 text-sm">Your Balance</div>
-            <div class="flex items-center justify-between mt-2">
-                <div class="text-lg font-semibold">$20.23</div>
-                <div class="flex items-center text-green-500">
-                    <span class="material-icons text-sm">arrow_upward</span>
-                    <span>23.12%</span>
-                </div>
-                <div class="flex items-center text-red-500">
-                    <span class="material-icons text-sm">arrow_downward</span>
-                    <span>23.12%</span>
-                </div>
-            </div>
-            <div class="flex justify-between mt-2 text-sm">
-                <div class="text-gray-600">Pending Credits</div>
-                <div>$0.12</div>
-            </div>
-            <div class="flex justify-between mt-2 text-sm">
-                <div class="text-gray-600">Free Attack Credits</div>
-                <div>5</div>
-            </div>
-        </div>
-        <div class="flex items-center space-x-4 p-2 relative group">
-            <%= image_tag "creditbake-logo.png", alt: "Profile Picture", class: "h-10 w-10 rounded-full" %>
-            <div>
-                <div class="font-semibold">Darren Booker</div>
-                <div class="text-gray-600 text-sm">Admin</div>
-            </div>
-            <div class="relative">
-                <button class="material-icons group-hover:block hidden">more_vert</button>
-                <div class="absolute right-0 mt-2 w-48 bg-white border rounded shadow-lg py-1 hidden group-hover:block">
-                    <%= link_to 'Logout', destroy_user_session_path, method: :delete, class: "block px-4 py-2 text-gray-700 hover:bg-gray-100" %>
-                </div>
-            </div>
-        </div>
+      </div>
     </div>
+  </div>
 </div>

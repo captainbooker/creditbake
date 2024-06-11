@@ -1,49 +1,47 @@
-<!-- app/views/layouts/_navbar.html.erb -->
-<header class="sticky top-0 z-50 flex w-full bg-white shadow-lg dark:bg-gray-800">
-  <div class="flex flex-grow items-center justify-between px-4 py-4 md:px-6 2xl:px-11">
-    <div class="flex items-center gap-2 sm:gap-4">
-      <!-- Hamburger Toggle BTN -->
-      <button class="block rounded-sm border border-gray-300 bg-white p-1.5 shadow-sm dark:border-gray-600 dark:bg-gray-800 lg:hidden">
-        <span class="relative block h-5.5 w-5.5 cursor-pointer">
-          <span class="block absolute right-0 h-full w-full">
-            <span class="relative left-0 top-0 my-1 block h-0.5 w-full rounded-sm bg-black dark:bg-white"></span>
-            <span class="relative left-0 top-0 my-1 block h-0.5 w-full rounded-sm bg-black dark:bg-white"></span>
-            <span class="relative left-0 top-0 my-1 block h-0.5 w-full rounded-sm bg-black dark:bg-white"></span>
-          </span>
-        </span>
-      </button>
-      <!-- Hamburger Toggle BTN -->
+<div class="flex items-center space-x-4">
+  <!-- Search Bar -->
+  <div class="relative">
+    <input type="text" placeholder="Search" class="rounded-full py-2 px-4 pl-10 bg-gray-50 border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white">
+    <div class="absolute left-0 top-0 flex items-center h-full pl-3">
+      <svg class="w-5 h-5 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+        <path fill-rule="evenodd" d="M12.9 14.32a7.5 7.5 0 111.41-1.41l5.7 5.7a1 1 0 01-1.41 1.41l-5.7-5.7zm-1.4-5.82a5.5 5.5 0 10-11 0 5.5 5.5 0 0011 0z" clip-rule="evenodd"></path>
+      </svg>
     </div>
-
-    <!-- Search Input -->
-    <div class="relative flex-grow max-w-lg mx-auto">
-      <input type="text" class="w-6/12 pl-10 pr-4 py-2 rounded-full bg-gray-100 focus:outline-none" placeholder="Search">
-      <span class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">
-        <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 20 20">
-          <path d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1111.44 3.74l4.42 4.42a1 1 0 01-1.42 1.42l-4.42-4.42A6 6 0 012 8z" />
-        </svg>
-      </span>
-    </div>
-    <!-- Search Input -->
-
-    <!-- Icons -->
-    <div class="flex items-center space-x-4">
-      <button class="focus:outline-none">
-        <svg class="h-6 w-6 text-blue-500" fill="currentColor" viewBox="0 0 20 20">
-          <path d="M10 2a7 7 0 017 7c0 1.85-.636 3.54-1.707 4.854A7.964 7.964 0 0110 16c-1.85 0-3.54-.636-4.854-1.707A7.964 7.964 0 012 9a7 7 0 018-7zM9 7a1 1 0 112 0v2a1 1 0 01-2 0V7zm1 9a1 1 0 110-2 1 1 0 010 2z" />
-        </svg>
-      </button>
-      <button class="focus:outline-none">
-        <svg class="h-6 w-6 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
-          <path d="M10 2a7 7 0 017 7c0 1.85-.636 3.54-1.707 4.854A7.964 7.964 0 0110 16c-1.85 0-3.54-.636-4.854-1.707A7.964 7.964 0 012 9a7 7 0 018-7zM9 7a1 1 0 112 0v2a1 1 0 01-2 0V7zm1 9a1 1 0 110-2 1 1 0 010 2z" />
-        </svg>
-      </button>
-      <button class="focus:outline-none">
-        <svg class="h-6 w-6 text-blue-500" fill="currentColor" viewBox="0 0 20 20">
-          <path d="M10 2a7 7 0 017 7c0 1.85-.636 3.54-1.707 4.854A7.964 7.964 0 0110 16c-1.85 0-3.54-.636-4.854-1.707A7.964 7.964 0 012 9a7 7 0 018-7zM9 7a1 1 0 112 0v2a1 1 0 01-2 0V7zm1 9a1 1 0 110-2 1 1 0 010 2z" />
-        </svg>
-      </button>
-    </div>
-    <!-- Icons -->
   </div>
-</header>
+  
+  <!-- Toggle Button -->
+  <div class="flex items-center space-x-2">
+    <div class="relative">
+      <input type="checkbox" id="toggle" class="hidden">
+      <label for="toggle" class="block w-12 h-6 bg-gray-300 rounded-full shadow-inner"></label>
+      <div class="dot absolute w-6 h-6 bg-white rounded-full shadow left-0 top-0 transition"></div>
+      <div class="absolute left-1 top-1.5 flex items-center">
+        <svg class="w-5 h-5 text-blue-500" fill="currentColor" viewBox="0 0 24 24">
+          <path d="M12 4.5a7.5 7.5 0 100 15 7.5 7.5 0 000-15zm0 13.5a6 6 0 110-12 6 6 0 010 12zm3.5-5.25a.75.75 0 10-1.5 0 .75.75 0 001.5 0zm-7 0a.75.75 0 10-1.5 0 .75.75 0 001.5 0z" />
+        </svg>
+      </div>
+      <div class="absolute right-1 top-1.5 flex items-center">
+        <svg class="w-5 h-5 text-gray-400" fill="currentColor" viewBox="0 0 24 24">
+          <path d="M12 6a7 7 0 00-7 7 7 7 0 007 7 7 7 0 007-7 7 7 0 00-7-7zm0 12a5 5 0 110-10 5 5 0 010 10zm0-1.25a3.75 3.75 0 100-7.5 3.75 3.75 0 000 7.5z" />
+        </svg>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Notification Bell -->
+  <div class="flex items-center">
+    <svg class="w-6 h-6 text-blue-500" fill="currentColor" viewBox="0 0 24 24">
+      <path d="M12 2a7 7 0 00-7 7v4.72L4.17 17.6a1 1 0 00-.17.6v1.8a1 1 0 001 1h14a1 1 0 001-1v-1.8a1 1 0 00-.17-.6L19 13.72V9a7 7 0 00-7-7zM6.2 16h11.6l.77.93v.57H5.43v-.57L6.2 16zM12 4a5 5 0 015 5v5H7V9a5 5 0 015-5zm0 16a2 2 0 001.73-1H10.27A2 2 0 0012 20z" />
+    </svg>
+  </div>
+</div>
+
+<script>
+  const toggle = document.querySelector("#toggle");
+  const dot = document.querySelector(".dot");
+  
+  toggle.addEventListener("change", () => {
+    dot.classList.toggle("translate-x-6");
+    dot.classList.toggle("bg-blue-500");
+  });
+</script>
