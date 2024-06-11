@@ -13,7 +13,9 @@ require "action_text/engine"
 require "action_view/railtie"
 require "action_cable/engine"
 require "sprockets/railtie"
-require 'dotenv/load'
+if ['development', 'test'].include? ENV['RAILS_ENV']
+  require 'dotenv/load'
+end
 
 # require "rails/test_unit/railtie"
 
