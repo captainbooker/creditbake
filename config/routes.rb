@@ -20,6 +20,7 @@ Rails.application.routes.draw do
 
   get 'challenge', to: 'dashboards#disputing', as: 'challenge'
   get 'letters', to: 'dashboards#letters', as: 'letters'
+  get 'credit_report', to: 'credit_reports#credit_report', as: 'credit_report'
   get 'create_attack', to: 'dashboards#create_attack', as: 'create_attack'
   patch 'disputing/save_challenges', to: 'dashboards#save_challenges', as: 'save_challenges'
   post 'import_credit_report', to: 'credit_reports#import', as: 'import_credit_report'

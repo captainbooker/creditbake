@@ -1,0 +1,28 @@
+<div class="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark mb-8">
+  <div class="border-b border-stroke px-7 py-4 dark:border-strokedark">
+    <h3 class="font-medium text-black dark:text-white">Import Credit Report</h3>
+  </div>
+  <div class="p-7">
+    <%= form_with url: import_credit_report_path, method: :post, local: true, html: { id: 'credit-report-form' } do |f| %>
+      <div class="mb-4">
+        <%= f.label :service, "Credit Monitoring Service", class: "block text-sm font-medium text-black dark:text-white" %>
+        <%= f.select :service, options_for_select([['IdentityIQ', 'identityiq'], ['Credit Dyno', 'creditdyno']]), {}, class: "w-full mt-2 p-2 border border-stroke dark:border-strokedark rounded" %>
+      </div>
+      <div class="mb-4">
+        <%= f.label :username, "Username", class: "block text-sm font-medium text-black dark:text-white" %>
+        <%= f.text_field :username, class: "w-full mt-2 p-2 border border-stroke dark:border-strokedark rounded" %>
+      </div>
+      <div class="mb-4">
+        <%= f.label :password, "Password", class: "block text-sm font-medium text-black dark:text-white" %>
+        <%= f.password_field :password, class: "w-full mt-2 p-2 border border-stroke dark:border-strokedark rounded" %>
+      </div>
+      <div class="mb-4">
+        <%= f.label :security_question, "Security Question", class: "block text-sm font-medium text-black dark:text-white" %>
+        <%= f.text_field :security_question, class: "w-full mt-2 p-2 border border-stroke dark:border-strokedark rounded" %>
+      </div>
+      <div class="flex justify-end mt-4">
+        <%= f.submit "Import Credit Report", class: "px-6 py-2 font-medium text-gray bg-primary rounded hover:bg-opacity-90", id: 'import-button' %>
+      </div>
+    <% end %>
+  </div>
+</div>

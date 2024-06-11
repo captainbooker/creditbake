@@ -5,7 +5,8 @@
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
-
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
     <%= javascript_pack_tag 'application', 'data-turbolinks-track': 'reload' %>
     <%= stylesheet_link_tag 'custom_layout', media: 'all' %>
   </head>
@@ -16,12 +17,6 @@
     <% end %>
     <%= render 'shared/flash_message' %>
     <%= yield %>
-
-    <a href="javascript:void(0)"
-    class="back-to-top fixed bottom-8 right-8 left-auto z-[999] hidden h-10 w-10 items-center justify-center rounded-md bg-primary text-white shadow-md transition duration-300 ease-in-out hover:bg-dark">
-      <span class="mt-[6px] h-3 w-3 rotate-45 border-t border-l border-white"></span>
-    </a>
-
-    <%= render "shared/footer" %>
+    <%= render "shared/footer" %> 
   </body>
 </html>

@@ -126,6 +126,9 @@ class CreditReportsController < ApplicationController
     process_parsed_content(content, credit_report)
   end
 
+  def credit_report
+  end
+
   def process_parsed_content(content, credit_report)
     inquiries = content[:inquiries]
     accounts = content[:accounts]

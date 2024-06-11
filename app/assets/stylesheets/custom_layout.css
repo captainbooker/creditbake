@@ -4,6 +4,7 @@
 
 @import "animate.css";
 @import url("https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap");
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
 
 /*
 ! tailwindcss v3.3.5 | MIT License | https://tailwindcss.com
@@ -136,7 +137,7 @@ code,
 kbd,
 samp,
 pre {
-  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  font-family: 'Poppins', sans-serif;
   /* 1 */
   font-size: 1em;
   /* 2 */
@@ -196,7 +197,7 @@ input,
 optgroup,
 select,
 textarea {
-  font-family: inherit;
+  font-family: 'Poppins', sans-serif;
   /* 1 */
   font-feature-settings: inherit;
   /* 1 */
@@ -442,7 +443,7 @@ video {
 }
 
 body {
-  font-family: "Inter", sans-serif;
+  font-family: 'Poppins', sans-serif;
 }
 
 *, ::before, ::after{
@@ -3064,4 +3065,66 @@ body {
   .\32xl\:p-\[60px\]{
     padding: 60px;
   }
+}
+
+.hover\:bg-blue-100:hover {
+  background-color: #059de2;
+}
+
+.hover\:text-white:hover {
+  color: white;
+}
+
+/* Custom styles */
+.bg-gray-100 {
+  background-color: #f3f4f6;
+}
+
+.text-blue-500 {
+  color: #059de2;
+}
+
+.text-gray-400 {
+  color: #9ca3af;
+}
+
+.shadow-lg {
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+.shadow-sm {
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+}
+
+.focus\:outline-none:focus {
+  outline: none;
+}
+
+.peer:checked ~ .content {
+  background-color: #059DE2;
+  color: white;
+}
+
+.custom-blue {
+  background-color: #059DE2;
+}
+
+.custom-blue-text {
+  color: #059DE2;
+}
+
+.hover-blue-text:hover {
+  color: #059DE2;
+}
+
+.bg-secondary {
+  background-color: #0066CC;
+}
+
+.bg-secondary-dark {
+  background-color: #004A99;
+}
+
+.bg-primary {
+  background-color: #059DE2;
 }

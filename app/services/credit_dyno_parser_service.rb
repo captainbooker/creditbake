@@ -25,14 +25,11 @@ class CreditDynoParserService
       bureau = record.at_css('p.bureau.arr-title-sm')&.text&.strip
       address = address_elements.map(&:text).join(', ')
   
-      puts "Inquiry Date: #{inquiry_date}"  # Debugging statement
-      puts "Inquiry Name: #{inquiry_name}"  # Debugging statement
-      puts "Type of Business: #{type_of_business}"  # Debugging statement
-      puts "Bureau: #{bureau}"  # Debugging statement
-      puts "Address: #{address}"  # Debugging statement
-  
       next unless inquiry_date.present?
       next unless bureau.present?
+  
+      # Check if the inquiry with the same name and bureau already exists
+      next if inquiries.any? { |inquiry| inquiry[:inquiry_name] == inquiry_name && inquiry[:credit_bureau] == bureau }
   
       inquiries << {
         inquiry_name: inquiry_name,
@@ -43,7 +40,7 @@ class CreditDynoParserService
       }
     end
     inquiries
-  end  
+  end   
 
   def extract_accounts
     accounts = []
