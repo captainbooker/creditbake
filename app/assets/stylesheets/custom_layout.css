@@ -15,6 +15,18 @@
 2. Allow adding a border to an element by just adding a border-width. (https://github.com/tailwindcss/tailwindcss/pull/116)
 */
 
+code,
+kbd,
+samp,
+pre {
+  font-family: 'Poppins', sans-serif;
+  /* 1 */
+  font-size: 1em;
+  /* 2 */
+}
+
+
+
 *,
 ::before,
 ::after {
@@ -132,16 +144,6 @@ strong {
 1. Use the user's configured `mono` font family by default.
 2. Correct the odd `em` font sizing in all browsers.
 */
-
-code,
-kbd,
-samp,
-pre {
-  font-family: 'Poppins', sans-serif;
-  /* 1 */
-  font-size: 1em;
-  /* 2 */
-}
 
 /*
 Add the correct font size in all browsers.
@@ -1582,12 +1584,12 @@ body {
 
   .lg\:text-body-color{
     --tw-text-opacity: 1;
-    color: rgb(99 115 129 / var(--tw-text-opacity));
+    color: rgba(99 115 129 / var(--tw-text-opacity));
   }
 
   .lg\:text-white{
     --tw-text-opacity: 1;
-    color: rgb(255 255 255 / var(--tw-text-opacity));
+    color: rgba(255 255 255 / var(--tw-text-opacity));
   }
 
   .lg\:opacity-0{
@@ -1616,7 +1618,7 @@ body {
 
   .group:hover .lg\:group-hover\:text-white{
     --tw-text-opacity: 1;
-    color: rgb(255 255 255 / var(--tw-text-opacity));
+    color: rgba(255 255 255 / var(--tw-text-opacity));
   }
 
   .group:hover .lg\:group-hover\:opacity-70{
@@ -1629,7 +1631,7 @@ body {
 
   :is(.dark .dark\:lg\:text-dark-6){
     --tw-text-opacity: 1;
-    color: rgb(156 163 175 / var(--tw-text-opacity));
+    color: rgba(156 163 175 / var(--tw-text-opacity));
   }
 }
 
