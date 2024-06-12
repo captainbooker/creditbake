@@ -1,7 +1,9 @@
 <header class="fixed top-0 left-0 z-50 w-full bg-white shadow-md">
   <div class="container mx-auto flex justify-between items-center p-4">
     <div class="flex items-center space-x-4">
-      <%= image_tag "logo.png", class: "w-24 h-6", alt: "CreditBake Logo" %>
+      <%= link_to unauthenticated_root_path do %>
+        <%= image_tag "logo.png", class: "w-24 h-6", alt: "CreditBake Logo" %>
+      <% end %>
     </div>
     <nav class="hidden md:flex justify-center flex-1 space-x-6">
       <a href="#home" class="text-lg font-medium text-gray-700 hover-blue-text transition-colors duration-300">Home</a>
@@ -12,8 +14,8 @@
       <a href="#blog" class="text-lg font-medium text-gray-700 hover-blue-text transition-colors duration-300">Blog</a>
     </nav>
     <div class="hidden sm:flex items-center space-x-4">
-      <a href="signin.html" class="text-lg font-medium text-gray-700 hover-blue-text transition-colors duration-300">Sign In</a>
-      <a href="signup.html" class="px-6 py-2 text-lg font-medium text-white custom-blue rounded hover:bg-blue-600 transition-colors duration-300">Sign Up</a>
+      <a href="<%= new_user_session_path %>" class="text-lg font-medium text-gray-700 hover-blue-text transition-colors duration-300">Sign In</a>
+      <a href="<%= new_user_registration_path %>" class="px-6 py-2 text-lg font-medium text-white custom-blue rounded hover:bg-blue-600 transition-colors duration-300">Sign Up</a>
     </div>
   </div>
 </header>
