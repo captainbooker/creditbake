@@ -12,12 +12,13 @@ module.exports = function (api) {
   ];
 
   const plugins = [
-    '@babel/plugin-transform-destructuring',
-    ['@babel/plugin-proposal-class-properties', { loose: true }],
-    '@babel/plugin-proposal-object-rest-spread',
     '@babel/plugin-syntax-dynamic-import',
+    '@babel/plugin-transform-destructuring',
+    ['@babel/plugin-transform-class-properties', { loose: true }],
+    ['@babel/plugin-transform-private-methods', { loose: true }],
+    ['@babel/plugin-transform-private-property-in-object', { loose: true }],
     '@babel/plugin-transform-runtime',
-    '@babel/plugin-transform-regenerator'
+    '@babel/plugin-transform-regenerator',
   ];
 
   return {
