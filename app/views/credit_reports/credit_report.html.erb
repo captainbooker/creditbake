@@ -43,8 +43,8 @@
     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
       <!-- Previous Credit Reports Section -->
       <div class="p-6 mb-8">
-        <div class="mb-8 text-xl mt-4">
-          <h3 class="font-normal text-black">Previous Credit Reports</h3>
+        <div class="mb-8 text-xl">
+          <h3 class="font-semibold text-black">Credit Reports</h3>
         </div>
         <% current_user.credit_reports.each do |report| %>
           <div class="border rounded-lg p-4 mb-2 bg-white">
@@ -61,14 +61,14 @@
       <!-- Tips Section -->
       <div class="border border-gray-300 rounded-lg p-6 shadow-md mb-8">
         <div class="flex items-center mb-4">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-yellow-500 mr-2" viewBox="0 0 20 20" fill="currentColor">
-            <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.721-1.36 3.486 0l6.267 11.14C18.771 15.597 17.943 17 16.528 17H3.472c-1.415 0-2.243-1.403-1.482-2.761l6.267-11.14zM11 13a1 1 0 10-2 0 1 1 0 002 0zm-1-4a1 1 0 00-.8.4l-1 1.5a1 1 0 001.6 1.2l.2-.3V13a1 1 0 002 0V8.618l.4.6a1 1 0 001.6-1.2l-1-1.5A1 1 0 0010 9z" clip-rule="evenodd" />
-          </svg>
+          <%= image_tag "ooui_notice.png", class: "h-5 w-5 mr-2" %>
           <h3 class="font-normal text-black">Tips to Improve Credit Report</h3>
         </div>
         <ul class="list-disc list-inside text-gray-700">
-          <li>Lorem Ipsum Dolor Sit Ament</li>
-          <li>Lorem Ipsum Dolor Sit Ament</li>
+          <li>Reduce Credit Card Balances</li>
+          <li>Maintain Older Accounts</li>
+          <li>Check Your Credit Report </li>
+          <li>Pay Bills on Time</li>
         </ul>
       </div>
     </div>

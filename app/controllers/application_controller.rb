@@ -1,4 +1,5 @@
 class ApplicationController < ActionController::Base
+  add_flash_types :info, :error, :success
   layout :layout_by_resource
   
   rescue_from CanCan::AccessDenied do |exception|

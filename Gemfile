@@ -43,7 +43,6 @@ gem 'mechanize'
 gem 'selenium-webdriver', '~> 4.4'
 gem 'activeadmin'
 gem 'rubyzip', '~> 2.3'
-gem 'lemonsqueezy'
 
 gem 'net-http'
 gem 'sendgrid-ruby'

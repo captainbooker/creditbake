@@ -27,8 +27,7 @@ Rails.application.routes.draw do
   patch 'disputing/save_challenges', to: 'dashboards#save_challenges', as: 'save_challenges'
   post 'import_credit_report', to: 'credit_reports#import', as: 'import_credit_report'
   post 'credit_reports/download_all_files', to: 'credit_reports#download_all_files', as: 'download_all_files'
-
-  post 'lemon_squeezy_payments/create', to: 'lemon_squeezy_payments#create'
+  
   get 'success', to: 'dashboards#success', as: 'success'
   get 'cancel', to: 'dashboards#cancel', as: 'cancel'
 
