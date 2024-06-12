@@ -15,7 +15,7 @@
     <% if !user_signed_in? %>
       <%= render 'layouts/navbar' %>
     <% end %>
-    <%= render 'shared/flash_message' %>
+    
     <%= yield %>
     <%= render "shared/footer" %> 
   </body>

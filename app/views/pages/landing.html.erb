@@ -166,9 +166,11 @@
         </ul>
       </div>
       <div class="px-6 py-4">
-        <button class="w-full bg-blue-500 text-white font-semibold py-3 rounded-md hover:bg-blue-600 transition duration-300">
-          Purchase Now
-        </button>
+        <%= link_to new_user_registration_path, class: "w-full" do %>
+          <button class="w-full bg-blue-500 text-white font-semibold py-3 rounded-md hover:bg-blue-600 transition duration-300">
+            Purchase Now
+          </button>
+        <% end %>
       </div>
     </div>
   </div>
@@ -185,14 +187,13 @@
       <div class="bg-white shadow-lg rounded-lg p-6 mb-6 lg:mb-0">
         <div class="flex items-center mb-4">
           <div class="flex-shrink-0">
-            <img class="w-12 h-12 rounded-full" src="https://via.placeholder.com/150" alt="Elmo Weber">
+            <%= image_tag "testimonial1.jpeg", class: "w-12 h-12 rounded-full" %>
           </div>
           <div class="ml-4">
-            <div class="text-lg font-medium text-gray-900">Elmo Weber</div>
-            <div class="text-gray-600">Founder, Fair Friend</div>
+            <div class="text-lg font-medium text-gray-900">Leul</div>
           </div>
         </div>
-        <p class="text-gray-600">“CreditBake has never let me down. I’m pleased with our partnership and they consistently develop reliable applications. They estimate a range of hours for each project and they manage it efficiently.”</p>
+        <p class="text-gray-600">“CreditBake has been a game-changer for me! I was struggling with inaccuracies on my credit report for years. With CreditBake's seamless import and automated dispute process, I saw results within just a few weeks. My credit score improved, and I couldn't be happier with the service!”</p>
         <div class="flex items-center mt-4">
           <div class="flex-shrink-0">
             <span class="text-yellow-500">★★★★★</span>
@@ -202,14 +203,13 @@
       <div class="bg-white shadow-lg rounded-lg p-6 mb-6 lg:mb-0">
         <div class="flex items-center mb-4">
           <div class="flex-shrink-0">
-            <img class="w-12 h-12 rounded-full" src="https://via.placeholder.com/150" alt="Elmo Weber">
+            <%= image_tag "testimonial2.jpeg", class: "w-12 h-12 rounded-full" %>
           </div>
           <div class="ml-4">
-            <div class="text-lg font-medium text-gray-900">Elmo Weber</div>
-            <div class="text-gray-600">Founder, Fair Friend</div>
+            <div class="text-lg font-medium text-gray-900">Valentina Guy</div>
           </div>
         </div>
-        <p class="text-gray-600">“CreditBake has never let me down. I’m pleased with our partnership and they consistently develop reliable applications. They estimate a range of hours for each project and they manage it efficiently.”</p>
+        <p class="text-gray-600">“I was skeptical about using an AI-powered credit repair service, but CreditBake exceeded all my expectations. The platform is user-friendly, and the support team is incredibly responsive. Thanks to CreditBake, I've successfully removed several errors from my credit report and am on my way to achieving my financial goals.”</p>
         <div class="flex items-center mt-4">
           <div class="flex-shrink-0">
             <span class="text-yellow-500">★★★★★</span>
@@ -219,14 +219,13 @@
       <div class="bg-white shadow-lg rounded-lg p-6 mb-6 lg:mb-0">
         <div class="flex items-center mb-4">
           <div class="flex-shrink-0">
-            <img class="w-12 h-12 rounded-full" src="https://via.placeholder.com/150" alt="Elmo Weber">
+            <%= image_tag "testimonial3.jpeg", class: "w-12 h-12 rounded-full" %>
           </div>
           <div class="ml-4">
-            <div class="text-lg font-medium text-gray-900">Elmo Weber</div>
-            <div class="text-gray-600">Founder, Fair Friend</div>
+            <div class="text-lg font-medium text-gray-900">Derrick Gyamfi</div>
           </div>
         </div>
-        <p class="text-gray-600">“CreditBake has never let me down. I’m pleased with our partnership and they consistently develop reliable applications. They estimate a range of hours for each project and they manage it efficiently.”</p>
+        <p class="text-gray-600">“CreditBake has simplified the credit repair process for me. The integration with CreditDyno made importing my credit report effortless. Within a few months, CreditBake's intelligent dispute letters helped me clear up several discrepancies, significantly boosting my credit score. I highly recommend CreditBake to anyone looking to repair their credit”</p>
         <div class="flex items-center mt-4">
           <div class="flex-shrink-0">
             <span class="text-yellow-500">★★★★★</span>
@@ -235,7 +234,7 @@
       </div>
     </div>
     <div class="flex justify-center mt-8">
-      <button class="bg-primary text-white px-4 py-2 rounded-full hover:bg-blue-600">Start Using CreditBake</button>
+      <%= link_to "Start Using CreditBake", new_user_registration_path, class: "bg-primary text-white px-4 py-2 rounded-full hover:bg-blue-600" %>
     </div>
   </div>
 </section>
@@ -358,26 +357,27 @@
       </div>
       <div class="bg-white p-8 shadow-md rounded-lg">
         <h3 class="text-2xl font-bold text-blue-600 mb-6">Send us a Message</h3>
-        <form>
+        <%= form_with model: @contact_form, url: contacts_path, method: :post, local: true do |form| %>
           <div class="mb-4">
-            <label for="fullName" class="block text-gray-700 font-semibold mb-2">Full Name</label>
-            <input type="text" id="fullName" placeholder="Full Name" class="w-full p-3 border border-gray-300 rounded-md">
+            <%= form.label :full_name, "Full Name", class: "block text-gray-700 font-semibold mb-2" %>
+            <%= form.text_field :full_name, placeholder: "Full Name", class: "w-full p-3 border border-gray-300 rounded-md" %>
           </div>
           <div class="mb-4">
-            <label for="email" class="block text-gray-700 font-semibold mb-2">Email</label>
-            <input type="email" id="email" placeholder="Email" class="w-full p-3 border border-gray-300 rounded-md">
+            <%= form.label :email, "Email", class: "block text-gray-700 font-semibold mb-2" %>
+            <%= form.email_field :email, placeholder: "Email", class: "w-full p-3 border border-gray-300 rounded-md" %>
           </div>
           <div class="mb-4">
-            <label for="phone" class="block text-gray-700 font-semibold mb-2">Phone</label>
-            <input type="text" id="phone" placeholder="Phone" class="w-full p-3 border border-gray-300 rounded-md">
+            <%= form.label :phone, "Phone", class: "block text-gray-700 font-semibold mb-2" %>
+            <%= form.text_field :phone, placeholder: "Phone", class: "w-full p-3 border border-gray-300 rounded-md" %>
           </div>
           <div class="mb-4">
-            <label for="message" class="block text-gray-700 font-semibold mb-2">Message</label>
-            <textarea id="message" placeholder="Type your msg here" class="w-full p-3 border border-gray-300 rounded-md h-32"></textarea>
+            <%= form.label :message, "Message", class: "block text-gray-700 font-semibold mb-2" %>
+            <%= form.text_area :message, placeholder: "Type your message here", class: "w-full p-3 border border-gray-300 rounded-md h-32" %>
           </div>
-          <button type="submit" class="w-full bg-blue-600 text-white font-bold py-3 rounded-md hover:bg-blue-700 transition duration-300">Send</button>
-        </form>
+          <%= form.submit "Send", class: "w-full bg-blue-600 text-white font-bold py-3 rounded-md hover:bg-blue-700 transition duration-300" %>
+        <% end %>
       </div>
+
     </div>
   </div>
 </section>

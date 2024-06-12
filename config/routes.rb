@@ -1,4 +1,6 @@
 Rails.application.routes.draw do
+  get 'contacts/new'
+  get 'contacts/create'
   get 'stripe_payments/create'
   devise_for :admin_users, ActiveAdmin::Devise.config
   ActiveAdmin.routes(self)
@@ -29,6 +31,8 @@ Rails.application.routes.draw do
   post 'lemon_squeezy_payments/create', to: 'lemon_squeezy_payments#create'
   get 'success', to: 'dashboards#success', as: 'success'
   get 'cancel', to: 'dashboards#cancel', as: 'cancel'
+
+  resources :contacts, only: [:new, :create]
   
   authenticated :user do
     root 'dashboards#index', as: :authenticated_root
