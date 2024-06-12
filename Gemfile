@@ -45,6 +45,8 @@ gem 'activeadmin'
 gem 'rubyzip', '~> 2.3'
 gem 'lemonsqueezy'
 
+gem 'net-http'
+
 gem 'dotenv', groups: [:development, :test]
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console

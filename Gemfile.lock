@@ -376,6 +376,7 @@ DEPENDENCIES
   listen (~> 3.3)
   mechanize
   mini_magick
+  net-http
   pdf-reader
   pg (~> 1.1)
   prawn
