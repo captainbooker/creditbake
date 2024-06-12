@@ -13,3 +13,4 @@ def use_quotaguard_proxy(uri)
       yield http
     end
   end
+end
