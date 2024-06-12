@@ -115,7 +115,7 @@ class CreditReportsController < ApplicationController
     
     parser = case credit_report.service
              when 'identityiq'
-               IdentityIQParserService.new(document_content)
+              IdentityiqParserService.new(document_content)
              when 'creditdyno'
                CreditDynoParserService.new(document_content)
              else

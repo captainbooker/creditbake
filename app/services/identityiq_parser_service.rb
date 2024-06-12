@@ -1,5 +1,5 @@
 # app/services/identity_iq_parser_service.rb
-class IdentityIQParserService
+class IdentityiqParserService
   def initialize(content)
     @content = Nokogiri::HTML(content)
   end
