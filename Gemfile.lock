@@ -299,6 +299,7 @@ GEM
       faraday-multipart (>= 1)
     ruby-rc4 (0.1.5)
     ruby2_keywords (0.0.5)
+    ruby_http_client (3.5.2)
     rubyntlm (0.6.3)
     rubyzip (2.3.2)
     sass-rails (6.0.0)
@@ -316,6 +317,8 @@ GEM
       rubyzip (>= 1.2.2, < 3.0)
       websocket (~> 1.0)
     semantic_range (3.0.0)
+    sendgrid-ruby (6.4.0)
+      ruby_http_client (~> 3.4)
     spring (4.2.1)
     sprockets (4.2.1)
       concurrent-ruby (~> 1.0)
@@ -388,6 +391,7 @@ DEPENDENCIES
   rubyzip (~> 2.3)
   sass-rails (>= 6)
   selenium-webdriver (~> 4.4)
+  sendgrid-ruby
   spring
   turbolinks (~> 5)
   tzinfo-data

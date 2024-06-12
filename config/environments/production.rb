@@ -40,6 +40,17 @@ Rails.application.configure do
   # Store uploaded files on the local file system (see config/storage.yml for options).
   config.active_storage.service = :local
 
+  config.action_mailer.smtp_settings = {
+    address: 'smtp.sendgrid.net',
+    port: 587,
+    domain: 'creditbake.com',
+    authentication: :plain,
+    user_name: 'apikey', # This is the string "apikey", not your actual API key
+    password: ENV['SENDGRID_API_KEY'],
+    enable_starttls_auto: true
+  }
+
+  config.action_mailer.default_url_options = { host: 'yourdomain.com', protocol: 'https' }
   # Mount Action Cable outside main process or domain.
   # config.action_cable.mount_path = nil
   # config.action_cable.url = 'wss://example.com/cable'

@@ -1,4 +1,7 @@
 class ApplicationMailer < ActionMailer::Base
-  default from: 'from@example.com'
+  require 'sendgrid-ruby'
+  include SendGrid
+
+  default from: 'darren@creditbake.com'
   layout 'mailer'
 end

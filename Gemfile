@@ -46,6 +46,7 @@ gem 'rubyzip', '~> 2.3'
 gem 'lemonsqueezy'
 
 gem 'net-http'
+gem 'sendgrid-ruby'
 
 gem 'dotenv', groups: [:development, :test]
 group :development, :test do
