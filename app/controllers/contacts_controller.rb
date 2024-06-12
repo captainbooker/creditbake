@@ -8,9 +8,9 @@ class ContactsController < ApplicationController
 
     if @contact_form.valid?
       ContactMailer.with(contact_form: @contact_form).send_contact_email.deliver_now
-      redirect_to new_contact_path, notice: 'Your message has been sent!'
+      redirect_to unauthenticated_root_path, notice: 'Your message has been sent!'
     else
-      render :new
+      redirect_to unauthenticated_root_path
     end
   end
 

@@ -13,5 +13,10 @@
  *= require_tree .
  *= require_self
  */
- 
+
+
  @import "application.tailwind.css";
+
+html {
+  scroll-behavior: smooth;
+}
