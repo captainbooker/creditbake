@@ -59,6 +59,7 @@ module.exports = function(api) {
           loose: true
         }
       ],
+      ["@babel/plugin-proposal-optional-chaining"],
       [
         '@babel/plugin-proposal-private-property-in-object',
         {
