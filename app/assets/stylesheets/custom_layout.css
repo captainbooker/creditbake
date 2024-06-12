@@ -1582,16 +1582,6 @@ body {
     line-height: 1.2;
   }
 
-  .lg\:text-body-color{
-    --tw-text-opacity: 1;
-    color: rgba(99 115 129 / var(--tw-text-opacity));
-  }
-
-  .lg\:text-white{
-    --tw-text-opacity: 1;
-    color: rgba(255 255 255 / var(--tw-text-opacity));
-  }
-
   .lg\:opacity-0{
     opacity: 0;
   }
@@ -1616,22 +1606,12 @@ body {
     top: 100%;
   }
 
-  .group:hover .lg\:group-hover\:text-white{
-    --tw-text-opacity: 1;
-    color: rgba(255 255 255 / var(--tw-text-opacity));
-  }
-
   .group:hover .lg\:group-hover\:opacity-70{
     opacity: 0.7;
   }
 
   :is(.dark .dark\:lg\:bg-transparent){
     background-color: transparent;
-  }
-
-  :is(.dark .dark\:lg\:text-dark-6){
-    --tw-text-opacity: 1;
-    color: rgba(156 163 175 / var(--tw-text-opacity));
   }
 }
 
