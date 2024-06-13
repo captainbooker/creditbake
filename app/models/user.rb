@@ -17,8 +17,10 @@ class User < ApplicationRecord
   has_one_attached :id_document
   has_one_attached :utility_bill
 
-  attr_encrypted :ssn_last4, key: ENV['ENCRYPTION_KEY']
-  blind_index :ssn_last4
+  attr_encrypted :ssn_last4, key: [ENV['ENCRYPTION_KEY']].pack('H*')
+  blind_index :ssn_last4, key: [ENV['ENCRYPTION_KEY']].pack('H*')
+
+  validates :ssn_last4, length: { is: 4 }, numericality: { only_integer: true }
 
   validates :credits, numericality: { greater_than_or_equal_to: 0 }
 

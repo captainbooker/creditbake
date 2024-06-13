@@ -17,12 +17,7 @@
     </div>
     <div class="lg:w-1/2">
       <div class="relative">
-        <%= image_tag "placeholder.png", class: "rounded-lg shadow-lg" %>
-        <a href="#" class="absolute inset-0 flex items-center justify-center">
-          <svg class="w-16 h-16 text-white hover:text-gray-300 transition-colors duration-300" fill="currentColor" viewBox="0 0 20 20">
-            <path d="M6.303 4.14a1 1 0 011.395-.05l.08.069 6 5.5a1 1 0 01.063 1.387l-.063.073-6 5.5a1 1 0 01-1.478-1.337l.078-.089L11.191 10 6.777 5.72a1 1 0 01-.067-1.387z" />
-          </svg>
-        </a>
+        <%= video_tag "explainer.mp4", controls: true, size: "640x480", poster: "explainer_poster.png", class: "rounded-lg shadow-lg" %>
       </div>
     </div>
   </div>
@@ -193,7 +188,7 @@
             <%= image_tag "testimonial1.jpeg", class: "w-12 h-12 rounded-full" %>
           </div>
           <div class="ml-4">
-            <div class="text-lg font-medium text-gray-900">Leul</div>
+            <div class="text-lg font-medium text-gray-900">Leul A.</div>
           </div>
         </div>
         <p class="text-gray-600">“CreditBake has been a game-changer for me! I was struggling with inaccuracies on my credit report for years. With CreditBake's seamless import and automated dispute process, I saw results within just a few weeks. My credit score improved, and I couldn't be happier with the service!”</p>
@@ -209,7 +204,7 @@
             <%= image_tag "testimonial2.jpeg", class: "w-12 h-12 rounded-full" %>
           </div>
           <div class="ml-4">
-            <div class="text-lg font-medium text-gray-900">Valentina Guy</div>
+            <div class="text-lg font-medium text-gray-900">Valentina G.</div>
           </div>
         </div>
         <p class="text-gray-600">“I was skeptical about using an AI-powered credit repair service, but CreditBake exceeded all my expectations. The platform is user-friendly, and the support team is incredibly responsive. Thanks to CreditBake, I've successfully removed several errors from my credit report and am on my way to achieving my financial goals.”</p>
@@ -225,7 +220,7 @@
             <%= image_tag "testimonial3.jpeg", class: "w-12 h-12 rounded-full" %>
           </div>
           <div class="ml-4">
-            <div class="text-lg font-medium text-gray-900">Derrick Gyamfi</div>
+            <div class="text-lg font-medium text-gray-900">Derrick G.</div>
           </div>
         </div>
         <p class="text-gray-600">“CreditBake has simplified the credit repair process for me. The integration with CreditDyno made importing my credit report effortless. Within a few months, CreditBake's intelligent dispute letters helped me clear up several discrepancies, significantly boosting my credit score. I highly recommend CreditBake to anyone looking to repair their credit”</p>
@@ -385,3 +380,6 @@
   </div>
 </section>
 
+<script>
+document.querySelector('video').setAttribute("controlslist", "nodownload");
+</script>
