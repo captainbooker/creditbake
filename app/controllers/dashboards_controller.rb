@@ -1,6 +1,4 @@
-require 'prawn'
-require 'mini_magick'
-
+# app/controllers/dashboards_controller.rb
 class DashboardsController < ApplicationController
   include OpenaiPromptable
   before_action :authenticate_user!
@@ -24,14 +22,14 @@ class DashboardsController < ApplicationController
   end
 
   def create_attack
-    # This method will now only be called after successful payment via success callback
     round = params[:round].to_i
+    attack_cost = 24.99
 
-    if params[:payment_success] != 'true'
-      redirect_to letters_path, alert: 'Payment required.'
+    if current_user.credits < attack_cost
+      redirect_to payment_path, alert: "You don't have enough credits to generate an attack letter. Please add credits."
       return
     end
-    
+
     create_attack_logic(round)
     redirect_to letters_path, notice: 'Attack created successfully and letters saved.'
   end
@@ -56,6 +54,7 @@ class DashboardsController < ApplicationController
     )
 
     generate_pdfs(letter)
+    current_user.decrement!(:credits, 24.99)  # Deduct the credits for the attack letter
   end
 
   def generate_pdfs(letter)
@@ -71,7 +70,7 @@ class DashboardsController < ApplicationController
     end
     attachment_path
   end
-  
+
   def add_image_to_pdf(image_path, pdf, title)
     pdf.start_new_page
     pdf.text title
@@ -102,13 +101,11 @@ class DashboardsController < ApplicationController
     Prawn::Document.generate(pdf_path) do |pdf|
       pdf.text document_content
 
-      # Add ID Document (always an image) if attached
       if user.id_document.attached?
         id_document_path = save_attachment_to_temp(user.id_document)
         add_image_to_pdf(id_document_path, pdf, "ID Document:")
       end
 
-      # Add Utility Bill (can be image or PDF) if attached
       if user.utility_bill.attached?
         utility_bill_path = save_attachment_to_temp(user.utility_bill)
         case file_mime_type(utility_bill_path)

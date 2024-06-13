@@ -10,6 +10,10 @@ class CreditReportsController < ApplicationController
   def show
   end
 
+  def credit_report
+    @credit_reports = current_user.credit_reports
+  end
+
   # def download
   #   if @credit_report.document.attached?
   #     redirect_to rails_blob_path(@credit_report.document, disposition: "attachment")
@@ -124,9 +128,6 @@ class CreditReportsController < ApplicationController
   
     content = parser.extract_content
     process_parsed_content(content, credit_report)
-  end
-
-  def credit_report
   end
 
   def process_parsed_content(content, credit_report)

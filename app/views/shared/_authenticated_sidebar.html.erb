@@ -43,19 +43,7 @@
     <div class="bg-gray-100 p-4 rounded-lg mb-4">
       <div class="text-gray-600 text-sm">Your Balance</div>
       <div class="flex items-center justify-between mt-2">
-        <div class="text-lg font-semibold">$20.23</div>
-        <div class="flex items-center text-green-500">
-          <span class="material-icons text-sm">arrow_upward</span>
-          <span>23.12%</span>
-        </div>
-        <div class="flex items-center text-red-500">
-          <span class="material-icons text-sm">arrow_downward</span>
-          <span>23.12%</span>
-        </div>
-      </div>
-      <div class="flex justify-between mt-2 text-sm">
-        <div class="text-gray-600">Pending Credits</div>
-        <div>$0.12</div>
+        <div class="text-lg font-semibold">$ <%= current_user.credits %></div>
       </div>
       <div class="flex justify-between mt-2 text-sm">
         <div class="text-gray-600">Free Attack Credits</div>

@@ -20,6 +20,8 @@ class User < ApplicationRecord
   attr_encrypted :ssn_last4, key: ENV['ENCRYPTION_KEY']
   blind_index :ssn_last4
 
+  validates :credits, numericality: { greater_than_or_equal_to: 0 }
+
   def assign_default_role
     self.add_role(:user) if self.roles.blank?
   end

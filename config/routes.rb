@@ -31,6 +31,9 @@ Rails.application.routes.draw do
   get 'success', to: 'dashboards#success', as: 'success'
   get 'cancel', to: 'dashboards#cancel', as: 'cancel'
 
+  get '/payment', to: 'payments#new', as: 'payment'
+  post '/payment', to: 'payments#create'
+
   resources :contacts, only: [:new, :create]
   
   authenticated :user do

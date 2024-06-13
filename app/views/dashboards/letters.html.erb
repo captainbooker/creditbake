@@ -9,7 +9,7 @@
       </ol>
     </nav>
     <div class="relative">
-      <button class="px-6 py-2 font-medium text-white bg-black rounded hover:bg-opacity-90" id="create-attack-button">
+      <button class="px-6 py-2 font-medium text-white bg-primary rounded hover:bg-opacity-90" id="create-attack-button">
         Create Attack
       </button>
       <div class="absolute right-0 mt-2 w-48 bg-white border border-gray-300 rounded shadow-lg hidden" id="attack-dropdown">
@@ -29,7 +29,7 @@
     <div class="max-w-full overflow-x-auto">
       <div class="min-w-[1170px]">
         <!-- table header start -->
-        <div class="grid grid-cols-12 bg-[#F9FAFB] px-5 py-4 dark:bg-meta-4 lg:px-7.5 2xl:px-11">
+        <div class="grid grid-cols-12 background-blue px-5 py-4 dark:bg-meta-4 lg:px-7.5 2xl:px-11">
           <div class="col-span-3">
             <h5 class="font-medium text-[#637381] dark:text-bodydark">NAME</h5>
           </div>
@@ -78,6 +78,7 @@
 document.addEventListener("DOMContentLoaded", function() {
   const attackButton = document.getElementById('create-attack-button');
   const attackDropdown = document.getElementById('attack-dropdown');
+  const roundButtons = document.querySelectorAll('[data-round]');
 
   attackButton.addEventListener('click', function() {
     attackDropdown.classList.toggle('hidden');
@@ -88,17 +89,30 @@ document.addEventListener("DOMContentLoaded", function() {
       attackDropdown.classList.add('hidden');
     }
   });
-});
 
-function downloadAllFiles(letterId) {
-  const form = document.createElement('form');
-  form.method = 'post';
-  form.action = '<%= download_all_files_path %>';
-  form.innerHTML = `
-    <input type="hidden" name="letter_id" value="${letterId}">
-    <input type="hidden" name="${document.querySelector('meta[name=csrf-param]').content}" value="${document.querySelector('meta[name=csrf-token]').content}">
-  `;
-  document.body.appendChild(form);
-  form.submit();
-}
+  roundButtons.forEach(button => {
+    button.addEventListener('click', function() {
+      const round = this.getAttribute('data-round');
+      if (parseFloat('<%= @current_user.credits %>') < 24.99) {
+        alert("You don't have enough credits. Please add credits.");
+        window.location.href = '<%= payment_path %>';
+      } else {
+        createAttack(round);
+      }
+    });
+  });
+
+  function createAttack(round) {
+    const form = document.createElement('form');
+    form.method = 'get';
+    form.action = '<%= create_attack_path %>';
+    form.innerHTML = `
+      <input type="hidden" name="round" value="${round}">
+      <input type="hidden" name="payment_success" value="true">
+      <input type="hidden" name="${document.querySelector('meta[name=csrf-param]').content}" value="${document.querySelector('meta[name=csrf-token]').content}">
+    `;
+    document.body.appendChild(form);
+    form.submit();
+  }
+});
 </script>
