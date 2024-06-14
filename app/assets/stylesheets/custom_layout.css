@@ -1781,3 +1781,37 @@ body {
 .custom-background-color {
   background-color: #fcfcfc;
 }
+
+.fixed.inset-0.flex {
+  transition: transform 0.3s ease-in-out;
+}
+
+.hidden-modal {
+  transform: translateX(-100%);
+}
+
+.md\\:hidden-modal {
+  display: none;
+}
+
+
+/* Custom styles for sidebar visibility */
+.sidebar {
+  display: none;
+}
+
+@media (min-width: 768px) {
+  .sidebar {
+    display: flex;
+  }
+}
+
+.mobile-sidebar {
+  display: block;
+}
+
+@media (min-width: 768px) {
+  .mobile-sidebar {
+    display: none;
+  }
+}

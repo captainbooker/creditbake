@@ -4,7 +4,7 @@
       <h1 class="text-base font-semibold leading-6 text-gray-900">Challenge Letters</h1>
       <p class="mt-2 text-sm text-gray-700">A list of all the challenge letters including their name, file count, created date, and download options.</p>
     </div>
-    <div class="mt-4 sm:ml-16 sm:mt-0 sm:flex-none">
+    <div class="mt-4 sm:ml-16 sm:mt-0 sm:flex-none relative">
       <button type="button" class="block rounded-md custom-blue px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600" id="create-attack-button">Create Attack</button>
       <div class="absolute right-0 mt-2 w-48 bg-white border border-gray-300 rounded shadow-lg hidden" id="attack-dropdown">
         <ul>
@@ -23,12 +23,12 @@
       <div class="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
         <div class="overflow-hidden shadow ring-1 ring-black ring-opacity-5 sm:rounded-lg">
           <table class="min-w-full divide-y divide-gray-300">
-            <thead class="bg-gray-50">
+            <thead class="custom-blue md:bg-gray-50 rounded-t-lg shadow-lg">
               <tr>
-                <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6">Name</th>
-                <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">File Count</th>
-                <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Created At</th>
-                <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"></th>
+                <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-white md:text-gray-900 sm:pl-6">Name</th>
+                <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-white md:text-gray-900">File Count</th>
+                <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-white md:text-gray-900">Created At</th>
+                <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-white md:text-gray-900"></th>
               </tr>
             </thead>
             <tbody class="divide-y divide-gray-200 bg-white">
@@ -38,24 +38,26 @@
                   <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500"><%= [letter.experian_pdf, letter.transunion_pdf, letter.equifax_pdf].compact.count %></td>
                   <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500"><%= letter.created_at.strftime("%m/%d/%Y") %></td>
                   <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                    <div class="flex justify-end">
-                      <button class="text-white bg-black px-4 py-2 rounded hover:bg-opacity-90" onclick="downloadAllFiles('<%= letter.id %>')">Download All Files</button>
+                    <div class="flex flex-col sm:flex-row sm:justify-end items-start sm:items-center">
+                      <button class="text-white bg-black px-4 py-2 rounded hover:bg-opacity-90 mb-2 sm:mb-0 sm:mr-2" onclick="downloadAllFiles('<%= letter.id %>')">Download All Files</button>
                       <% if letter.mailed? %>
-                        <p class="text-green-500 ml-4">Mailed</p>
-                        <p class="text-gray-500 ml-4">Tracking Numbers:</p>
-                        <ul class="text-gray-500 ml-4">
-                          <% if letter.experian_tracking_number.present? %>
-                            <li>Experian: <%= letter.experian_tracking_number %></li>
-                          <% end %>
-                          <% if letter.transunion_tracking_number.present? %>
-                            <li>TransUnion: <%= letter.transunion_tracking_number %></li>
-                          <% end %>
-                          <% if letter.equifax_tracking_number.present? %>
-                            <li>Equifax: <%= letter.equifax_tracking_number %></li>
-                          <% end %>
-                        </ul>
+                        <div class="text-green-500 sm:ml-4 mb-2 sm:mb-0">Mailed</div>
+                        <div class="text-gray-500 sm:ml-4 mb-2 sm:mb-0">
+                          Tracking Numbers:
+                          <ul>
+                            <% if letter.experian_tracking_number.present? %>
+                              <li>Experian: <%= letter.experian_tracking_number %></li>
+                            <% end %>
+                            <% if letter.transunion_tracking_number.present? %>
+                              <li>TransUnion: <%= letter.transunion_tracking_number %></li>
+                            <% end %>
+                            <% if letter.equifax_tracking_number.present? %>
+                              <li>Equifax: <%= letter.equifax_tracking_number %></li>
+                            <% end %>
+                          </ul>
+                        </div>
                       <% else %>
-                        <button class="text-white bg-blue-500 px-4 py-2 ml-2 rounded hover:bg-blue-600" onclick="showMailModal('<%= letter.id %>')">Mail</button>
+                        <button class="text-white bg-blue-500 px-4 py-2 rounded hover:bg-blue-600 sm:ml-2" onclick="showMailModal('<%= letter.id %>')">Mail</button>
                       <% end %>
                     </div>
                   </td>
@@ -71,7 +73,7 @@
     </div>
   </div>
 
-  <div id="mailModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 hidden transition-opacity duration-300 ease-out">
+  <div id="mailModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 hidden-modal transition-opacity duration-300 ease-out">
     <div class="bg-white p-6 rounded-lg shadow-lg max-w-md w-full transform transition-transform duration-300 ease-out scale-95">
       <h2 class="text-xl font-semibold mb-4">Choose Mailing Option</h2>
       <p class="mb-4">Please choose between black and white or color mailing for the letter.</p>
