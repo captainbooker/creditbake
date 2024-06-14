@@ -7,15 +7,30 @@ class DashboardsController < ApplicationController
   end
 
   def disputing
-    @inquiries = current_user.inquiries
-    @accounts = current_user.accounts.includes(:bureau_details)
+    @inquiries = current_user.inquiries.order(created_at: :desc)
+    @accounts = current_user.accounts.includes(:bureau_details).order(created_at: :desc)
   end  
 
   def save_challenges
-    Inquiry.where(id: params[:inquiry_ids], user_id: current_user.id).update_all(challenge: true) if params[:inquiry_ids].present?
-    Account.where(id: params[:account_ids], user_id: current_user.id).update_all(challenge: true) if params[:account_ids].present?
+    # Reset all challenges for the current user
+    current_user.inquiries.update_all(challenge: false)
+    current_user.accounts.update_all(challenge: false)
+  
+    # Set challenge for selected inquiries
+    if params[:inquiry_ids].present?
+      selected_inquiries = params[:inquiry_ids].select { |_, v| v == 'true' }.keys
+      Inquiry.where(id: selected_inquiries, user_id: current_user.id).update_all(challenge: true)
+    end
+  
+    # Set challenge for selected accounts
+    if params[:account_ids].present?
+      selected_accounts = params[:account_ids].select { |_, v| v == 'true' }.keys
+      Account.where(id: selected_accounts, user_id: current_user.id).update_all(challenge: true)
+    end
+  
     redirect_to letters_path, notice: 'Challenged items saved successfully.'
   end
+  
 
   def letters
     @letters = current_user.letters.order(created_at: :desc).page(params[:page]).per(10)
