@@ -35,6 +35,12 @@ Rails.application.routes.draw do
   post '/payment', to: 'payments#create'
 
   resources :contacts, only: [:new, :create]
+
+  resources :letters do
+    post 'mail', to: 'mailings#create', as: :mail
+    get 'calculate_cost', to: 'mailings#calculate_cost'
+  end
+  resources :spendings, only: [:index]
   
   authenticated :user do
     root 'dashboards#index', as: :authenticated_root

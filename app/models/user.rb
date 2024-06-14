@@ -13,6 +13,8 @@ class User < ApplicationRecord
   has_many :accounts
   has_many :credit_reports
   has_many :letters
+  has_many :spendings
+  has_many :mailings
 
   has_one_attached :id_document
   has_one_attached :utility_bill
@@ -26,5 +28,10 @@ class User < ApplicationRecord
 
   def assign_default_role
     self.add_role(:user) if self.roles.blank?
+  end
+
+  def log_spending(amount, description)
+    spendings.create(amount: amount, description: description)
+    decrement!(:credits, amount)
   end
 end

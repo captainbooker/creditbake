@@ -373,6 +373,7 @@ DEPENDENCIES
   docsplit
   dotenv
   jbuilder (~> 2.7)
+  kaminari
   listen (~> 3.3)
   mechanize
   mini_magick

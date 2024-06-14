@@ -79,8 +79,34 @@
                   </div>
                 </div>
               </div>
+              <div class="mt-6">
+                <div class="flex items-center justify-between">
+                  <div class="flex items-center gap-4">
+                    <div class="text-sm font-medium text-gray-700">ID Document</div>
+                    <% if @user.id_document.attached? %>
+                      <span class="text-gray-500"><%= @user.id_document.filename.to_s %></span>
+                    <% end %>
+                  </div>
+                  <div>
+                    <%= form.file_field :id_document, accept: 'application/pdf,image/*', class: 'block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100' %>
+                  </div>
+                </div>
+              </div>
+              <div class="mt-6">
+                <div class="flex items-center justify-between">
+                  <div class="flex items-center gap-4">
+                    <div class="text-sm font-medium text-gray-700">Utility Bill</div>
+                    <% if @user.utility_bill.attached? %>
+                      <span class="text-gray-500"><%= @user.utility_bill.filename.to_s %></span>
+                    <% end %>
+                  </div>
+                  <div>
+                    <%= form.file_field :utility_bill, accept: 'application/pdf,image/*', class: 'block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100' %>
+                  </div>
+                </div>
+              </div>
               <div class="flex justify-end gap-4.5 mt-6">
-                <button class="flex justify-center rounded bg-primary px-6 py-2 font-medium text-gray hover:bg-opacity-90" type="submit">
+                <button class="flex justify-center rounded bg-primary px-6 py-2 font-medium text-white hover:bg-opacity-90" type="submit">
                   Save
                 </button>
               </div>

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2024_06_13_170656) do
+ActiveRecord::Schema.define(version: 2024_06_14_050241) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -196,7 +196,24 @@ ActiveRecord::Schema.define(version: 2024_06_13_170656) do
     t.bigint "user_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.boolean "mailed"
+    t.string "tracking_number"
+    t.string "experian_tracking_number"
+    t.string "transunion_tracking_number"
+    t.string "equifax_tracking_number"
     t.index ["user_id"], name: "index_letters_on_user_id"
+  end
+
+  create_table "mailings", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "letter_id", null: false
+    t.integer "pages"
+    t.boolean "color"
+    t.decimal "cost"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["letter_id"], name: "index_mailings_on_letter_id"
+    t.index ["user_id"], name: "index_mailings_on_user_id"
   end
 
   create_table "roles", force: :cascade do |t|
@@ -207,6 +224,15 @@ ActiveRecord::Schema.define(version: 2024_06_13_170656) do
     t.datetime "updated_at", precision: 6, null: false
     t.index ["name", "resource_type", "resource_id"], name: "index_roles_on_name_and_resource_type_and_resource_id"
     t.index ["resource_type", "resource_id"], name: "index_roles_on_resource"
+  end
+
+  create_table "spendings", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.decimal "amount", precision: 10, scale: 2, null: false
+    t.string "description"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["user_id"], name: "index_spendings_on_user_id"
   end
 
   create_table "users", force: :cascade do |t|
@@ -253,4 +279,7 @@ ActiveRecord::Schema.define(version: 2024_06_13_170656) do
   add_foreign_key "disputes", "clients"
   add_foreign_key "disputes", "credit_reports"
   add_foreign_key "inquiries", "users"
+  add_foreign_key "mailings", "letters"
+  add_foreign_key "mailings", "users"
+  add_foreign_key "spendings", "users"
 end

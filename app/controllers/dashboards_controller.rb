@@ -18,7 +18,7 @@ class DashboardsController < ApplicationController
   end
 
   def letters
-    @letters = current_user.letters
+    @letters = current_user.letters.order(created_at: :desc).page(params[:page]).per(10)
   end
 
   def create_attack
