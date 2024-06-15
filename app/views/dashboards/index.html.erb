@@ -1,231 +1,48 @@
 <div class="mx-auto max-w-screen-2xl p-4 md:p-6 2xl:p-10">
-  <!-- ===== Data Stats Start ===== -->
-  <div
-    class="mb-8 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between"
-  >
-    <div>
-      <h2 class="text-title-sm2 font-bold text-black dark:text-white">
-        Account Overview
-      </h2>
+  <div class="max-w-7xl mx-auto p-6">
+    <div class="flex items-center justify-between mb-6">
+      <h1 class="text-2xl font-bold">Credit Scores</h1>
+      <button class="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-700">Create Attack</button>
     </div>
-
-    <div class="flex items-center">
-      <p class="font-medium uppercase text-black dark:text-white">
-        Short by:
-      </p>
-      <div class="relative z-20 inline-block">
-        <select
-          name="#"
-          id="#"
-          class="relative z-20 inline-flex appearance-none bg-transparent py-1 pl-3 pr-8 font-medium outline-none"
-        >
-          <option value="">Current Week</option>
-          <option value="">Last Week</option>
-        </select>
-        <span class="absolute right-1 top-1/2 z-10 -translate-y-1/2">
-          <svg
-            width="18"
-            height="18"
-            viewBox="0 0 18 18"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              d="M8.99995 12.8249C8.8312 12.8249 8.69058 12.7687 8.54995 12.6562L2.0812 6.2999C1.82808 6.04678 1.82808 5.65303 2.0812 5.3999C2.33433 5.14678 2.72808 5.14678 2.9812 5.3999L8.99995 11.278L15.0187 5.34365C15.2718 5.09053 15.6656 5.09053 15.9187 5.34365C16.1718 5.59678 16.1718 5.99053 15.9187 6.24365L9.44995 12.5999C9.30933 12.7405 9.1687 12.8249 8.99995 12.8249Z"
-              fill="#64748B"
-            />
+    <hr class="mb-6">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div class="score-card">
+        <div class="score-circle">
+          <svg viewBox="0 0 100 100" class="w-full h-full">
+            <circle class="text-gray-300" stroke-width="10" stroke="currentColor" fill="transparent" r="40" cx="50" cy="50" />
+            <circle id="transunion-progress" class="text-red-500" stroke-width="10" stroke-dasharray="251.2" stroke-dashoffset="251.2" stroke-linecap="round" stroke="currentColor" fill="transparent" r="40" cx="50" cy="50" />
           </svg>
-        </span>
+          <div id="transunion-score-text" class="score-text">579</div>
+        </div>
+        <p id="transunion-score-indicator" class="score-indicator">Poor</p>
+        <p class="updated-date">Updated 05/17/24</p>
+        <p class="font-semibold">TransUnion</p>
       </div>
-    </div>
-  </div>
 
-  <div
-    class="grid grid-cols-1 gap-4 sm:grid-cols-2 md:gap-6 xl:grid-cols-3 2xl:gap-7.5"
-  >
-    <div
-      class="rounded-sm border border-stroke bg-white p-4 shadow-default dark:border-strokedark dark:bg-boxdark md:p-6 xl:p-7.5"
-    >
-      <div class="flex items-end justify-between">
-        <div>
-          <h3
-            class="mb-4 text-title-lg font-bold text-black dark:text-white"
-          >
-            197
-          </h3>
-          <p class="font-medium">Clients Added</p>
-          <span class="mt-2 flex items-center gap-2">
-            <span
-              class="flex items-center gap-1 rounded-md bg-meta-3 p-1 text-xs font-medium text-white"
-            >
-              <svg
-                width="14"
-                height="15"
-                viewBox="0 0 14 15"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M13.0155 5.24683H9.49366C9.23116 5.24683 9.01241 5.46558 9.01241 5.72808C9.01241 5.99058 9.23116 6.20933 9.49366 6.20933H11.6593L8.85928 8.09058C8.74991 8.17808 8.59678 8.17808 8.46553 8.09058L5.57803 6.18745C5.11866 5.8812 4.54991 5.8812 4.09053 6.18745L0.721783 8.44058C0.503033 8.5937 0.437408 8.89995 0.590533 9.1187C0.678033 9.24995 0.831157 9.33745 1.00616 9.33745C1.09366 9.33745 1.20303 9.31558 1.26866 9.24995L4.65928 6.99683C4.76866 6.90933 4.92178 6.90933 5.05303 6.99683L7.94053 8.92183C8.39991 9.22808 8.96866 9.22808 9.42803 8.92183L12.5124 6.8437V9.27183C12.5124 9.53433 12.7312 9.75308 12.9937 9.75308C13.2562 9.75308 13.4749 9.53433 13.4749 9.27183V5.72808C13.5187 5.46558 13.278 5.24683 13.0155 5.24683Z"
-                  fill="white"
-                />
-              </svg>
-              <span>+2.5%</span>
-            </span>
-
-            <span class="text-sm font-medium">Since last week</span>
-          </span>
-        </div>
-
-        <div x-data="{percent : 60}">
-          <svg class="h-17.5 w-17.5 -rotate-90 transform">
-            <circle
-              class="text-stroke dark:text-strokedark"
-              stroke-width="10"
-              stroke="currentColor"
-              fill="transparent"
-              r="30"
-              cx="35"
-              cy="35"
-            />
-            <circle
-              class="text-primary"
-              stroke-width="10"
-              :stroke-dasharray="30 * 2 * Math.PI"
-              :stroke-dashoffset="30 * 2 * Math.PI - percent / 100 * 30 * 2 * Math.PI"
-              stroke-linecap=""
-              stroke="currentColor"
-              fill="transparent"
-              r="30"
-              cx="35"
-              cy="35"
-            />
+      <div class="score-card">
+        <div class="score-circle">
+          <svg viewBox="0 0 100 100" class="w-full h-full">
+            <circle class="text-gray-300" stroke-width="10" stroke="currentColor" fill="transparent" r="40" cx="50" cy="50" />
+            <circle id="experian-progress" class="text-red-500" stroke-width="10" stroke-dasharray="251.2" stroke-dashoffset="251.2" stroke-linecap="round" stroke="currentColor" fill="transparent" r="40" cx="50" cy="50" />
           </svg>
+          <div id="experian-score-text" class="score-text">555</div>
         </div>
+        <p id="experian-score-indicator" class="score-indicator">Poor</p>
+        <p class="updated-date">Updated 05/17/24</p>
+        <p class="font-semibold">Experian</p>
       </div>
-    </div>
 
-    <div
-      class="rounded-sm border border-stroke bg-white p-4 shadow-default dark:border-strokedark dark:bg-boxdark md:p-6 xl:p-7.5"
-    >
-      <div class="flex items-end justify-between">
-        <div>
-          <h3
-            class="mb-4 text-title-lg font-bold text-black dark:text-white"
-          >
-            745
-          </h3>
-          <p class="font-medium">Contracts Signed</p>
-          <span class="mt-2 flex items-center gap-2">
-            <span
-              class="flex items-center gap-1 rounded-md bg-red p-1 text-xs font-medium text-white"
-            >
-              <svg
-                width="14"
-                height="15"
-                viewBox="0 0 14 15"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M13.0157 5.24683C12.7532 5.24683 12.5344 5.46558 12.5344 5.72808V8.1562L9.40631 6.07808C8.94693 5.77183 8.37818 5.77183 7.91881 6.07808L5.0313 8.00308C4.92193 8.09058 4.7688 8.09058 4.63755 8.00308L1.24693 5.74995C1.02818 5.59683 0.721929 5.66245 0.568804 5.8812C0.415679 6.09995 0.481304 6.4062 0.700054 6.55933L4.09068 8.81245C4.55005 9.1187 5.1188 9.1187 5.57818 8.81245L8.46568 6.88745C8.57506 6.79995 8.72818 6.79995 8.85943 6.88745L11.6594 8.7687H9.4938C9.23131 8.7687 9.01256 8.98745 9.01256 9.24995C9.01256 9.51245 9.23131 9.7312 9.4938 9.7312H13.0157C13.2782 9.7312 13.4969 9.51245 13.4969 9.24995V5.72808C13.5188 5.46558 13.2782 5.24683 13.0157 5.24683Z"
-                  fill="white"
-                />
-              </svg>
-              <span>+1.5%</span>
-            </span>
-
-            <span class="text-sm font-medium">Since last week</span>
-          </span>
-        </div>
-
-        <div x-data="{percent : 30}">
-          <svg class="h-17.5 w-17.5 -rotate-90 transform">
-            <circle
-              class="text-stroke dark:text-strokedark"
-              stroke-width="10"
-              stroke="currentColor"
-              fill="transparent"
-              r="30"
-              cx="35"
-              cy="35"
-            />
-            <circle
-              class="text-primary"
-              stroke-width="10"
-              :stroke-dasharray="30 * 2 * Math.PI"
-              :stroke-dashoffset="30 * 2 * Math.PI - percent / 100 * 30 * 2 * Math.PI"
-              stroke-linecap=""
-              stroke="currentColor"
-              fill="transparent"
-              r="30"
-              cx="35"
-              cy="35"
-            />
+      <div class="score-card">
+        <div class="score-circle">
+          <svg viewBox="0 0 100 100" class="w-full h-full">
+            <circle class="text-gray-300" stroke-width="10" stroke="currentColor" fill="transparent" r="40" cx="50" cy="50" />
+            <circle id="equifax-progress" class="text-yellow-500" stroke-width="10" stroke-dasharray="251.2" stroke-dashoffset="251.2" stroke-linecap="round" stroke="currentColor" fill="transparent" r="40" cx="50" cy="50" />
           </svg>
+          <div id="equifax-score-text" class="score-text">606</div>
         </div>
-      </div>
-    </div>
-
-    <div
-      class="rounded-sm border border-stroke bg-white p-4 shadow-default dark:border-strokedark dark:bg-boxdark md:p-6 xl:p-7.5"
-    >
-      <div class="flex items-end justify-between">
-        <div>
-          <h3
-            class="mb-4 text-title-lg font-bold text-black dark:text-white"
-          >
-            512
-          </h3>
-          <p class="font-medium">Invoice Sent</p>
-          <span class="mt-2 flex items-center gap-2">
-            <span
-              class="flex items-center gap-1 rounded-md bg-meta-3 p-1 text-xs font-medium text-white"
-            >
-              <svg
-                width="14"
-                height="15"
-                viewBox="0 0 14 15"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M13.0155 5.24683H9.49366C9.23116 5.24683 9.01241 5.46558 9.01241 5.72808C9.01241 5.99058 9.23116 6.20933 9.49366 6.20933H11.6593L8.85928 8.09058C8.74991 8.17808 8.59678 8.17808 8.46553 8.09058L5.57803 6.18745C5.11866 5.8812 4.54991 5.8812 4.09053 6.18745L0.721783 8.44058C0.503033 8.5937 0.437408 8.89995 0.590533 9.1187C0.678033 9.24995 0.831157 9.33745 1.00616 9.33745C1.09366 9.33745 1.20303 9.31558 1.26866 9.24995L4.65928 6.99683C4.76866 6.90933 4.92178 6.90933 5.05303 6.99683L7.94053 8.92183C8.39991 9.22808 8.96866 9.22808 9.42803 8.92183L12.5124 6.8437V9.27183C12.5124 9.53433 12.7312 9.75308 12.9937 9.75308C13.2562 9.75308 13.4749 9.53433 13.4749 9.27183V5.72808C13.5187 5.46558 13.278 5.24683 13.0155 5.24683Z"
-                  fill="white"
-                />
-              </svg>
-              <span>+0.5%</span>
-            </span>
-
-            <span class="text-sm font-medium">Since last week</span>
-          </span>
-        </div>
-
-        <div x-data="{percent : 70}">
-          <svg class="h-17.5 w-17.5 -rotate-90 transform">
-            <circle
-              class="text-stroke dark:text-strokedark"
-              stroke-width="10"
-              stroke="currentColor"
-              fill="transparent"
-              r="30"
-              cx="35"
-              cy="35"
-            />
-            <circle
-              class="text-primary"
-              stroke-width="10"
-              :stroke-dasharray="30 * 2 * Math.PI"
-              :stroke-dashoffset="30 * 2 * Math.PI - percent / 100 * 30 * 2 * Math.PI"
-              stroke-linecap=""
-              stroke="currentColor"
-              fill="transparent"
-              r="30"
-              cx="35"
-              cy="35"
-            />
-          </svg>
-        </div>
+        <p id="equifax-score-indicator" class="score-indicator">Fair</p>
+        <p class="updated-date">Updated 05/18/24</p>
+        <p class="font-semibold">Equifax</p>
       </div>
     </div>
   </div>
@@ -1162,3 +979,79 @@
     <!-- ===== To Do List End ===== -->
   </div>
 </div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+  const scoreRanges = [
+    { min: 300, max: 579, label: 'Poor', color: 'text-red-500' },
+    { min: 580, max: 669, label: 'Fair', color: 'text-yellow-500' },
+    { min: 670, max: 739, label: 'Good', color: 'text-green-500' },
+    { min: 740, max: 799, label: 'Very Good', color: 'text-blue-500' },
+    { min: 800, max: 850, label: 'Excellent', color: 'text-purple-500' }
+  ];
+
+  function getColorAndLabel(score) {
+    for (let range of scoreRanges) {
+      if (score >= range.min && score <= range.max) {
+        return { color: range.color, label: range.label };
+      }
+    }
+    return { color: 'text-gray-500', label: 'Unknown' };
+  }
+
+  function setProgress(elementId, score, maxScore = 850) {
+    const element = document.getElementById(elementId);
+    const percent = (score / maxScore) * 100;
+    const dashOffset = 251.2 - (percent / 100) * 251.2;
+
+    element.style.strokeDashoffset = dashOffset;
+    
+    // Animate the strokeDashoffset
+    element.animate([
+      { strokeDashoffset: 251.2 },
+      { strokeDashoffset: dashOffset }
+    ], {
+      duration: 2000,
+      easing: 'ease-out',
+      fill: 'forwards'
+    });
+  }
+
+  async function fetchScores() {
+    try {
+      const response = await fetch('/credit_reports/scores');
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      console.error('Error fetching scores:', error);
+      return { experian_score: 0, transunion_score: 0, equifax_score: 0 };
+    }
+  }
+
+  fetchScores().then(scores => {
+    if (scores.experian_score) {
+      const { color, label } = getColorAndLabel(scores.experian_score);
+      document.getElementById('experian-score-text').textContent = scores.experian_score;
+      document.getElementById('experian-score-text').parentElement.classList.add(color);
+      document.getElementById('experian-score-text').parentElement.nextElementSibling.textContent = label;
+      setProgress('experian-progress', scores.experian_score, 800);
+    }
+
+    if (scores.transunion_score) {
+      const { color, label } = getColorAndLabel(scores.transunion_score);
+      document.getElementById('transunion-score-text').textContent = scores.transunion_score;
+      document.getElementById('transunion-score-text').parentElement.classList.add(color);
+      document.getElementById('transunion-score-text').parentElement.nextElementSibling.textContent = label;
+      setProgress('transunion-progress', scores.transunion_score, 800);
+    }
+
+    if (scores.equifax_score) {
+      const { color, label } = getColorAndLabel(scores.equifax_score);
+      document.getElementById('equifax-score-text').textContent = scores.equifax_score;
+      document.getElementById('equifax-score-text').parentElement.classList.add(color);
+      document.getElementById('equifax-score-text').parentElement.nextElementSibling.textContent = label;
+      setProgress('equifax-progress', scores.equifax_score, 800);
+    }
+  });
+});
+</script>

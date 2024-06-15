@@ -1,7 +1,8 @@
-# app/services/identity_iq_parser_service.rb
+require 'json'
+
 class IdentityiqParserService
   def initialize(content)
-    @content = Nokogiri::HTML(content)
+    @content = JSON.parse(content)
   end
 
   def extract_content
@@ -15,79 +16,80 @@ class IdentityiqParserService
 
   def extract_inquiries
     inquiries = []
-    inquiries_section = @content.at_css('div#Inquiries')
-    return inquiries unless inquiries_section
+    inquiry_partitions = @content.dig('BundleComponents', 'BundleComponent').select do |component|
+      component.dig('TrueLinkCreditReportType', 'InquiryPartition')
+    end
+    
+    inquiry_partitions.each do |component|
+      inquiry_records = component.dig('TrueLinkCreditReportType', 'InquiryPartition')
 
-    inquiries_table = inquiries_section.at_css('table')
-    return inquiries unless inquiries_table
+      next unless inquiry_records
 
-    inquiries_table.css('tr').each do |row|
-      cells = row.css('td')
-      next if cells.empty?
+      inquiry_records.each do |inquiry_record|
+        inquiry = inquiry_record['Inquiry']
+        next unless inquiry
 
-      inquiries << {
-        inquiry_name: cells[0].text.strip,
-        type_of_business: cells[1].text.strip,
-        inquiry_date: cells[2].text.strip,
-        credit_bureau: cells[3].text.strip
-      }
+        inquiry_date = inquiry['@inquiryDate']
+        inquiry_name = inquiry['@subscriberName']
+        type_of_business = inquiry.dig('IndustryCode', '@description')
+        address = inquiry.dig('Source', 'Bureau', '@description')
+        bureau = inquiry.dig('Source', 'Bureau', '@abbreviation')
+
+        inquiries << {
+          inquiry_name: inquiry_name,
+          type_of_business: type_of_business,
+          inquiry_date: inquiry_date,
+          address: address,
+          credit_bureau: bureau
+        }
+      end
     end
     inquiries
   end
 
   def extract_accounts
     accounts = []
-    account_containers = @content.css('div.account-container') # Adjust the selector based on actual HTML structure
+    account_partitions = @content.dig('BundleComponents', 'BundleComponent').select do |component|
+      component.dig('TrueLinkCreditReportType', 'TradeLinePartition')
+    end
 
-    account_containers.each do |container|
-      account_number = extract_detail(container, 'Account #:').first
-      account_type = extract_detail(container, 'Account Type:').first
-      account_type_detail = extract_detail(container, 'Account Type - Detail:').first
-      account_status = extract_detail(container, 'Account Status:').first
-      balance_owed = extract_detail(container, 'Balance:')
-      high_credit = extract_detail(container, 'High Credit:')
-      credit_limit = extract_detail(container, 'Credit Limit:')
-      past_due_amount = extract_detail(container, 'Past Due:')
-      payment_status = extract_detail(container, 'Payment Status:')
-      date_opened = extract_detail(container, 'Date Opened:')
-      date_of_last_payment = extract_detail(container, 'Date of Last Payment:')
-      last_reported = extract_detail(container, 'Last Reported:')
+    account_partitions.each do |component|
+      tradeline_partitions = component.dig('TrueLinkCreditReportType', 'TradeLinePartition')
+      next unless tradeline_partitions
 
-      accounts << {
-        account_number: account_number,
-        account_type: account_type,
-        account_type_detail: account_type_detail,
-        account_status: account_status,
-        transunion_balance_owed: balance_owed[0],
-        experian_balance_owed: balance_owed[1],
-        equifax_balance_owed: balance_owed[2],
-        transunion_high_credit: high_credit[0],
-        experian_high_credit: high_credit[1],
-        equifax_high_credit: high_credit[2],
-        transunion_credit_limit: credit_limit[0],
-        experian_credit_limit: credit_limit[1],
-        equifax_credit_limit: credit_limit[2],
-        transunion_past_due_amount: past_due_amount[0],
-        experian_past_due_amount: past_due_amount[1],
-        equifax_past_due_amount: past_due_amount[2],
-        transunion_payment_status: payment_status[0],
-        experian_payment_status: payment_status[1],
-        equifax_payment_status: payment_status[2],
-        transunion_date_opened: date_opened[0],
-        experian_date_opened: date_opened[1],
-        equifax_date_opened: date_opened[2],
-        transunion_date_of_last_payment: date_of_last_payment[0],
-        experian_date_of_last_payment: date_of_last_payment[1],
-        equifax_date_of_last_payment: date_of_last_payment[2],
-        transunion_last_reported: last_reported[0],
-        experian_last_reported: last_reported[1],
-        equifax_last_reported: last_reported[2]
-      }
+      tradeline_partitions.each do |partition|
+        tradelines = partition['Tradeline']
+  
+        next unless tradelines
+
+        tradelines.each do |tradeline|
+          next unless tradeline.is_a?(Hash) && tradeline['@accountNumber']
+          
+          account_number = tradeline['@accountNumber']
+          account_status = tradeline.dig('AccountCondition', '@description')
+          account_type = tradeline.dig('GrantedTrade', 'CreditType', '@description')
+          account_name = tradeline['@creditorName']
+          bureau = tradeline['@bureau']
+
+          account = accounts.find { |acc| acc[:account_number] == account_number }
+
+          if account.nil?
+            account = { account_number: account_number, account_status: account_status, account_type: account_type, name: account_name, bureau_details: {} }
+            accounts << account
+          end
+
+          account[:bureau_details][bureau.downcase.to_sym] = {
+            credit_limit: tradeline.dig('GrantedTrade', 'CreditLimit', '$'),
+            high_balance: tradeline['@highBalance'],
+            high_credit: tradeline['@highBalance'],
+            past_due_amount: tradeline.dig('GrantedTrade', '@amountPastDue'),
+            payment_status: tradeline.dig('PayStatus', '@description'),
+            date_opened: tradeline['@dateOpened'],
+            date_of_last_payment: tradeline.dig('GrantedTrade', '@dateLastPayment')
+          }
+        end
+      end
     end
     accounts
-  end
-
-  def extract_detail(container, detail_name)
-    container.xpath(".//td[contains(text(),\"#{detail_name}\")]/following-sibling::td").map(&:text).map(&:strip)
   end
 end

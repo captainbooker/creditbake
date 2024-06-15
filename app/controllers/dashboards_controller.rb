@@ -5,6 +5,16 @@ class DashboardsController < ApplicationController
   before_action :ensure_required_documents, only: [:create_attack]
 
   def index
+    @credit_report = CreditReport.where(user_id: current_user.id).order(created_at: :desc).first
+  end
+
+  def scores
+    credit_report = CreditReport.where(user_id: current_user.id).order(created_at: :desc).first
+    render json: {
+      experian_score: credit_report.experian_score,
+      transunion_score: credit_report.transunion_score,
+      equifax_score: credit_report.equifax_score
+    }
   end
 
   def disputing

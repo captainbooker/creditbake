@@ -1,4 +1,6 @@
-# app/services/identityiq_service.rb
+require 'selenium-webdriver'
+require 'json'
+
 class IdentityiqService
   BASE_URL = 'https://member.identityiq.com'
   attr_reader :username, :password, :security_question, :service
@@ -6,33 +8,44 @@ class IdentityiqService
   def initialize(username, password, security_question, service)
     @username = username
     @password = password
-    @service = service
     @security_question = security_question
-    @agent = Mechanize.new
+    @service = service
+    @driver = Selenium::WebDriver.for :chrome
   end
 
   def fetch_credit_report
     login
-    navigate_to_credit_report
+    fetch_credit_report_json
+  ensure
+    @driver.quit
   end
 
   private
 
   def login
-    login_page = @agent.get("#{BASE_URL}/")
-    login_form = login_page.form_with(class: 'css-12wm6r2') do |form|
-      form.username = @username
-      form.password = @password
-    end
-    @agent.submit(login_form)
+    @driver.navigate.to "#{BASE_URL}/"
+    username_field = @driver.find_element(name: 'username')
+    password_field = @driver.find_element(name: 'password')
+
+    username_field.send_keys(@username)
+    password_field.send_keys(@password)
+
+    login_button = @driver.find_element(css: 'button[type="submit"]')
+    login_button.click
+
   end
 
-  def navigate_to_credit_report
-    # Assuming that the credit report is accessible at a specific URL after login
-    # Replace '/path-to-credit-report' with the actual path
-    report_page = @agent.get("#{BASE_URL}/CreditReport.aspx")
-    report_page.body
-    # Logic to extract and save the credit report from the report_page
-    # For example, downloading a PDF or parsing HTML data
+  def fetch_credit_report_json
+    @driver.navigate.to "#{BASE_URL}/CreditReport.aspx?view=json"
+    wait = Selenium::WebDriver::Wait.new(timeout: 10)
+
+    json_content = wait.until {
+      element = @driver.find_element(:tag_name, 'pre')
+      element.text if element.displayed?
+    }
+
+    json_content = json_content.sub(/^JSON_CALLBACK\(/, '').sub(/\);?$/, '')
+
+    json_content
   end
 end

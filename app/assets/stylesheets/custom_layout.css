@@ -1811,8 +1811,51 @@ body {
   display: block;
 }
 
+.body-background-color {
+  background-color: #f1f0f7;
+}
+
 @media (min-width: 768px) {
   .mobile-sidebar {
     display: none;
   }
+}
+
+.score-card {
+  background-color: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: 0.5rem;
+  padding: 1.5rem;
+  text-align: center;
+  position: relative;
+}
+.score-circle {
+  position: relative;
+  width: 6rem;
+  height: 6rem;
+  margin: 0 auto;
+}
+.score-circle svg {
+  transform: rotate(-90deg);
+}
+.score-circle .score-text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #1f2937;
+}
+.score-indicator {
+  position: absolute;
+  bottom: -1.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 1rem;
+  color: #6b7280;
+}
+.updated-date {
+  font-size: 0.875rem;
+  color: #6b7280;
 }

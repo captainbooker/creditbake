@@ -46,6 +46,8 @@ Rails.application.routes.draw do
 
   get '/payment', to: 'payments#new', as: 'payment'
   post '/payment', to: 'payments#create'
+  get 'credit_reports', to: 'dashboards#index'
+  get 'credit_reports/scores', to: 'dashboards#scores'
 
   resources :contacts, only: [:new, :create]
 

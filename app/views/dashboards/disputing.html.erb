@@ -1,4 +1,4 @@
-<div class="mx-auto max-w-screen-3xl p-4 md:p-6 2xl:p-10 custom-background-color">
+<div class="mx-auto max-w-screen-3xl p-4 md:p-6 2xl:p-10">
   <div class="mx-auto max-w-270">
 
     <%= form_with url: save_challenges_path, method: :patch do %>
@@ -51,11 +51,14 @@
                 <input type="checkbox" id="account_<%= account.id %>" name="account_ids[<%= account.id %>]" value="true" class="form-checkbox hidden peer" <%= 'checked' if account.challenge %>>
                 <div class="peer-checked:border-custom-blue peer-checked:text-lg">
                   <div class="flex justify-between px-4 pt-2">
-                    <p class="font-normal text-gray-800 peer-checked:text-white">Account Number</p>
-                    <p class="font-semibold text-black peer-checked:text-white"><%= account.account_number %>XXXX</p>
+                    <p class="font-semibold text-gray-800 peer-checked:text-white"><%= account.name %></p>
+                  </div>
+                  <div class="flex justify-between px-4 pt-2">
+                    <p class="font-normal text-gray-800 peer-checked:text-white">Account Number:</p>
+                    <p class="font-semibold text-black peer-checked:text-white"><%= account.account_number %></p>
                   </div>
                   <div class="flex justify-between px-4">
-                    <p class="font-normal text-gray-800 peer-checked:text-white">Account Type:</p>
+                    <p class="font-normal text-gray-800 peer-checked:text-white">Account Type</p>
                     <p class="font-semibold text-black peer-checked:text-white"><%= account.account_type %></p>
                   </div>
                   <p class="mt-4 font-semibold text-black peer-checked:text-white p-4">Account Type Details</p>
@@ -80,7 +83,7 @@
                     <p class="font-semibold text-black peer-checked:text-white"><%= account.bureau_details.first&.past_due_amount %></p>
                   </div>
                   <div class="custom-blue text-white rounded-b-md peer-checked:bg-blue-600">
-                    <div class="flex justify-between px-4">
+                    <div class="flex justify-between px-4 pt-2">
                       <p>Payment Status</p>
                       <p><%= account.bureau_details.first&.payment_status %></p>
                     </div>
@@ -88,7 +91,7 @@
                       <p>Date Opened</p>
                       <p><%= account.bureau_details.first&.date_opened %></p>
                     </div>
-                    <div class="flex justify-between px-4">
+                    <div class="flex justify-between px-4 pb-2">
                       <p>Last Payment Date</p>
                       <p><%= account.bureau_details.first&.date_of_last_payment %></p>
                     </div>
