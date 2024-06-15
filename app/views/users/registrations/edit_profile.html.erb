@@ -66,29 +66,29 @@
 </div>
 
 <script>
-  document.addEventListener("DOMContentLoaded", function() {
-    const submitButton = document.getElementById("submit_button");
-    const requiredFields = document.querySelectorAll("input[required], select[required]");
+document.addEventListener("turbolinks:load", function() {
+  const submitButton = document.getElementById("submit_button");
+  const requiredFields = document.querySelectorAll("input[required], select[required]");
 
-    requiredFields.forEach(field => {
-      field.addEventListener("input", function() {
-        let allFilled = true;
-        requiredFields.forEach(input => {
-          if (input.value === "") {
-            allFilled = false;
-          }
-        });
-
-        if (allFilled) {
-          submitButton.classList.remove("bg-gray-400", "cursor-not-allowed");
-          submitButton.classList.add("custom-blue", "hover:bg-indigo-500", "cursor-pointer");
-          submitButton.disabled = false;
-        } else {
-          submitButton.classList.add("bg-gray-400", "cursor-not-allowed");
-          submitButton.classList.remove("custom-blue", "hover:bg-indigo-500", "cursor-pointer");
-          submitButton.disabled = true;
+  requiredFields.forEach(field => {
+    field.addEventListener("input", function() {
+      let allFilled = true;
+      requiredFields.forEach(input => {
+        if (input.value === "") {
+          allFilled = false;
         }
       });
+
+      if (allFilled) {
+        submitButton.classList.remove("bg-gray-400", "cursor-not-allowed");
+        submitButton.classList.add("custom-blue", "hover:bg-indigo-500", "cursor-pointer");
+        submitButton.disabled = false;
+      } else {
+        submitButton.classList.add("bg-gray-400", "cursor-not-allowed");
+        submitButton.classList.remove("custom-blue", "hover:bg-indigo-500", "cursor-pointer");
+        submitButton.disabled = true;
+      }
     });
   });
+});
 </script>

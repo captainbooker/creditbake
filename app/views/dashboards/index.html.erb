@@ -15,7 +15,7 @@
           <div id="transunion-score-text" class="score-text">579</div>
         </div>
         <p id="transunion-score-indicator" class="score-indicator">Poor</p>
-        <p class="updated-date">Updated 05/17/24</p>
+        <p class="updated-date">Updated <%= @credit_report.created_at.strftime("%m/%d/%Y") %></p>
         <p class="font-semibold">TransUnion</p>
       </div>
 
@@ -28,7 +28,7 @@
           <div id="experian-score-text" class="score-text">555</div>
         </div>
         <p id="experian-score-indicator" class="score-indicator">Poor</p>
-        <p class="updated-date">Updated 05/17/24</p>
+        <p class="updated-date">Updated <%= @credit_report.created_at.strftime("%m/%d/%Y") %></p>
         <p class="font-semibold">Experian</p>
       </div>
 
@@ -41,7 +41,7 @@
           <div id="equifax-score-text" class="score-text">606</div>
         </div>
         <p id="equifax-score-indicator" class="score-indicator">Fair</p>
-        <p class="updated-date">Updated 05/18/24</p>
+        <p class="updated-date">Updated <%= @credit_report.created_at.strftime("%m/%d/%Y") %></p>
         <p class="font-semibold">Equifax</p>
       </div>
     </div>
@@ -981,7 +981,7 @@
 </div>
 
 <script>
-document.addEventListener("DOMContentLoaded", function() {
+document.addEventListener("turbolinks:load", function() {
   const scoreRanges = [
     { min: 300, max: 579, label: 'Poor', color: 'text-red-500' },
     { min: 580, max: 669, label: 'Fair', color: 'text-yellow-500' },
