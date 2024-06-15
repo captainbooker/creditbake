@@ -1,3 +1,4 @@
+# config/routes.rb
 Rails.application.routes.draw do
   get 'contacts/new'
   get 'contacts/create'
@@ -6,7 +7,19 @@ Rails.application.routes.draw do
   ActiveAdmin.routes(self)
 
   # Devise routes for user authentication
-  devise_for :users
+  devise_for :users, controllers: { registrations: 'users/registrations' }
+
+  devise_scope :user do
+    authenticated :user do
+      root 'dashboards#index', as: :authenticated_root
+      get 'profile/edit', to: 'users/registrations#edit_profile', as: :edit_profile
+      patch 'profile/update', to: 'users/registrations#update_profile', as: :users_update_profile
+    end
+
+    unauthenticated do
+      root 'pages#landing', as: :unauthenticated_root
+    end
+  end
 
   # Nested routes for clients and their profiles under users
   resources :users, only: [] do
@@ -29,7 +42,7 @@ Rails.application.routes.draw do
   post 'credit_reports/download_all_files', to: 'credit_reports#download_all_files', as: 'download_all_files'
   
   get 'success', to: 'dashboards#success', as: 'success'
-  get 'cancel', to: 'dashboards#cancel', as: 'cancel'
+  get 'cancel', to: 'dashboards#cancel'
 
   get '/payment', to: 'payments#new', as: 'payment'
   post '/payment', to: 'payments#create'
@@ -41,12 +54,4 @@ Rails.application.routes.draw do
     get 'calculate_cost', to: 'mailings#calculate_cost'
   end
   resources :spendings, only: [:index]
-  
-  authenticated :user do
-    root 'dashboards#index', as: :authenticated_root
-  end
-
-  unauthenticated do
-    root 'pages#landing', as: :unauthenticated_root
-  end
 end

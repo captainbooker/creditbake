@@ -1,0 +1,94 @@
+<!-- app/views/users/registrations/edit_profile.html.erb -->
+<div class="flex min-h-full">
+  <div class="flex flex-1 flex-col justify-center px-4 py-12 sm:px-6 lg:flex-none lg:px-20 xl:px-24">
+    <div class="mx-auto w-full max-w-sm lg:w-96">
+      <div>
+        <%= image_tag "creditbake-logo.png", class: "h-10 w-auto" %>
+        <h2 class="mt-8 text-2xl font-bold leading-9 tracking-tight text-gray-900">Complete your profile</h2>
+        <p class="mt-2 text-sm leading-6 text-gray-500">Congrats on taking that next step to a brighter financial life. Please fill in the following info to complete your profile. God Bless!</p>
+      </div>
+
+      <div class="mt-10">
+        <%= form_for current_user, url: users_update_profile_path, method: :patch do |f| %>
+          <%= hidden_field_tag :authenticity_token, form_authenticity_token %>
+          <div>
+            <label for="first_name" class="block text-sm font-medium leading-6 text-gray-900">First Name</label>
+            <div class="mt-2">
+              <%= f.text_field :first_name, id: "first_name", required: true, class: "block w-full rounded-md border-0 py-1.5 pl-3 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" %>
+            </div>
+          </div>
+          <div class="mt-6">
+            <label for="last_name" class="block text-sm font-medium leading-6 text-gray-900">Last Name</label>
+            <div class="mt-2">
+              <%= f.text_field :last_name, id: "last_name", required: true, class: "block w-full rounded-md border-0 py-1.5 pl-3 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" %>
+            </div>
+          </div>
+          <div class="mt-6">
+            <label for="phone_number" class="block text-sm font-medium leading-6 text-gray-900">Phone Number</label>
+            <div class="mt-2">
+              <%= f.text_field :phone_number, id: "phone_number", required: true, class: "block w-full rounded-md border-0 py-1.5 pl-3 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" %>
+            </div>
+          </div>
+          <div class="mt-6">
+            <label for="street_address" class="block text-sm font-medium leading-6 text-gray-900">Street Address</label>
+            <div class="mt-2">
+              <%= f.text_field :street_address, id: "street_address", required: true, class: "block w-full rounded-md border-0 py-1.5 pl-3 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" %>
+            </div>
+          </div>
+          <div class="mt-6">
+            <label for="city" class="block text-sm font-medium leading-6 text-gray-900">City</label>
+            <div class="mt-2">
+              <%= f.text_field :city, id: "city", required: true, class: "block w-full rounded-md border-0 py-1.5 pl-3 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" %>
+            </div>
+          </div>
+          <div class="mt-6">
+            <label for="state" class="block text-sm font-medium leading-6 text-gray-900">State</label>
+            <div class="mt-2">
+              <%= f.select :state, options_for_select(us_states, current_user.state), { include_blank: 'Select State' }, class: "block w-full rounded-md border-0 py-1.5 pl-3 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" %>
+            </div>
+          </div>
+          <div class="mt-6">
+            <label for="postal_code" class="block text-sm font-medium leading-6 text-gray-900">Postal Code</label>
+            <div class="mt-2">
+              <%= f.text_field :postal_code, id: "postal_code", required: true, class: "block w-full rounded-md border-0 py-1.5 pl-3 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" %>
+            </div>
+          </div>
+          <div class="mt-6">
+            <%= f.submit "Complete Profile", id: "submit_button", class: "flex w-full justify-center rounded-md bg-gray-400 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm cursor-not-allowed" %>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+  <div class="relative hidden w-0 flex-1 lg:block">
+    <div class="custom-blue absolute inset-0 h-full w-full object-cover"></div>
+  </div>
+</div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    const submitButton = document.getElementById("submit_button");
+    const requiredFields = document.querySelectorAll("input[required], select[required]");
+
+    requiredFields.forEach(field => {
+      field.addEventListener("input", function() {
+        let allFilled = true;
+        requiredFields.forEach(input => {
+          if (input.value === "") {
+            allFilled = false;
+          }
+        });
+
+        if (allFilled) {
+          submitButton.classList.remove("bg-gray-400", "cursor-not-allowed");
+          submitButton.classList.add("custom-blue", "hover:bg-indigo-500", "cursor-pointer");
+          submitButton.disabled = false;
+        } else {
+          submitButton.classList.add("bg-gray-400", "cursor-not-allowed");
+          submitButton.classList.remove("custom-blue", "hover:bg-indigo-500", "cursor-pointer");
+          submitButton.disabled = true;
+        }
+      });
+    });
+  });
+</script>
