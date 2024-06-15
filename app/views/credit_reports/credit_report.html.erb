@@ -15,22 +15,24 @@
           </div>
           <div>
             <%= f.label :username, "User Name", class: "block text-sm font-medium text-gray-700 mb-1" %>
-            <%= f.text_field :username, placeholder: "Enter Your Name", class: "w-full mt-1 p-3 border rounded-lg bg-gray-100 text-gray-500" %>
+            <%= f.text_field :username, placeholder: "Enter Your Username", class: "w-full mt-1 p-3 border rounded-lg bg-gray-100 text-gray-500" %>
           </div>
           <div>
             <%= f.label :security_question, "Security Question", class: "block text-sm font-medium text-gray-700 mb-1" %>
-            <%= f.text_field :security_question, placeholder: "Select Security Question", class: "w-full mt-1 p-3 border rounded-lg bg-gray-100 text-gray-500" %>
+            <%= f.text_field :security_question, placeholder: "Enter Security Question Answer", class: "w-full mt-1 p-3 border rounded-lg bg-gray-100 text-gray-500" %>
           </div>
           <div>
             <%= f.label :password, "Password", class: "block text-sm font-medium text-gray-700 mb-1" %>
             <div class="relative">
-              <%= f.password_field :password, placeholder: "Enter Your Password", class: "w-full mt-1 p-3 border rounded-lg bg-gray-100 text-gray-500 pr-10" %>
-              <span class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-500">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 01-6 0 3 3 0 016 0z" />
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.455 5 12 5c4.545 0 8.268 2.943 9.542 7-.342 1.022-.888 1.974-1.605 2.767M15 12a3 3 0 01-6 0" />
+              <%= f.password_field :password, id: "password", placeholder: "Enter Your Password", class: "w-full mt-1 p-3 border rounded-lg bg-gray-100 text-gray-500 pr-10" %>
+              <button type="button" id="toggle_password_visibility" class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-500">
+                <svg id="eye_icon_password" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#000000">
+                  <path d="M480.18-353.85q60.97 0 103.47-42.68t42.5-103.65q0-60.97-42.68-103.47t-103.65-42.5q-60.97 0-103.47 42.68t-42.5 103.65q0 60.97 42.68 103.47t103.65 42.5ZM480-392q-45 0-76.5-31.5T372-500q0-45 31.5-76.5T480-608q45 0 76.5 31.5T588-500q0 45-31.5 76.5T480-392Zm.11 152q-129.96 0-236.88-70.73Q136.31-381.46 83.08-500q53.23-118.54 160.04-189.27T479.89-760q129.96 0 236.88 70.73Q823.69-618.54 876.92-500q-53.23 118.54-160.04 189.27T480.11-240ZM480-500Zm0 220q113 0 207.5-59.5T832-500q-50-101-144.5-160.5T480-720q-113 0-207.5 59.5T128-500q50 101 144.5 160.5T480-280Z"/>
                 </svg>
-              </span>
+                <svg id="eye_off_icon_password" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 hidden" viewBox="0 -960 960 960" fill="#000000">
+                  <path d="M617.85-454.15 586-486q9-52.38-29.69-90.69Q517.62-615 466-606l-31.85-31.85q10.08-4.15 21.04-6.23 10.96-2.07 24.81-2.07 61.15 0 103.65 42.5 42.5 42.5 42.5 103.65 0 13.85-2.07 25.58-2.08 11.73-6.23 20.27Zm126.46 122.92L714-358q38-29 67.5-63.5T832-500q-50-101-143.5-160.5T480-720q-29 0-57 4t-55 12l-31.23-31.23q34.85-13.15 70.92-18.96Q443.77-760 480-760q130.23 0 238.23 71.58 108 71.57 158.69 188.42-21.46 48.23-54.34 90.65-32.89 42.43-78.27 78.12Zm44.61 216.77L633.23-269.69q-26.54 11.77-65.88 20.73Q528-240 480-240q-131 0-238.23-71.58Q134.54-383.15 83.08-500q23.3-53 61.46-99.27 38.15-46.27 81.46-77.65l-111.54-112 28.31-28.31 674.46 674.46-28.31 28.31ZM254.31-648.62q-34.39 24.47-70.31 64.31-35.92 39.85-56 84.31 50 101 143.5 160.5T480-280q34.62 0 69.77-6.73t52.85-13.58L537.38-366q-9.46 5.31-26.38 8.73-16.92 3.42-31 3.42-61.15 0-103.65-42.5-42.5-42.5-42.5-103.65 0-13.31 3.42-29.85 3.42-16.53 8.73-27.53l-91.69-91.24ZM541-531Zm-112.54 56.54Z"/>
+                </svg>
+              </button>
             </div>
           </div>
           <div class="text-center md:col-span-2">
@@ -38,14 +40,37 @@
           </div>
         </div>
       <% end %>
+
+      <div class="mb-12 mt-4">
+        <h3 class="font-semibold text-black text-xl">Don't Have an Account?</h3>
+        <p class="text-gray-700 mt-2 text-lg">We are partners with IdentityIQ and Credit Dyno. If you don't have an account yet, click on the links below to sign up. After signing up, come back and enter your credentials to import your credit report into our system.</p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+        <div class="border border-gray-300 rounded-lg p-6 shadow-md bg-white text-center">
+          <h4 class="text-lg font-semibold text-black mb-2">IdentityIQ</h4>
+          <p class="text-gray-700">Get your credit report from IdentityIQ.</p>
+          <p class="text-gray-700 mb-4">Trial Period</p>
+          <a href="https://www.identityiq.com/sc-securepreferred.aspx?offercode=431287GJ" target="_blank" class="px-6 py-3 bg-black text-white font-medium rounded-lg hover:bg-white hover:text-black hover:border hover:border-black transition duration-300">Sign Up for IdentityIQ</a>
+        </div>
+        <div class="border border-gray-300 rounded-lg p-6 shadow-md bg-white text-center">
+          <h4 class="text-lg font-semibold text-black mb-2">Credit Dyno</h4>
+          <p class="text-gray-700">Get your credit report from Credit Dyno.</p>
+          <p class="text-gray-700 mb-4">Trial Period</p>
+          <a href="https://creditdyno.com/redirect.asp?GUID=JQS97V16P36N" target="_blank" class="px-6 py-3 bg-black text-white font-medium rounded-lg hover:bg-white hover:text-black hover:border hover:border-black transition duration-300">Sign Up for Credit Dyno</a>
+        </div>
+      </div>
     </div>
-    
+
     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
       <!-- Previous Credit Reports Section -->
       <div class="p-6 mb-8">
         <div class="mb-8 text-xl">
           <h3 class="font-semibold text-black">Credit Reports</h3>
         </div>
+        <% if @credit_reports.empty? %>
+          <p>No past credit reports</p>
+        <% end %>
         <% @credit_reports.each do |report| %>
           <div class="border rounded-lg p-4 mb-2 bg-white">
             <div class="flex justify-between items-center">
@@ -58,7 +83,6 @@
         <% end %>
       </div>
 
-
       <!-- Tips Section -->
       <div class="border border-gray-300 rounded-lg p-6 shadow-md mb-8">
         <div class="flex items-center mb-4">
@@ -68,10 +92,31 @@
         <ul class="list-disc list-inside text-gray-700">
           <li>Reduce Credit Card Balances</li>
           <li>Maintain Older Accounts</li>
-          <li>Check Your Credit Report </li>
+          <li>Check Your Credit Report</li>
           <li>Pay Bills on Time</li>
         </ul>
       </div>
     </div>
   </div>
 </div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+  const passwordField = document.getElementById("password");
+  const togglePasswordButton = document.getElementById("toggle_password_visibility");
+  const eyeIconPassword = document.getElementById("eye_icon_password");
+  const eyeOffIconPassword = document.getElementById("eye_off_icon_password");
+
+  togglePasswordButton.addEventListener("click", function() {
+    if (passwordField.type === "password") {
+      passwordField.type = "text";
+      eyeIconPassword.classList.remove("hidden");
+      eyeOffIconPassword.classList.add("hidden");
+    } else {
+      passwordField.type = "password";
+      eyeIconPassword.classList.add("hidden");
+      eyeOffIconPassword.classList.remove("hidden");
+    }
+  });
+});
+</script>
