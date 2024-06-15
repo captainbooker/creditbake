@@ -2,6 +2,7 @@
 class DashboardsController < ApplicationController
   include OpenaiPromptable
   before_action :authenticate_user!
+  before_action :ensure_required_documents, only: [:create_attack]
 
   def index
   end

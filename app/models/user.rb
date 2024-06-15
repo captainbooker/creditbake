@@ -33,4 +33,14 @@ class User < ApplicationRecord
     spendings.create(amount: amount, description: description)
     decrement!(:credits, amount)
   end
+
+  def initials
+    first_initial = first_name.present? ? first_name[0].upcase : ""
+    last_initial = last_name.present? ? last_name[0].upcase : ""
+    "#{first_initial}#{last_initial}"
+  end
+
+  def full_name
+    "#{first_name} #{last_name}"
+  end
 end

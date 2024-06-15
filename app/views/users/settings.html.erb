@@ -25,12 +25,9 @@
             <%= form_with(model: @user, local: true) do |form| %>
               <div class="flex justify-center mb-6">
                 <div class="flex items-center gap-2">
-                  <div class="h-24 w-24 rounded-full bg-gray-100 dark:bg-gray-800 flex justify-center items-center">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 text-blue-500" viewBox="0 0 20 20" fill="currentColor">
-                      <path d="M4 5a2 2 0 012-2h8a2 2 0 012 2v10a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm4 1a1 1 0 100 2 1 1 0 000-2zm0 4a1 1 0 100 2 1 1 0 000-2z" />
-                    </svg>
+                  <div class="h-24 w-24 rounded-full custom-blue dark:custom-blue flex justify-center items-center">
+                    <p class="text-white text-md"><%= current_user.initials %></p>
                   </div>
-                  <%= form.file_field :avatar, accept: 'image/*', class: 'hidden', id: 'upload-photo' %>
                 </div>
               </div>
               <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -60,7 +57,7 @@
                 </div>
                 <div>
                   <%= form.label :state, "State", class: "block text-sm font-medium text-gray-700 mb-1" %>
-                  <%= form.text_field :state, placeholder: "Enter Your State", class: "w-full mt-1 p-3 border rounded-lg bg-gray-100 text-gray-500" %>
+                  <%= form.select :state, options_for_select(us_states, current_user.state), { include_blank: 'Select State' }, class: "w-full mt-1 p-3 border rounded-lg bg-gray-100 text-gray-500" %>
                 </div>
                 <div>
                   <%= form.label :city, "City", class: "block text-sm font-medium text-gray-700 mb-1" %>
@@ -72,8 +69,18 @@
                 </div>
                 <div>
                   <%= form.label :ssn_last4, "Last 4 SSN", class: "block text-sm font-medium text-gray-700 mb-1" %>
-                  <%= form.text_field :ssn_last4, placeholder: "Last 4 SSN", class: "w-full mt-1 p-3 border rounded-lg bg-gray-100 text-gray-500" %>
-                  <div class="flex items-center mt-1 text-sm text-gray-500">
+                  <div class="relative">
+                    <%= form.password_field :ssn_last4, id: "ssn_last4", placeholder: "Last 4 SSN", class: "w-full mt-1 p-3 border rounded-lg bg-gray-100 text-gray-500 pr-10" %>
+                    <button type="button" id="toggle_ssn_visibility" class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-500">
+                      <svg id="eye_icon" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#000000">
+                        <path d="M480.18-353.85q60.97 0 103.47-42.68t42.5-103.65q0-60.97-42.68-103.47t-103.65-42.5q-60.97 0-103.47 42.68t-42.5 103.65q0 60.97 42.68 103.47t103.65 42.5ZM480-392q-45 0-76.5-31.5T372-500q0-45 31.5-76.5T480-608q45 0 76.5 31.5T588-500q0 45-31.5 76.5T480-392Zm.11 152q-129.96 0-236.88-70.73Q136.31-381.46 83.08-500q53.23-118.54 160.04-189.27T479.89-760q129.96 0 236.88 70.73Q823.69-618.54 876.92-500q-53.23 118.54-160.04 189.27T480.11-240ZM480-500Zm0 220q113 0 207.5-59.5T832-500q-50-101-144.5-160.5T480-720q-113 0-207.5 59.5T128-500q50 101 144.5 160.5T480-280Z"/>
+                      </svg>
+                      <svg id="eye_off_icon" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 hidden" viewBox="0 -960 960 960" fill="#000000">
+                        <path d="M617.85-454.15 586-486q9-52.38-29.69-90.69Q517.62-615 466-606l-31.85-31.85q10.08-4.15 21.04-6.23 10.96-2.07 24.81-2.07 61.15 0 103.65 42.5 42.5 42.5 42.5 103.65 0 13.85-2.07 25.58-2.08 11.73-6.23 20.27Zm126.46 122.92L714-358q38-29 67.5-63.5T832-500q-50-101-143.5-160.5T480-720q-29 0-57 4t-55 12l-31.23-31.23q34.85-13.15 70.92-18.96Q443.77-760 480-760q130.23 0 238.23 71.58 108 71.57 158.69 188.42-21.46 48.23-54.34 90.65-32.89 42.43-78.27 78.12Zm44.61 216.77L633.23-269.69q-26.54 11.77-65.88 20.73Q528-240 480-240q-131 0-238.23-71.58Q134.54-383.15 83.08-500q23.3-53 61.46-99.27 38.15-46.27 81.46-77.65l-111.54-112 28.31-28.31 674.46 674.46-28.31 28.31ZM254.31-648.62q-34.39 24.47-70.31 64.31-35.92 39.85-56 84.31 50 101 143.5 160.5T480-280q34.62 0 69.77-6.73t52.85-13.58L537.38-366q-9.46 5.31-26.38 8.73-16.92 3.42-31 3.42-61.15 0-103.65-42.5-42.5-42.5-42.5-103.65 0-13.31 3.42-29.85 3.42-16.53 8.73-27.53l-91.69-91.24ZM541-531Zm-112.54 56.54Z"/>
+                      </svg>
+                    </button>
+                  </div>
+                  <div class="flex items-center mt-1 text-xs text-gray-500">
                     <span class="material-icons text-gray-500 mr-2">info</span>
                     <p>Your SSN is protected with advanced encryption techniques to ensure its safety.</p>
                   </div>
@@ -118,3 +125,24 @@
     <!-- ====== Settings Section End ====== -->
   </div>
 </div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+  const ssnField = document.getElementById("ssn_last4");
+  const toggleButton = document.getElementById("toggle_ssn_visibility");
+  const eyeIcon = document.getElementById("eye_icon");
+  const eyeOffIcon = document.getElementById("eye_off_icon");
+
+  toggleButton.addEventListener("click", function() {
+    if (ssnField.type === "password") {
+      ssnField.type = "text";
+      eyeIcon.classList.add("hidden");
+      eyeOffIcon.classList.remove("hidden");
+    } else {
+      ssnField.type = "password";
+      eyeOffIcon.classList.add("hidden");
+      eyeIcon.classList.remove("hidden");
+    }
+  });
+});
+</script>

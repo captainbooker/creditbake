@@ -20,6 +20,12 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  def ensure_required_documents
+    if current_user.ssn_last4.blank? || !current_user.id_document.attached? || !current_user.utility_bill.attached?
+      redirect_to settings_path, alert: "Please upload the required documents before proceeding."
+    end
+  end
+
   protected
 
   def layout_by_resource
