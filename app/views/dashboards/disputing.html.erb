@@ -1,13 +1,12 @@
 <div class="mx-auto max-w-screen-3xl p-4 md:p-6 2xl:p-10">
   <div class="mx-auto max-w-270">
-
+    <div class="flex items-center justify-between mb-6">
+      <h1 class="text-2xl font-bold">Challenege</h1>
+      <button class="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-700">Create Attack</button>
+    </div>
     <%= form_with url: save_challenges_path, method: :patch do %>
       <%= hidden_field_tag :authenticity_token, form_authenticity_token %>
-
-      <div class="mb-12 text-3xl mt-4">
-        <h3 class="font-semibold text-black">Challenge Overview</h3>
-      </div>
-      
+    
       <div class="rounded-lg border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark mb-8">
         <div class="p-7 custom-background-color">
           <div class="mb-12 mt-4">

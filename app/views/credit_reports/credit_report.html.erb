@@ -1,7 +1,8 @@
 <div class="mx-auto max-w-screen-3xl p-4 md:p-6 2xl:p-10">
   <div class="mx-auto max-w-270">
-    <div class="mb-12 text-3xl mt-4">
-      <h3 class="font-semibold text-black">Import Credit Report</h3>
+    <div class="flex items-center justify-between mb-6">
+      <h1 class="text-2xl font-bold">Import Credit Report</h1>
+      <button class="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-700">Create Attack</button>
     </div>
     <div class="border border-gray-300 rounded-lg p-6 shadow-md mb-8 custom-background-color">
       <%= form_with url: import_credit_report_path, method: :post, local: true, html: { id: 'credit-report-form' } do |f| %>
