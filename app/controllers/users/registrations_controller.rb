@@ -2,6 +2,13 @@ class Users::RegistrationsController < Devise::RegistrationsController
   before_action :authenticate_user!, only: [:edit_profile, :update_profile]
   skip_before_action :ensure_profile_complete, only: [:edit_profile, :update_profile]
 
+  def create
+    super do |resource|
+      resource.credits = 0 # or any default value
+      resource.save
+    end
+  end
+  
   def edit_profile
     # Custom logic for the profile setup step
   end

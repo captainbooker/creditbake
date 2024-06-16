@@ -43,4 +43,8 @@ class User < ApplicationRecord
   def full_name
     "#{first_name} #{last_name}"
   end
+
+  def credits
+    self[:credits] || 0
+  end
 end
