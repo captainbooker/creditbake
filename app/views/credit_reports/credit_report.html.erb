@@ -2,7 +2,7 @@
   <div class="mx-auto max-w-270">
     <div class="flex items-center justify-between mb-6">
       <h1 class="text-2xl font-bold">Import Credit Report</h1>
-      <button class="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-700">Create Attack</button>
+      <%= link_to 'Create Attack', letters_path, class: "bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-700" %>
     </div>
     <div class="border border-gray-300 rounded-lg p-6 shadow-md mb-8 custom-background-color">
       <%= form_with url: import_credit_report_path, method: :post, local: true, html: { id: 'credit-report-form' } do |f| %>
@@ -12,7 +12,7 @@
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
           <div>
             <%= f.label :service, "Credit Monitoring Service", class: "block text-sm font-medium text-gray-700 mb-1" %>
-            <%= f.select :service, options_for_select([['IdentityIQ', 'identityiq'], ['Credit Dyno', 'creditdyno']]), {}, class: "w-full mt-1 p-3 border rounded-lg bg-gray-100 text-gray-500" %>
+            <%= f.select :service, options_for_select([['IdentityIQ', 'identityiq']]), {}, class: "w-full mt-1 p-3 border rounded-lg bg-gray-100 text-gray-500" %>
           </div>
           <div>
             <%= f.label :username, "User Name", class: "block text-sm font-medium text-gray-700 mb-1" %>
@@ -47,18 +47,12 @@
         <p class="text-gray-700 mt-2 text-lg">We are partners with IdentityIQ and Credit Dyno. If you don't have an account yet, click on the links below to sign up. After signing up, come back and enter your credentials to import your credit report into our system.</p>
       </div>
 
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+      <div class="flex justify-center mb-8">
         <div class="border border-gray-300 rounded-lg p-6 shadow-md bg-white text-center">
           <h4 class="text-lg font-semibold text-black mb-2">IdentityIQ</h4>
           <p class="text-gray-700">Get your credit report from IdentityIQ.</p>
           <p class="text-gray-700 mb-4">Trial Period</p>
           <a href="https://www.identityiq.com/sc-securepreferred.aspx?offercode=431287GJ" target="_blank" class="px-6 py-3 bg-black text-white font-medium rounded-lg hover:bg-white hover:text-black hover:border hover:border-black transition duration-300">Sign Up for IdentityIQ</a>
-        </div>
-        <div class="border border-gray-300 rounded-lg p-6 shadow-md bg-white text-center">
-          <h4 class="text-lg font-semibold text-black mb-2">Credit Dyno</h4>
-          <p class="text-gray-700">Get your credit report from Credit Dyno.</p>
-          <p class="text-gray-700 mb-4">Trial Period</p>
-          <a href="https://creditdyno.com/redirect.asp?GUID=JQS97V16P36N" target="_blank" class="px-6 py-3 bg-black text-white font-medium rounded-lg hover:bg-white hover:text-black hover:border hover:border-black transition duration-300">Sign Up for Credit Dyno</a>
         </div>
       </div>
     </div>

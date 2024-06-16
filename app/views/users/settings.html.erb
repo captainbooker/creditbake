@@ -100,16 +100,30 @@
                 </div>
               </div>
               <div class="mt-6">
-                <div class="flex items-center justify-between">
-                  <div class="flex items-center gap-4">
-                    <div class="text-sm font-medium text-gray-700">Utility Bill</div>
-                    <% if @user.utility_bill.attached? %>
-                      <span class="text-gray-500"><%= @user.utility_bill.filename.to_s %></span>
-                    <% end %>
-                  </div>
-                  <div>
-                    <%= form.file_field :utility_bill, accept: 'application/pdf,image/*', class: 'block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100' %>
-                  </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                  <% ["id_document", "utility_bill", "additional_document1", "additional_document2"].each do |doc| %>
+                    <div class="flex flex-col items-center justify-between border p-4 rounded-lg shadow-md bg-white">
+                      <div class="flex flex-col items-center">
+                        <div class="text-sm font-medium text-gray-700 capitalize"><%= doc.humanize %></div>
+                        <% if @user.send(doc).attached? %>
+                          <span class="text-gray-500 mb-2"><%= @user.send(doc).filename.to_s %></span>
+                          <div class="mb-2">
+                            <% if @user.send(doc).content_type.starts_with?('image/') %>
+                              <%= image_tag url_for(@user.send(doc)), class: "h-24 w-24 object-cover rounded-lg shadow-sm" %>
+                            <% else %>
+                              <%= link_to "View Document", url_for(@user.send(doc)), target: "_blank", class: "text-blue-500 underline" %>
+                            <% end %>
+                          </div>
+                        <% end %>
+                      </div>
+                      <div>
+                        <%= form.file_field doc, accept: 'application/pdf,image/*', class: 'block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100' %>
+                      </div>
+                      <div>
+                        <%= form.hidden_field doc, value: @user.send(doc).attached? ? rails_blob_path(@user.send(doc), disposition: "attachment") : "" %>
+                      </div>
+                    </div>
+                  <% end %>
                 </div>
               </div>
               <div class="flex justify-end gap-4.5 mt-6">
