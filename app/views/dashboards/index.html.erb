@@ -12,10 +12,10 @@
             <circle class="text-gray-300" stroke-width="10" stroke="currentColor" fill="transparent" r="40" cx="50" cy="50" />
             <circle id="transunion-progress" class="text-red-500" stroke-width="10" stroke-dasharray="251.2" stroke-dashoffset="251.2" stroke-linecap="round" stroke="currentColor" fill="transparent" r="40" cx="50" cy="50" />
           </svg>
-          <div id="transunion-score-text" class="score-text">579</div>
+          <div id="transunion-score-text" class="score-text">0</div>
         </div>
-        <p id="transunion-score-indicator" class="score-indicator">Poor</p>
-        <p class="updated-date">Updated <%= @credit_report.created_at.strftime("%m/%d/%Y") %></p>
+        <p id="transunion-score-indicator" class="score-indicator">Import Credit Report</p>
+        <p class="updated-date">Updated <%= @credit_report&.created_at&.strftime("%m/%d/%Y") %></p>
         <p class="font-semibold">TransUnion</p>
       </div>
 
@@ -25,10 +25,10 @@
             <circle class="text-gray-300" stroke-width="10" stroke="currentColor" fill="transparent" r="40" cx="50" cy="50" />
             <circle id="experian-progress" class="text-red-500" stroke-width="10" stroke-dasharray="251.2" stroke-dashoffset="251.2" stroke-linecap="round" stroke="currentColor" fill="transparent" r="40" cx="50" cy="50" />
           </svg>
-          <div id="experian-score-text" class="score-text">555</div>
+          <div id="experian-score-text" class="score-text">0</div>
         </div>
-        <p id="experian-score-indicator" class="score-indicator">Poor</p>
-        <p class="updated-date">Updated <%= @credit_report.created_at.strftime("%m/%d/%Y") %></p>
+        <p id="experian-score-indicator" class="score-indicator">Import Credit Report</p>
+        <p class="updated-date">Updated <%= @credit_report&.created_at&.strftime("%m/%d/%Y") %></p>
         <p class="font-semibold">Experian</p>
       </div>
 
@@ -38,10 +38,10 @@
             <circle class="text-gray-300" stroke-width="10" stroke="currentColor" fill="transparent" r="40" cx="50" cy="50" />
             <circle id="equifax-progress" class="text-yellow-500" stroke-width="10" stroke-dasharray="251.2" stroke-dashoffset="251.2" stroke-linecap="round" stroke="currentColor" fill="transparent" r="40" cx="50" cy="50" />
           </svg>
-          <div id="equifax-score-text" class="score-text">606</div>
+          <div id="equifax-score-text" class="score-text">0</div>
         </div>
-        <p id="equifax-score-indicator" class="score-indicator">Fair</p>
-        <p class="updated-date">Updated <%= @credit_report.created_at.strftime("%m/%d/%Y") %></p>
+        <p id="equifax-score-indicator" class="score-indicator">Import Credit Report</p>
+        <p class="updated-date">Updated <%= @credit_report&.created_at&.strftime("%m/%d/%Y") %></p>
         <p class="font-semibold">Equifax</p>
       </div>
     </div>

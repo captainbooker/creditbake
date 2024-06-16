@@ -11,9 +11,9 @@ class DashboardsController < ApplicationController
   def scores
     credit_report = CreditReport.where(user_id: current_user.id).order(created_at: :desc).first
     render json: {
-      experian_score: credit_report.experian_score,
-      transunion_score: credit_report.transunion_score,
-      equifax_score: credit_report.equifax_score
+      experian_score: credit_report&.experian_score,
+      transunion_score: credit_report&.transunion_score,
+      equifax_score: credit_report&.equifax_score
     }
   end
 
