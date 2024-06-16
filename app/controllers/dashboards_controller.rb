@@ -6,6 +6,12 @@ class DashboardsController < ApplicationController
 
   def index
     @credit_report = CreditReport.where(user_id: current_user.id).order(created_at: :desc).first
+    @accounts = current_user.accounts
+    @inquiries = current_user.inquiries
+    @negative_accounts = current_user.accounts.joins(:bureau_details)
+                              .where.not(bureau_details: { payment_status: ['As Agreed', 'Current'] })
+                              .distinct
+    @letters = current_user.letters.order(created_at: :desc).page(params[:page]).per(10)
   end
 
   def scores

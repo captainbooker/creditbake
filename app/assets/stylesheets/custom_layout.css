@@ -1859,3 +1859,29 @@ body {
   font-size: 0.875rem;
   color: #6b7280;
 }
+
+/* Loader CSS */
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.loader {
+  border: 4px solid rgba(255, 255, 255, 0.3); 
+  border-top: 4px solid #ffffff; 
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  animation: spin 1s linear infinite;
+}
+
+/* Ensure overlay is initially hidden */
+#loading-overlay {
+  display: none;
+}
+
+/* Make overlay visible when the hidden class is removed */
+#loading-overlay.show {
+  display: flex;
+}
+

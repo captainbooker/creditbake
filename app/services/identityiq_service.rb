@@ -10,7 +10,14 @@ class IdentityiqService
     @password = password
     @security_question = security_question
     @service = service
-    @driver = Selenium::WebDriver.for :chrome
+
+    # Configure Chrome options to run in headless mode
+    options = Selenium::WebDriver::Chrome::Options.new
+    options.add_argument('--headless') # Run in headless mode
+    options.add_argument('--disable-gpu') # Disable GPU hardware acceleration
+    options.add_argument('--window-size=1920,1080') # Set a default window size
+
+    @driver = Selenium::WebDriver.for :chrome, options: options
   end
 
   def fetch_credit_report
@@ -32,7 +39,6 @@ class IdentityiqService
 
     login_button = @driver.find_element(css: 'button[type="submit"]')
     login_button.click
-
   end
 
   def fetch_credit_report_json

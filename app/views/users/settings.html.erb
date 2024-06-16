@@ -119,9 +119,6 @@
                       <div>
                         <%= form.file_field doc, accept: 'application/pdf,image/*', class: 'block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100' %>
                       </div>
-                      <div>
-                        <%= form.hidden_field doc, value: @user.send(doc).attached? ? rails_blob_path(@user.send(doc), disposition: "attachment") : "" %>
-                      </div>
                     </div>
                   <% end %>
                 </div>
@@ -157,6 +154,28 @@ document.addEventListener("turbolinks:load", function() {
       eyeOffIcon.classList.add("hidden");
       eyeIcon.classList.remove("hidden");
     }
+  });
+
+  document.querySelectorAll("input[type='file']").forEach(input => {
+    input.addEventListener("change", function(event) {
+      const fileInput = event.target;
+      const file = fileInput.files[0];
+      const previewContainer = fileInput.closest("div").previousElementSibling;
+
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          if (file.type.startsWith("image/")) {
+            previewContainer.innerHTML = `<img src="${e.target.result}" class="h-24 w-24 object-cover rounded-lg shadow-sm" />`;
+          } else {
+            previewContainer.innerHTML = `<a href="${e.target.result}" target="_blank" class="text-blue-500 underline">View Document</a>`;
+          }
+        };
+        reader.readAsDataURL(file);
+      } else {
+        previewContainer.innerHTML = "";
+      }
+    });
   });
 });
 </script>
