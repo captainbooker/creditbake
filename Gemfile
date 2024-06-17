@@ -48,7 +48,6 @@ gem 'net-http'
 gem 'sendgrid-ruby'
 gem 'kaminari'
 gem 'friendly_id', '~> 5.5.0'
-gem 'secure_headers'
 
 
 gem 'dotenv', groups: [:development, :test]

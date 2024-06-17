@@ -16,7 +16,6 @@ require "sprockets/railtie"
 if ['development', 'test'].include? ENV['RAILS_ENV']
   require 'dotenv/load'
 end
-require 'secure_headers'
 
 # require "rails/test_unit/railtie"
 
@@ -41,6 +40,5 @@ module Creditbake
 
     # Don't generate system test files.
     config.generators.system_tests = nil
-    config.middleware.use SecureHeaders::Middleware
   end
 end
