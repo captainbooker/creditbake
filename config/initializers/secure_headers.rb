@@ -1,8 +1,8 @@
-# config/initializers/secure_headers.rb
 SecureHeaders::Configuration.default do |config|
   config.csp = {
     default_src: ["'self'"],
-    script_src: ["'self'", "'unsafe-inline'", "'unsafe-eval'", "https:"],
+    script_src: ["'self'", "'unsafe-inline'", "'unsafe-eval'", "https:", "https://unpkg.com"],
+    script_src_elem: ["'self'", "https://unpkg.com"],
     style_src: ["'self'", "'unsafe-inline'", "https:"],
     img_src: ["'self'", "data:", "https:"],
     font_src: ["'self'", "https:", "data:"],
@@ -13,8 +13,7 @@ SecureHeaders::Configuration.default do |config|
     child_src: ["'self'"],
     form_action: ["'self'"],
     frame_ancestors: ["'none'"],
-    base_uri: ["'self'"],
-    plugin_types: ["application/pdf"]
+    base_uri: ["'self'"]
   }
 
   config.hsts = "max-age=#{1.year.to_i}; includeSubdomains; preload"

@@ -27,6 +27,7 @@ class User < ApplicationRecord
 
 
   validates :credits, numericality: { greater_than_or_equal_to: 0 }
+  validate :password_complexity, on: :create
 
   def assign_default_role
     self.add_role(:user) if self.roles.blank?
@@ -49,5 +50,13 @@ class User < ApplicationRecord
 
   def credits
     self[:credits] || 0
+  end
+
+  private
+
+  def password_complexity
+    if password.present? && !password.match?(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/)
+      errors.add :password, 'must be at least 8 characters long, include 1 uppercase letter, 1 lowercase letter, 1 digit, and 1 special character (@, $, !, %, *, ?, &).'
+    end
   end
 end

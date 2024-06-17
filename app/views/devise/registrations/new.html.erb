@@ -1,13 +1,8 @@
 <section class="bg-[#F4F7FF] py-20 lg:py-32 dark:bg-dark">
-  <div class="p-4">
-    <%= render 'shared/flash_message' %>
-  </div>
   <div class="container">
     <div class="flex flex-wrap -mx-4">
       <div class="w-full px-4">
-        <div
-          class="wow fadeInUp relative mx-auto max-w-[525px] overflow-hidden rounded-xl shadow-form bg-white dark:bg-dark-2 py-14 px-8 text-center sm:px-12 md:px-[60px]"
-          data-wow-delay=".15s">
+        <div class="wow fadeInUp relative mx-auto max-w-[525px] overflow-hidden rounded-xl shadow-form bg-white dark:bg-dark-2 py-14 px-8 text-center sm:px-12 md:px-[60px]" data-wow-delay=".15s">
           <div class="mb-10 text-center">
             <div class="mb-10 text-center">
               <%= image_tag "creditbake-logo.png", class: "mx-auto inline-block max-w-[160px]" %>
@@ -17,6 +12,7 @@
             <div class="p-4">
               <%= render 'shared/flash_message', resource: resource %>
             </div>
+            <div class="password-errors mb-4 text-left"></div> <!-- Add this line for password errors -->
             <div class="mb-[22px]">
               <%= f.email_field :email, placeholder: "Email", class: "w-full px-5 py-3 text-base transition bg-transparent border rounded-md outline-none border-stroke dark:border-dark-3 text-body-color dark:text-dark-6 placeholder:text-dark-6 focus:border-primary dark:focus:border-primary focus-visible:shadow-none" %>
             </div>
@@ -27,7 +23,7 @@
               <%= f.password_field :password_confirmation, placeholder: "Confirm Password", class: "w-full px-5 py-3 text-base transition bg-transparent border rounded-md outline-none border-stroke dark:border-dark-3 text-body-color dark:text-dark-6 placeholder:text-dark-6 focus:border-primary dark:focus:border-primary focus-visible:shadow-none" %>
             </div>
             <div class="mb-9">
-              <%= f.submit "Sign Up", class: "w-full px-5 py-3 text-base text-white transition duration-300 ease-in-out border rounded-md cursor-pointer border-primary bg-primary hover:bg-blue-dark" %>
+              <%= f.submit "Sign Up", class: "w-full px-5 py-3 text-base text-white transition duration-300 ease-in-out border rounded-md cursor-pointer border-primary bg-primary hover:bg-blue-dark", disabled: true %>
             </div>
           <% end %>
 
@@ -53,3 +49,47 @@
     </div>
   </div>
 </section>
+
+
+<script>
+document.addEventListener('turbolinks:load', () => {
+  const passwordInput = document.querySelector('#user_password');
+  const passwordConfirmationInput = document.querySelector('#user_password_confirmation');
+  const submitButton = document.querySelector('.registration-form input[type="submit"]');
+
+  if (passwordInput) {
+    passwordInput.addEventListener('input', validatePassword);
+    passwordConfirmationInput.addEventListener('input', validatePassword);
+  }
+
+  function validatePassword() {
+    const password = passwordInput.value;
+    const passwordConfirmation = passwordConfirmationInput.value;
+
+    const complexityRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+    const errorMessages = [];
+
+    if (!complexityRegex.test(password)) {
+      errorMessages.push('Password must be at least 8 characters long, include 1 uppercase letter, 1 lowercase letter, 1 digit, and 1 special character (@, $, !, %, *, ?, &).');
+    }
+
+    if (password !== passwordConfirmation) {
+      errorMessages.push('Password and password confirmation do not match.');
+    }
+
+    const errorContainer = document.querySelector('.password-errors');
+    errorContainer.innerHTML = '';
+    if (errorMessages.length > 0) {
+      errorMessages.forEach(message => {
+        const errorDiv = document.createElement('div');
+        errorDiv.classList.add('text-red-500');
+        errorDiv.innerText = message;
+        errorContainer.appendChild(errorDiv);
+      });
+      submitButton.disabled = true;
+    } else {
+      submitButton.disabled = false;
+    }
+  }
+});
+</script>

@@ -12,7 +12,7 @@ Rails.application.routes.draw do
   devise_scope :user do
     authenticated :user do
       root 'dashboards#index', as: :authenticated_root
-      get 'profile/edit', to: 'users/registrations#edit_profile', as: :edit_profile
+      get 'complete_registration', to: 'users/registrations#edit_profile', as: :edit_profile
       patch 'profile/update', to: 'users/registrations#update_profile', as: :users_update_profile
     end
 
@@ -44,7 +44,7 @@ Rails.application.routes.draw do
   get 'success', to: 'dashboards#success', as: 'success'
   get 'cancel', to: 'dashboards#cancel'
 
-  get '/payment', to: 'payments#new', as: 'payment'
+  get '/payment', to: 'payments#index', as: 'payment'
   post '/payment', to: 'payments#create'
   get 'credit_reports', to: 'dashboards#index'
   get 'credit_reports/scores', to: 'dashboards#scores'

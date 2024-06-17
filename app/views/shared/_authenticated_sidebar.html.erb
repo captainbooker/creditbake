@@ -64,7 +64,7 @@
         </div>
         <div class="flex justify-between mt-2 text-sm">
           <div class="text-gray-600">Free Attack Credits</div>
-          <div>5</div>
+          <div>0</div>
         </div>
       </div>
       <div class="flex items-center space-x-4 p-2 relative group">
@@ -114,6 +114,12 @@
         </svg>
         <span class="font-medium <%= 'text-black' if current_page?(user_settings_path) %>">Settings</span>
       <% end %>
+      <%= link_to payment_path, class: "flex items-center space-x-3 py-2 px-4 text-white rounded-lg #{'bg-white' if current_page?(payment_path)} hover:bg-white hover:text-black transition duration-300" do %>
+        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="<%= current_page?(payment_path) ? '#000000'  : '#ffffff' %>">
+          <path d="M840-695.38v430.76q0 27.62-18.5 46.12Q803-200 775.38-200H184.62q-27.62 0-46.12-18.5Q120-237 120-264.62v-430.76q0-27.62 18.5-46.12Q157-760 184.62-760h590.76q27.62 0 46.12 18.5Q840-723 840-695.38Zm-680 87.69h640v-87.69q0-9.24-7.69-16.93-7.69-7.69-16.93-7.69H184.62q-9.24 0-16.93 7.69-7.69 7.69-7.69 16.93v87.69Zm0 95.38v247.69q0 9.24 7.69 16.93 7.69 7.69 16.93 7.69h590.76q9.24 0 16.93-7.69 7.69-7.69 7.69-16.93v-247.69H160ZM160-240v-480 480Z"/>
+        </svg>
+        <span class="font-medium <%= 'text-black' if current_page?(payment_path) %>">Billing</span>
+      <% end %>
       <%= link_to destroy_user_session_path, method: :delete, class: "flex items-center space-x-3 py-2 px-4 rounded-lg hover:bg-white hover:text-black transition duration-300 text-white" do %>
         <span class="material-icons">power_settings_new</span>
         <span class="font-medium">Logout</span>
@@ -129,7 +135,7 @@
         </div>
         <div class="flex justify-between mt-2 text-sm">
           <div class="text-gray-600">Free Attack Credits</div>
-          <div>5</div>
+          <div>0</div>
         </div>
       </div>
       <div class="flex items-center space-x-4 p-2 relative group">
