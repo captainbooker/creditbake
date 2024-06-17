@@ -8,6 +8,10 @@
         <p class="mt-2 text-sm leading-6 text-gray-500">Congrats on taking that next step to a brighter financial life. Please fill in the following info to complete your profile. God Bless!</p>
       </div>
 
+      <div class="p-4">
+        <%= render 'shared/flash_message' %>
+      </div>
+
       <div class="mt-10">
         <%= form_for current_user, url: users_update_profile_path, method: :patch do |f| %>
           <%= hidden_field_tag :authenticity_token, form_authenticity_token %>

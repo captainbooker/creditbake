@@ -9,3 +9,24 @@
     </div>
   <% end %>
 <% end %>
+
+<script>
+document.addEventListener('turbolinks:load', function() {
+  const flashMessages = document.querySelectorAll('.flash-message');
+  const closeButtons = document.querySelectorAll('.close-btn');
+
+  // Auto-hide flash messages after 6 seconds
+  flashMessages.forEach(flashMessage => {
+    setTimeout(() => {
+      flashMessage.classList.add('hidden');
+    }, 6000);
+  });
+
+  // Close button functionality
+  closeButtons.forEach(button => {
+    button.addEventListener('click', function() {
+      this.parentElement.classList.add('hidden');
+    });
+  });
+});
+</script>

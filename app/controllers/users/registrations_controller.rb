@@ -19,8 +19,7 @@ class Users::RegistrationsController < Devise::RegistrationsController
     end
     
     if missing_required_fields? || current_user.signature.blank?
-      flash.now[:alert] = 'Profile could not be updated. Please ensure all fields are filled out and a signature is provided.'
-      redirect_to :edit_profile
+      redirect_to edit_profile_path, alert: 'Profile could not be updated. Please ensure all fields are filled out and a signature is provided.'
     elsif current_user.save
       redirect_to authenticated_root_path, notice: 'Profile updated successfully.'
     else
@@ -31,7 +30,7 @@ class Users::RegistrationsController < Devise::RegistrationsController
   protected
 
   def profile_params
-    params.require(:user).permit(:first_name, :last_name, :phone_number, :street_address, :city, :state, :postal_code, :country, :ssn_last4)
+    params.require(:user).permit(:first_name, :agreement, :last_name, :phone_number, :street_address, :city, :state, :postal_code, :country, :ssn_last4)
   end
 
   def after_sign_up_path_for(resource)

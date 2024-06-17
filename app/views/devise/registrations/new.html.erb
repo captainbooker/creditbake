@@ -10,7 +10,7 @@
           </div>
           <%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { class: "registration-form" }) do |f| %>
             <div class="p-4">
-              <%= render 'shared/flash_message', resource: resource %>
+              <%= render 'shared/devise_error_messages', resource: resource %>
             </div>
             <div class="password-errors mb-4 text-left"></div> <!-- Add this line for password errors -->
             <div class="mb-[22px]">
@@ -22,20 +22,27 @@
             <div class="mb-[22px]">
               <%= f.password_field :password_confirmation, placeholder: "Confirm Password", class: "w-full px-5 py-3 text-base transition bg-transparent border rounded-md outline-none border-stroke dark:border-dark-3 text-body-color dark:text-dark-6 placeholder:text-dark-6 focus:border-primary dark:focus:border-primary focus-visible:shadow-none" %>
             </div>
+            <div class="mb-[22px] text-left">
+              <label class="inline-flex items-center">
+                <input type="checkbox" id="terms-checkbox" class="form-checkbox text-primary" />
+                <span class="ml-2">I agree to the <a href="/privacy" target="_blank" class="text-primary hover:underline">Privacy Policy</a> and <a href="/terms" target="_blank" class="text-primary hover:underline">Terms of Use</a>.</span>
+              </label>
+            </div>
+            <%= f.hidden_field :agreement, value: false %>
             <div class="mb-9">
               <%= f.submit "Sign Up", class: "w-full px-5 py-3 text-base text-white transition duration-300 ease-in-out border rounded-md cursor-pointer border-primary bg-primary hover:bg-blue-dark", disabled: true %>
             </div>
           <% end %>
 
           <p class="mb-4 text-base text-body-secondary">
-            By creating an account you are agree with our
-            <a href="javascript:void(0)" class="text-primary hover:underline">
-              Privacy
+            By creating an account you agree with our
+            <a href="/privacy" target="_blank" class="text-primary hover:underline">
+              Privacy Policy
             </a>
             and
-            <a href="javascript:void(0)" class="text-primary hover:underline">
-              Policy
-            </a>
+            <a href="/terms" target="_blank" class="text-primary hover:underline">
+              Terms of Use
+            </a>.
           </p>
 
           <p class="text-base text-body-secondary">
@@ -56,15 +63,19 @@ document.addEventListener('turbolinks:load', () => {
   const passwordInput = document.querySelector('#user_password');
   const passwordConfirmationInput = document.querySelector('#user_password_confirmation');
   const submitButton = document.querySelector('.registration-form input[type="submit"]');
+  const termsCheckbox = document.querySelector('#terms-checkbox');
+  const agreementField = document.querySelector('#user_agreement');
 
   if (passwordInput) {
-    passwordInput.addEventListener('input', validatePassword);
-    passwordConfirmationInput.addEventListener('input', validatePassword);
+    passwordInput.addEventListener('input', validateForm);
+    passwordConfirmationInput.addEventListener('input', validateForm);
+    termsCheckbox.addEventListener('change', validateForm);
   }
 
-  function validatePassword() {
+  function validateForm() {
     const password = passwordInput.value;
     const passwordConfirmation = passwordConfirmationInput.value;
+    const isTermsChecked = termsCheckbox.checked;
 
     const complexityRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
     const errorMessages = [];
@@ -79,7 +90,7 @@ document.addEventListener('turbolinks:load', () => {
 
     const errorContainer = document.querySelector('.password-errors');
     errorContainer.innerHTML = '';
-    if (errorMessages.length > 0) {
+    if (errorMessages.length > 0 || !isTermsChecked) {
       errorMessages.forEach(message => {
         const errorDiv = document.createElement('div');
         errorDiv.classList.add('text-red-500');
@@ -87,8 +98,10 @@ document.addEventListener('turbolinks:load', () => {
         errorContainer.appendChild(errorDiv);
       });
       submitButton.disabled = true;
+      agreementField.value = false;
     } else {
       submitButton.disabled = false;
+      agreementField.value = true;
     }
   }
 });

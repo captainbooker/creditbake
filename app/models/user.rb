@@ -28,6 +28,7 @@ class User < ApplicationRecord
 
   validates :credits, numericality: { greater_than_or_equal_to: 0 }
   validate :password_complexity, on: :create
+  validates :agreement, acceptance: true, on: :create
 
   def assign_default_role
     self.add_role(:user) if self.roles.blank?

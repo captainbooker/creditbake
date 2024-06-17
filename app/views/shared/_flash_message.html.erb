@@ -28,9 +28,6 @@
   </div>
 <% end %>
 
-<% if defined?(resource) && resource.errors.any? %>
-  <%= render "devise/shared/error_messages", resource: resource %>
-<% end %>
 
 <script>
 document.addEventListener('turbolinks:load', function() {
