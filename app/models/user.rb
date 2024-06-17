@@ -20,6 +20,7 @@ class User < ApplicationRecord
   has_one_attached :utility_bill
   has_one_attached :additional_document1
   has_one_attached :additional_document2
+  has_one_attached :signature
 
   attr_encrypted :ssn_last4, key: [ENV['ENCRYPTION_KEY']].pack('H*')
   blind_index :ssn_last4, key: [ENV['ENCRYPTION_KEY']].pack('H*')

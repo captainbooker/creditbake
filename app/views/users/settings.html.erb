@@ -87,19 +87,6 @@
                 </div>
               </div>
               <div class="mt-6">
-                <div class="flex items-center justify-between">
-                  <div class="flex items-center gap-4">
-                    <div class="text-sm font-medium text-gray-700">ID Document</div>
-                    <% if @user.id_document.attached? %>
-                      <span class="text-gray-500"><%= @user.id_document.filename.to_s %></span>
-                    <% end %>
-                  </div>
-                  <div>
-                    <%= form.file_field :id_document, accept: 'application/pdf,image/*', class: 'block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100' %>
-                  </div>
-                </div>
-              </div>
-              <div class="mt-6">
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                   <% ["id_document", "utility_bill", "additional_document1", "additional_document2"].each do |doc| %>
                     <div class="flex flex-col items-center justify-between border p-4 rounded-lg shadow-md bg-white">

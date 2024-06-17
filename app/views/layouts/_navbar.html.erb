@@ -38,53 +38,53 @@
 </header>
 
 <script>
-  document.addEventListener('DOMContentLoaded', function () {
-    const menuBtn = document.getElementById('menu-btn');
-    const mobileMenu = document.getElementById('mobile-menu');
+document.addEventListener("turbolinks:load", function() {
+  const menuBtn = document.getElementById('menu-btn');
+  const mobileMenu = document.getElementById('mobile-menu');
 
-    menuBtn.addEventListener('click', function () {
-      mobileMenu.classList.toggle('hidden');
-    });
+  menuBtn.addEventListener('click', function () {
+    mobileMenu.classList.toggle('hidden');
+  });
 
-    const sections = document.querySelectorAll('section');
-    const navLinks = document.querySelectorAll('nav a');
+  const sections = document.querySelectorAll('section');
+  const navLinks = document.querySelectorAll('nav a');
 
-    navLinks.forEach(link => {
-      link.addEventListener('click', function (e) {
-        const href = this.getAttribute('href');
-        if (href.startsWith('#')) {
-          e.preventDefault();
-          const targetId = href.substring(1);
-          const targetSection = document.getElementById(targetId);
+  navLinks.forEach(link => {
+    link.addEventListener('click', function (e) {
+      const href = this.getAttribute('href');
+      if (href.startsWith('#')) {
+        e.preventDefault();
+        const targetId = href.substring(1);
+        const targetSection = document.getElementById(targetId);
 
-          if (targetSection) {
-            window.scrollTo({
-              top: targetSection.offsetTop,
-              behavior: 'smooth'
-            });
-          }
-
-          mobileMenu.classList.add('hidden'); // Close mobile menu on link click
+        if (targetSection) {
+          window.scrollTo({
+            top: targetSection.offsetTop,
+            behavior: 'smooth'
+          });
         }
-      });
-    });
 
-    window.addEventListener('scroll', function () {
-      let current = '';
-      sections.forEach(section => {
-        const sectionTop = section.offsetTop;
-        const sectionHeight = section.clientHeight;
-        if (pageYOffset >= sectionTop - sectionHeight / 3) {
-          current = section.getAttribute('id');
-        }
-      });
-
-      navLinks.forEach(link => {
-        link.classList.remove('custom-blue-text');
-        if (link.getAttribute('href').includes(current)) {
-          link.classList.add('custom-blue-text');
-        }
-      });
+        mobileMenu.classList.add('hidden'); // Close mobile menu on link click
+      }
     });
   });
+
+  window.addEventListener('scroll', function () {
+    let current = '';
+    sections.forEach(section => {
+      const sectionTop = section.offsetTop;
+      const sectionHeight = section.clientHeight;
+      if (pageYOffset >= sectionTop - sectionHeight / 3) {
+        current = section.getAttribute('id');
+      }
+    });
+
+    navLinks.forEach(link => {
+      link.classList.remove('custom-blue-text');
+      if (link.getAttribute('href').includes(current)) {
+        link.classList.add('custom-blue-text');
+      }
+    });
+  });
+});
 </script>

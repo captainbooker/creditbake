@@ -73,7 +73,7 @@
     </div>
   </div>
 
-  <div id="mailModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 hidden-modal transition-opacity duration-300 ease-out">
+  <div id="mailModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 hidden opacity-0 scale-95 transition-opacity transition-transform duration-300 ease-out">
     <div class="bg-white p-6 rounded-lg shadow-lg max-w-md w-full transform transition-transform duration-300 ease-out scale-95">
       <h2 class="text-xl font-semibold mb-4">Choose Mailing Option</h2>
       <p class="mb-4">Please choose between black and white or color mailing for the letter.</p>
@@ -96,47 +96,47 @@
   </div>
 </div>
 
+<div id="loading-overlay" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+  <div class="text-white text-center">
+    <div class="loader mb-4"></div>
+    <p>Please do not close the browser while we work to generate your letters.</p>
+  </div>
+</div>
+
 <script>
-document.addEventListener("turbolinks:load", function() {
+function initializeCreateAttackDropdown() {
   const attackButton = document.getElementById('create-attack-button');
   const attackDropdown = document.getElementById('attack-dropdown');
   const roundButtons = document.querySelectorAll('[data-round]');
+  const loadingOverlay = document.getElementById('loading-overlay');
 
-  attackButton.addEventListener('click', function() {
-    attackDropdown.classList.toggle('hidden');
-  });
+  if (attackButton && attackDropdown && roundButtons.length > 0) {
+    attackButton.addEventListener('click', function() {
+      attackDropdown.classList.toggle('hidden');
+    });
 
-  document.addEventListener('click', function(event) {
-    if (!attackButton.contains(event.target) && !attackDropdown.contains(event.target)) {
-      attackDropdown.classList.add('hidden');
-    }
-  });
-
-  roundButtons.forEach(button => {
-    button.addEventListener('click', function() {
-      const round = this.getAttribute('data-round');
-      if (parseFloat('<%= current_user.credits %>') < 24.99) {
-        alert("You don't have enough credits. Please add credits.");
-        window.location.href = '<%= payment_path %>';
-      } else {
-        createAttack(round);
+    document.addEventListener('click', function(event) {
+      if (!attackButton.contains(event.target) && !attackDropdown.contains(event.target)) {
+        attackDropdown.classList.add('hidden');
       }
     });
-  });
 
-  function createAttack(round) {
-    const form = document.createElement('form');
-    form.method = 'get';
-    form.action = '<%= create_attack_path %>';
-    form.innerHTML = `
-      <input type="hidden" name="round" value="${round}">
-      <input type="hidden" name="payment_success" value="true">
-      <input type="hidden" name="${document.querySelector('meta[name=csrf-param]').content}" value="${document.querySelector('meta[name=csrf-token]').content}">
-    `;
-    document.body.appendChild(form);
-    form.submit();
+    roundButtons.forEach(button => {
+      button.addEventListener('click', function() {
+        const round = this.getAttribute('data-round');
+        if (parseFloat('<%= current_user.credits %>') < 24.99) {
+          alert("You don't have enough credits. Please add credits.");
+          window.location.href = '<%= payment_path %>';
+        } else {
+          loadingOverlay.classList.add('show'); // Show the loading overlay
+          createAttack(round);
+        }
+      });
+    });
   }
+}
 
+function initializeMailModal() {
   window.downloadAllFiles = function(letterId) {
     const form = document.createElement('form');
     form.method = 'post';
@@ -189,5 +189,54 @@ document.addEventListener("turbolinks:load", function() {
     document.body.appendChild(form);
     form.submit();
   }
+}
+
+document.addEventListener("turbolinks:load", function() {
+  initializeCreateAttackDropdown();
+  initializeMailModal();
 });
+
+document.addEventListener("turbolinks:before-cache", function() {
+  const attackButton = document.getElementById('create-attack-button');
+  const attackDropdown = document.getElementById('attack-dropdown');
+  const roundButtons = document.querySelectorAll('[data-round]');
+  
+  if (attackButton && attackDropdown && roundButtons.length > 0) {
+    attackButton.removeEventListener('click', function() {
+      attackDropdown.classList.toggle('hidden');
+    });
+
+    document.removeEventListener('click', function(event) {
+      if (!attackButton.contains(event.target) && !attackDropdown.contains(event.target)) {
+        attackDropdown.classList.add('hidden');
+      }
+    });
+
+    roundButtons.forEach(button => {
+      button.removeEventListener('click', function() {
+        const round = this.getAttribute('data-round');
+        if (parseFloat('<%= current_user.credits %>') < 24.99) {
+          alert("You don't have enough credits. Please add credits.");
+          window.location.href = '<%= payment_path %>';
+        } else {
+          createAttack(round);
+        }
+      });
+    });
+  }
+});
+
+function createAttack(round) {
+  const form = document.createElement('form');
+  form.method = 'get';
+  form.action = '<%= create_attack_path %>';
+  form.innerHTML = `
+    <input type="hidden" name="round" value="${round}">
+    <input type="hidden" name="payment_success" value="true">
+    <input type="hidden" name="${document.querySelector('meta[name=csrf-param]').content}" value="${document.querySelector('meta[name=csrf-token]').content}">
+  `;
+  document.body.appendChild(form);
+  form.submit();
+}
 </script>
+

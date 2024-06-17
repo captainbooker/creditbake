@@ -11,7 +11,17 @@ class Users::RegistrationsController < Devise::RegistrationsController
   end
 
   def update_profile
-    if current_user.update(profile_params)
+    current_user.assign_attributes(profile_params)
+    
+    if params[:signature_data].present?
+      signature_io = decode_base64_image(params[:signature_data])
+      current_user.signature.attach(io: signature_io, filename: 'signature.png', content_type: 'image/png')
+    end
+    
+    if missing_required_fields? || current_user.signature.blank?
+      flash.now[:alert] = 'Profile could not be updated. Please ensure all fields are filled out and a signature is provided.'
+      redirect_to :edit_profile
+    elsif current_user.save
       redirect_to authenticated_root_path, notice: 'Profile updated successfully.'
     else
       render :edit_profile
@@ -27,4 +37,14 @@ class Users::RegistrationsController < Devise::RegistrationsController
   def after_sign_up_path_for(resource)
     edit_profile_path # Redirect to the profile setup step
   end
+
+  def decode_base64_image(data)
+    decoded_data = Base64.decode64(data.split(',')[1])
+    StringIO.new(decoded_data)
+  end
+
+  def missing_required_fields?
+    profile_params.values.any?(&:blank?)
+  end
 end
+

@@ -22,7 +22,7 @@ class ApplicationController < ActionController::Base
 
   def ensure_required_documents
     if current_user.ssn_last4.blank? || !current_user.id_document.attached? || !current_user.utility_bill.attached?
-      redirect_to settings_path, alert: "Please upload the required documents before proceeding."
+      redirect_to user_settings_path, alert: "Please upload the required fields and documents before proceeding (SSN, ID & Utility Bill)"
     end
   end
 

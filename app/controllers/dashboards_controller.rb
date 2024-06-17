@@ -70,10 +70,10 @@ class DashboardsController < ApplicationController
 
   def create_attack_logic(round)
     inquiries = current_user.inquiries.where(challenge: true)
-    accounts = current_user.accounts.where(challenge: true)
+    accounts = current_user.accounts.where(challenge: true).includes(:bureau_details)
 
     inquiry_details = inquiries.map { |inquiry| { name: inquiry.inquiry_name, bureau: inquiry.credit_bureau } }
-    account_details = accounts.map { |account| { number: account.account_number, bureau: account.bureau_details.pluck(:bureau) } }
+    account_details = accounts.map { |account| { name: account.name, number: account.account_number, bureau: account.bureau_details.pluck(:bureau) } }
 
     responses = send_prompts_for_round(round, inquiry_details, account_details)
 
@@ -103,10 +103,10 @@ class DashboardsController < ApplicationController
     attachment_path
   end
 
-  def add_image_to_pdf(image_path, pdf, title)
+  def add_image_to_pdf(image_path, pdf, title, width, height)
     pdf.start_new_page
     pdf.text title
-    pdf.image image_path, width: 500, height: 400, position: :center
+    pdf.image image_path, width: width, height: height, position: :center
   end
 
   def convert_pdf_to_image(pdf_path)
@@ -133,9 +133,14 @@ class DashboardsController < ApplicationController
     Prawn::Document.generate(pdf_path) do |pdf|
       pdf.text document_content
 
+      if user.signature.attached?
+        signature_path = save_attachment_to_temp(user.signature)
+        add_image_to_pdf(signature_path, pdf, "Signature:", 100, 100)
+      end
+
       if user.id_document.attached?
         id_document_path = save_attachment_to_temp(user.id_document)
-        add_image_to_pdf(id_document_path, pdf, "ID Document:")
+        add_image_to_pdf(id_document_path, pdf, "ID Document:", 500, 400)
       end
 
       if user.utility_bill.attached?
@@ -143,9 +148,9 @@ class DashboardsController < ApplicationController
         case file_mime_type(utility_bill_path)
         when 'application/pdf'
           image_path = convert_pdf_to_image(utility_bill_path)
-          add_image_to_pdf(image_path, pdf, "Utility Bill:")
+          add_image_to_pdf(image_path, pdf, "Utility Bill:", 500, 400)
         when 'image/jpeg', 'image/png'
-          add_image_to_pdf(utility_bill_path, pdf, "Utility Bill:")
+          add_image_to_pdf(utility_bill_path, pdf, "Utility Bill:", 400, 300)
         else
           Rails.logger.error "Unsupported file type: #{file_mime_type(utility_bill_path)}"
         end

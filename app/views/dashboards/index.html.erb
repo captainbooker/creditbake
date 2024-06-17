@@ -56,7 +56,7 @@
             <div class="text-3xl font-semibold text-red-500"><%= @accounts.count %></div>
           </div>
           <div class="mt-4">
-            <%= link_to 'Take Action', '#', class: "px-6 py-3 font-medium rounded-lg transition duration-300 #{ 'bg-gray-400 text-gray-700 cursor-not-allowed' if @accounts.count.zero? } #{ 'bg-blue-500 text-white hover:bg-blue-700' unless @accounts.count.zero? }", disabled: @accounts.count.zero? %>
+            <%= link_to 'Take Action', letters_path, class: "px-6 py-3 font-medium rounded-lg transition duration-300 #{ 'bg-gray-400 text-gray-700 cursor-not-allowed' if @accounts.count.zero? } #{ 'custom-blue text-white hover:bg-blue-700' unless @accounts.count.zero? }", disabled: @accounts.count.zero? %>
           </div>
         </div>
 
@@ -66,7 +66,7 @@
             <div class="text-3xl font-semibold text-red-500"><%= @inquiries.count %></div>
           </div>
           <div class="mt-4">
-            <%= link_to 'Take Action', '#', class: "px-6 py-3 font-medium rounded-lg transition duration-300 #{ 'bg-gray-400 text-gray-700 cursor-not-allowed' if @inquiries.count.zero? } #{ 'bg-blue-500 text-white hover:bg-blue-700' unless @inquiries.count.zero? }", disabled: @inquiries.count.zero? %>
+            <%= link_to 'Take Action', letters_path, class: "px-6 py-3 font-medium rounded-lg transition duration-300 #{ 'bg-gray-400 text-gray-700 cursor-not-allowed' if @inquiries.count.zero? } #{ 'custom-blue text-white hover:bg-blue-700' unless @inquiries.count.zero? }", disabled: @inquiries.count.zero? %>
           </div>
         </div>
 
@@ -76,7 +76,7 @@
             <div class="text-3xl font-semibold text-red-500"><%= @negative_accounts.count %></div>
           </div>
           <div class="mt-4">
-            <%= link_to 'Take Action', '#', class: "px-6 py-3 font-medium rounded-lg transition duration-300 #{ 'bg-gray-400 text-gray-700 cursor-not-allowed' if @negative_accounts.count.zero? } #{ 'custom-blue text-white hover:bg-blue-700' unless @negative_accounts.count.zero? }", disabled: @negative_accounts.count.zero? %>
+            <%= link_to 'Take Action', letters_path, class: "px-6 py-3 font-medium rounded-lg transition duration-300 #{ 'bg-gray-400 text-gray-700 cursor-not-allowed' if @negative_accounts.count.zero? } #{ 'custom-blue text-white hover:bg-blue-700' unless @negative_accounts.count.zero? }", disabled: @negative_accounts.count.zero? %>
           </div>
         </div>
       </div>
@@ -141,11 +141,35 @@
       </div>
     </div>
   </div>
+
+  <div id="mailModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 hidden transition-opacity duration-300 ease-out">
+    <div class="bg-white p-6 rounded-lg shadow-lg max-w-md w-full transform transition-transform duration-300 ease-out scale-95">
+      <h2 class="text-xl font-semibold mb-4">Choose Mailing Option</h2>
+      <p class="mb-4">Please choose between black and white or color mailing for the letter.</p>
+      <div class="flex justify-between mb-4">
+        <div>
+          <p>Black & White</p>
+          <p id="bwCost" class="font-semibold"></p>
+        </div>
+        <div>
+          <p>Color</p>
+          <p id="colorCost" class="font-semibold"></p>
+        </div>
+      </div>
+      <div class="flex justify-end">
+        <button id="mailBWButton" class="px-4 py-2 bg-blue-500 text-white rounded mr-2 hover:bg-blue-600">Mail B&W</button>
+        <button id="mailColorButton" class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">Mail Color</button>
+      </div>
+      <button class="absolute top-2 right-2 text-gray-500 hover:text-gray-700" onclick="closeMailModal()">&times;</button>
+    </div>
+  </div>
 </div>
 
 
 <script>
 document.addEventListener("turbolinks:load", function() {
+  initializeCreateAttackDropdown();
+  initializeMailModal();
   const scoreRanges = [
     { min: 300, max: 579, label: 'Poor', color: 'text-red-500' },
     { min: 580, max: 669, label: 'Fair', color: 'text-yellow-500' },
@@ -217,5 +241,120 @@ document.addEventListener("turbolinks:load", function() {
       setProgress('equifax-progress', scores.equifax_score, 800);
     }
   });
+});
+
+function initializeCreateAttackDropdown() {
+  const attackButton = document.getElementById('create-attack-button');
+  const attackDropdown = document.getElementById('attack-dropdown');
+  const roundButtons = document.querySelectorAll('[data-round]');
+
+  if (attackButton && attackDropdown && roundButtons.length > 0) {
+    attackButton.addEventListener('click', function() {
+      attackDropdown.classList.toggle('hidden');
+    });
+
+    document.addEventListener('click', function(event) {
+      if (!attackButton.contains(event.target) && !attackDropdown.contains(event.target)) {
+        attackDropdown.classList.add('hidden');
+      }
+    });
+
+    roundButtons.forEach(button => {
+      button.addEventListener('click', function() {
+        const round = this.getAttribute('data-round');
+        if (parseFloat('<%= current_user.credits %>') < 24.99) {
+          alert("You don't have enough credits. Please add credits.");
+          window.location.href = '<%= payment_path %>';
+        } else {
+          createAttack(round);
+        }
+      });
+    });
+  }
+}
+
+function initializeMailModal() {
+  window.downloadAllFiles = function(letterId) {
+    const form = document.createElement('form');
+    form.method = 'post';
+    form.action = '<%= download_all_files_path %>';
+    form.innerHTML = `
+      <input type="hidden" name="letter_id" value="${letterId}">
+      <input type="hidden" name="${document.querySelector('meta[name=csrf-param]').content}" value="${document.querySelector('meta[name=csrf-token]').content}">
+    `;
+    document.body.appendChild(form);
+    form.submit();
+  }
+
+  window.showMailModal = function(letterId) {
+    fetch(`/letters/${letterId}/calculate_cost?color=false`)
+      .then(response => response.json())
+      .then(data => {
+        const bwCost = data.total_cost_bw.toFixed(2);
+        const colorCost = data.total_cost_color.toFixed(2);
+
+        document.getElementById('bwCost').textContent = `$${bwCost}`;
+        document.getElementById('colorCost').textContent = `$${colorCost}`;
+
+        document.getElementById('mailBWButton').setAttribute('onclick', `mailLetter('${letterId}', false)`);
+        document.getElementById('mailColorButton').setAttribute('onclick', `mailLetter('${letterId}', true)`);
+
+        const modal = document.getElementById('mailModal');
+        modal.classList.remove('hidden');
+        setTimeout(() => {
+          modal.classList.remove('opacity-0', 'scale-95');
+        }, 10);
+      });
+  }
+
+  window.closeMailModal = function() {
+    const modal = document.getElementById('mailModal');
+    modal.classList.add('opacity-0', 'scale-95');
+    setTimeout(() => {
+      modal.classList.add('hidden');
+    }, 300);
+  }
+
+  window.mailLetter = function(letterId, color) {
+    const form = document.createElement('form');
+    form.method = 'post';
+    form.action = '<%= letter_mail_path(":letter_id") %>'.replace(':letter_id', letterId);
+    form.innerHTML = `
+      <input type="hidden" name="color" value="${color}">
+      <input type="hidden" name="${document.querySelector('meta[name=csrf-param]').content}" value="${document.querySelector('meta[name=csrf-token]').content}">
+    `;
+    document.body.appendChild(form);
+    form.submit();
+  }
+}
+
+document.addEventListener("turbolinks:before-cache", function() {
+  const attackButton = document.getElementById('create-attack-button');
+  const attackDropdown = document.getElementById('attack-dropdown');
+  const roundButtons = document.querySelectorAll('[data-round]');
+
+  if (attackButton && attackDropdown && roundButtons.length > 0) {
+    attackButton.removeEventListener('click', function() {
+      attackDropdown.classList.toggle('hidden');
+    });
+
+    document.removeEventListener('click', function(event) {
+      if (!attackButton.contains(event.target) && !attackDropdown.contains(event.target)) {
+        attackDropdown.classList.add('hidden');
+      }
+    });
+
+    roundButtons.forEach(button => {
+      button.removeEventListener('click', function() {
+        const round = this.getAttribute('data-round');
+        if (parseFloat('<%= current_user.credits %>') < 24.99) {
+          alert("You don't have enough credits. Please add credits.");
+          window.location.href = '<%= payment_path %>';
+        } else {
+          createAttack(round);
+        }
+      });
+    });
+  }
 });
 </script>

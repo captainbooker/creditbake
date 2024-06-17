@@ -32,7 +32,8 @@ module OpenaiPromptable
         max_tokens: 1000
       }
     )
-    response['choices'].first['message']['content']
+    response_text = response['choices'].first['message']['content']
+    inject_sensitive_data(response_text, current_user.ssn_last4)
   end
 
   def get_prompt(round, inquiries, accounts, bureau)
@@ -60,7 +61,8 @@ module OpenaiPromptable
       city: #{current_user.city}
       state: #{current_user.state}
       postal_code: #{current_user.postal_code}
-      country: #{current_user.country}
+      country: "USA"
+      SSN Last 4: ###SSN_LAST4### (Include under sender address)
       current_date: #{Date.today.strftime("%B %d, %Y")}
   
       Inquiries:
@@ -84,7 +86,8 @@ module OpenaiPromptable
       city: #{current_user.city}
       state: #{current_user.state}
       postal_code: #{current_user.postal_code}
-      country: #{current_user.country}
+      country: USA
+      SSN Last 4: ###SSN_LAST4### (Include under sender address)
       current_date: #{Date.today.strftime("%B %d, %Y")}
 
       Inquiries:
@@ -108,7 +111,8 @@ module OpenaiPromptable
       city: #{current_user.city}
       state: #{current_user.state}
       postal_code: #{current_user.postal_code}
-      country: #{current_user.country}
+      country: USA
+      SSN Last 4: ###SSN_LAST4### (Include under sender address)
       current_date: #{Date.today.strftime("%B %d, %Y")}
 
       Inquiries:
@@ -132,7 +136,8 @@ module OpenaiPromptable
       city: #{current_user.city}
       state: #{current_user.state}
       postal_code: #{current_user.postal_code}
-      country: #{current_user.country}
+      country: USA
+      SSN Last 4: ###SSN_LAST4### (Include under sender address)
       current_date: #{Date.today.strftime("%B %d, %Y")}
 
       Inquiries:
@@ -156,7 +161,8 @@ module OpenaiPromptable
       city: #{current_user.city}
       state: #{current_user.state}
       postal_code: #{current_user.postal_code}
-      country: #{current_user.country}
+      country: USA
+      SSN Last 4: ###SSN_LAST4### (Include under sender address)
       current_date: #{Date.today.strftime("%B %d, %Y")}
 
       Inquiries:
@@ -180,7 +186,8 @@ module OpenaiPromptable
       city: #{current_user.city}
       state: #{current_user.state}
       postal_code: #{current_user.postal_code}
-      country: #{current_user.country}
+      country: USA
+      SSN Last 4: ###SSN_LAST4### (Include under sender address)
       current_date: #{Date.today.strftime("%B %d, %Y")}
 
       Inquiries:
@@ -204,7 +211,8 @@ module OpenaiPromptable
       city: #{current_user.city}
       state: #{current_user.state}
       postal_code: #{current_user.postal_code}
-      country: #{current_user.country}
+      country: USA
+      SSN Last 4: ###SSN_LAST4### (Include under sender address)
       current_date: #{Date.today.strftime("%B %d, %Y")}
 
       Inquiries:
@@ -225,7 +233,12 @@ module OpenaiPromptable
 
   def format_accounts(accounts, bureau)
     accounts.select { |account| account[:bureau].include?(bureau.downcase) }
-            .map { |account| "- Account Number: #{account[:number]}xxxx, Bureau: #{bureau.capitalize}" }
+            .map { |account| "- Account Name: #{account[:name]}, Account Number: #{account[:number]}, Bureau: #{bureau.capitalize}" }
             .join("\n")
+  end
+
+  def inject_sensitive_data(letter_text, ssn_last4)
+    placeholder = "###SSN_LAST4###"
+    letter_text.gsub(placeholder, ssn_last4)
   end
 end

@@ -1,7 +1,7 @@
 <div class="flex h-screen">
   <!-- Mobile Toggle Button -->
   <button id="sidebarToggle" class="md:hidden p-4 text-white custom-blue fixed bottom-4 right-4 z-50 rounded-full shadow-lg">
-    <span id="menuIcon" class="">
+    <span id="menuIcon">
       <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e8eaed">
         <path d="M160-269.23v-40h640v40H160ZM160-460v-40h640v40H160Zm0-190.77v-40h640v40H160Z"/>
       </svg>
@@ -68,15 +68,11 @@
         </div>
       </div>
       <div class="flex items-center space-x-4 p-2 relative group">
-        <%= image_tag "creditbake-logo.png", alt: "Profile Picture", class: "h-10 w-10 rounded-full" %>
-        <div>
-          <div class="font-semibold text-white">Darren Booker</div>
+        <div class="h-10 w-10 rounded-full bg-white dark:bg-white flex justify-center items-center">
+          <p class="text-black text-md"><%= current_user&.initials %></p>
         </div>
-        <div class="relative">
-          <button class="material-icons group-hover:block hidden text-white">more_vert</button>
-          <div class="absolute right-0 mt-2 w-48 bg-white border rounded-lg shadow-lg py-1 hidden group-hover:block">
-            <%= link_to 'Logout', destroy_user_session_path, method: :delete, class: "block px-4 py-2 text-gray-700 hover:bg-gray-100" %>
-          </div>
+        <div>
+          <div class="font-semibold text-white"><%= current_user&.full_name %></div>
         </div>
       </div>
     </div>
@@ -150,16 +146,18 @@
 
 <!-- Include the JavaScript to handle the toggle functionality -->
 <script>
-  document.addEventListener('DOMContentLoaded', function () {
-    const sidebarToggle = document.getElementById('sidebarToggle');
-    const mobileSidebar = document.getElementById('mobileSidebar');
-    const menuIcon = document.getElementById('menuIcon');
-    const closeIcon = document.getElementById('closeIcon');
+document.addEventListener("turbolinks:load", function() {
+  const sidebarToggle = document.getElementById('sidebarToggle');
+  const mobileSidebar = document.getElementById('mobileSidebar');
+  const menuIcon = document.getElementById('menuIcon');
+  const closeIcon = document.getElementById('closeIcon');
 
+  if (sidebarToggle && mobileSidebar && menuIcon && closeIcon) {
     sidebarToggle.addEventListener('click', function () {
       mobileSidebar.classList.toggle('-translate-x-full');
       menuIcon.classList.toggle('hidden');
       closeIcon.classList.toggle('hidden');
     });
-  });
+  }
+});
 </script>
