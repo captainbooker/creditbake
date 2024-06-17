@@ -312,6 +312,7 @@ GEM
       sprockets (> 3.0)
       sprockets-rails
       tilt
+    secure_headers (6.5.0)
     selenium-webdriver (4.11.0)
       rexml (~> 3.2, >= 3.2.5)
       rubyzip (>= 1.2.2, < 3.0)
@@ -391,6 +392,7 @@ DEPENDENCIES
   ruby-openai
   rubyzip (~> 2.3)
   sass-rails (>= 6)
+  secure_headers
   selenium-webdriver (~> 4.4)
   sendgrid-ruby
   spring

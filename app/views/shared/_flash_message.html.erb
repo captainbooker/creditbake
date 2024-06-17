@@ -28,17 +28,7 @@
   </div>
 <% end %>
 
-<% if devise_error_messages! %>
-  <% resource.errors.full_messages.each do |message| %>
-    <div class="flex items-center bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative m-1 w-full max-w-sm mx-auto flash-message" role="alert">
-      <svg class="w-6 h-6 mr-2 fill-current text-red-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11h-2v6h2V7zm0 8h-2v2h2v-2z"/></svg>
-      <span class="block sm:inline"><%= message %></span>
-      <button type="button" class="absolute top-0 bottom-0 right-0 px-4 py-3 close-btn" data-dismiss="alert" aria-label="Close">
-        <svg class="fill-current h-6 w-6 text-red-700" role="button" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M14.348 5.652a1 1 0 10-1.414-1.414L10 7.172 7.066 4.238a1 1 0 00-1.414 1.414L8.828 10l-3.176 3.176a1 1 0 101.414 1.414L10 12.828l2.934 2.934a1 1 0 001.414-1.414L11.172 10l3.176-3.176z"/></svg>
-      </button>
-    </div>
-  <% end %>
-<% end %>
+<%= render "devise/shared/error_messages", resource: resource %>
 
 <script>
 document.addEventListener('turbolinks:load', function() {
