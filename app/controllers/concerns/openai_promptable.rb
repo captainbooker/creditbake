@@ -21,10 +21,12 @@ module OpenaiPromptable
   end
 
   def send_prompt(round, inquiries, accounts, bureau)
-    prompt = get_prompt(round, inquiries, accounts, bureau)
+    formatted_table = format_accounts_with_bureau_details(accounts)
+  
+    prompt = get_prompt(round, inquiries, accounts, bureau, formatted_table)
     response = @client.chat(
       parameters: {
-        model: "gpt-4o",
+        model: "gpt-4",
         messages: [
           { role: "system", content: "You are an AI that generates Metro 2 compliance dispute letters for credit inquiries and accounts." },
           { role: "user", content: prompt }
@@ -35,10 +37,11 @@ module OpenaiPromptable
     response_text = response['choices'].first['message']['content']
     inject_sensitive_data(response_text, current_user.ssn_last4)
   end
+  
 
-  def get_prompt(round, inquiries, accounts, bureau)
+  def get_prompt(round, inquiries, accounts, bureau, formatted_table)
     case round
-    when 1 then round_1_prompt(inquiries, accounts, bureau)
+    when 1 then round_1_prompt(inquiries, accounts, bureau, formatted_table)
     when 2 then round_2_prompt(inquiries, accounts, bureau)
     when 3 then round_3_prompt(inquiries, accounts, bureau)
     when 4 then round_4_prompt(inquiries, accounts, bureau)
@@ -50,7 +53,7 @@ module OpenaiPromptable
     end
   end
 
-  def round_1_prompt(inquiries, accounts, bureau)
+  def round_1_prompt(inquiries, accounts, bureau, formatted_table)
     <<-PROMPT
       You are a credit repair expert using Metro 2 compliance standards, so please use Metro 2 codes in the letter. Draft a detailed dispute letter to the #{bureau.capitalize} regarding the inquiries below. Highlight the inaccuracies in the inquiry and request its immediate removal, citing relevant Metro 2 compliance regulations. The letter should be professional, concise, and emphasize the need for accurate reporting.
   
@@ -70,8 +73,8 @@ module OpenaiPromptable
   
       Use Metro 2 codes for the accounts below to dispute the compliance. Highlight the inaccuracies in the account information and request its immediate removal, citing relevant Metro 2 compliance regulations. The letter should be professional, concise, and emphasize the need for accurate reporting. Be sure to use FCRA as well and I should only be contacted at the address provided.
   
-      Accounts:
-      #{format_accounts(accounts, bureau)}
+      Accounts: (I am providing you with a table of data with headers, table_separator & table_rows. Take all the data and put it in a table)
+      #{formatted_table}
     PROMPT
   end
 
@@ -218,7 +221,7 @@ module OpenaiPromptable
       Inquiries:
       #{format_inquiries(inquiries, bureau)}
 
-      Accounts:
+      Accounts: (I am proving you with a table of data with headers, table_separator & table_rows. Take all the data and put it in a table)
       #{format_accounts(accounts, bureau)}
 
       Please ensure the credit bureaus remove any inaccurate information immediately and use Metro 2 compliance and FCRA and I should only be contacted at the address provided.
@@ -231,11 +234,22 @@ module OpenaiPromptable
              .join("\n")
   end
 
-  def format_accounts(accounts, bureau)
-    accounts.select { |account| account[:bureau].include?(bureau.downcase) }
-            .map { |account| "- Account Name: #{account[:name]}, Account Number: #{account[:number]}, Bureau: #{bureau.capitalize}" }
-            .join("\n")
+  def format_accounts_with_bureau_details(accounts)
+    table_headers = "| Account Name | Account Number | Experian Balance | TransUnion Balance | Equifax Balance | Experian Status | TransUnion Status | Equifax Status | Date Opened |\n"
+    table_separator = "|--------------|----------------|------------------|--------------------|-----------------|----------------|-------------------|----------------|-------------|\n"
+  
+    table_rows = accounts.map do |account|
+      experian_details = account[:bureau_details].find { |detail| detail[:bureau].downcase == 'experian' }
+      transunion_details = account[:bureau_details].find { |detail| detail[:bureau].downcase == 'transunion' }
+      equifax_details = account[:bureau_details].find { |detail| detail[:bureau].downcase == 'equifax' }
+  
+      "| #{account[:name]} | #{account[:number]} | #{experian_details&.dig(:balance_owed) || '-'} | #{transunion_details&.dig(:balance_owed) || '-'} | #{equifax_details&.dig(:balance_owed) || '-'} | #{experian_details&.dig(:payment_status) || '-'} | #{transunion_details&.dig(:payment_status) || '-'} | #{equifax_details&.dig(:payment_status) || '-'} | #{experian_details&.dig(:date_opened) || '-'} |"
+    end.join("\n")
+  
+    table_headers + table_separator + table_rows
   end
+  
+  
 
   def inject_sensitive_data(letter_text, ssn_last4)
     placeholder = "###SSN_LAST4###"

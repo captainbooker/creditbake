@@ -73,7 +73,25 @@ class DashboardsController < ApplicationController
     accounts = current_user.accounts.where(challenge: true).includes(:bureau_details)
 
     inquiry_details = inquiries.map { |inquiry| { name: inquiry.inquiry_name, bureau: inquiry.credit_bureau } }
-    account_details = accounts.map { |account| { name: account.name, number: account.account_number, bureau: account.bureau_details.pluck(:bureau) } }
+    account_details = accounts.map do |account|
+      {
+        name: account.name,
+        number: account.account_number,
+        bureau_details: account.bureau_details.map do |detail|
+          {
+            bureau: detail.bureau,
+            balance_owed: detail.balance_owed,
+            high_credit: detail.high_credit,
+            credit_limit: detail.credit_limit,
+            past_due_amount: detail.past_due_amount,
+            payment_status: detail.payment_status,
+            date_opened: detail.date_opened,
+            date_of_last_payment: detail.date_of_last_payment,
+            last_reported: detail.last_reported
+          }
+        end
+      }
+    end
 
     responses = send_prompts_for_round(round, inquiry_details, account_details)
 
