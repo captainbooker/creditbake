@@ -1925,7 +1925,7 @@ body {
     padding-bottom: 195.12%; /* Aspect ratio 410 / 800 */
   }
   .iframe-container iframe {
-    width: 390px;
+    width: 350px;
     height: 800px;
   }
 }
