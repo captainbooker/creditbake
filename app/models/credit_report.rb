@@ -32,8 +32,6 @@ class CreditReport < ApplicationRecord
   
     scores
   end
-  
-  
 
   def calculate_score_changes
     last_report = CreditReport.where(user_id: self.user_id).order(created_at: :desc).second
@@ -47,5 +45,13 @@ class CreditReport < ApplicationRecord
       self.transunion_score_change = 0
       self.equifax_score_change = 0
     end
+  end
+
+  def self.ransackable_attributes(auth_object = nil)
+    %w[client_id user_id username password security_question service experian_score transunion_score equifax_score experian_score_change transunion_score_change equifax_score_change created_at updated_at]
+  end
+
+  def self.ransackable_associations(auth_object = nil)
+    []
   end
 end

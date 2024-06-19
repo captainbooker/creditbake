@@ -15,6 +15,14 @@ class Letter < ApplicationRecord
     end
   end
 
+  def self.ransackable_attributes(auth_object = nil)
+    %w[name bureau experian_document transunion_document equifax_document user_id mailed tracking_number experian_tracking_number transunion_tracking_number equifax_tracking_number created_at updated_at]
+  end
+
+  def self.ransackable_associations(auth_object = nil)
+    []
+  end
+
   private
 
   def count_pages(attachment)

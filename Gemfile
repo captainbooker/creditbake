@@ -49,7 +49,7 @@ gem 'sendgrid-ruby'
 gem 'kaminari'
 gem 'friendly_id', '~> 5.5.0'
 gem 'rollbar'
-
+gem 'country_select', '~> 8.0'
 
 
 gem 'dotenv', groups: [:development, :test]

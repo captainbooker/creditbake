@@ -53,6 +53,14 @@ class User < ApplicationRecord
     self[:credits] || 0
   end
 
+  def self.ransackable_attributes(auth_object = nil)
+    %w[email phone_number first_name last_name street_address city state postal_code country credits slug created_at updated_at]
+  end
+
+  def self.ransackable_associations(auth_object = nil)
+    []
+  end
+
   private
 
   def password_complexity
