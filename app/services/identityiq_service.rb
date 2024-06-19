@@ -6,27 +6,17 @@ class IdentityiqService
   BASE_URL = 'https://member.identityiq.com'
   attr_reader :username, :password, :security_question, :service
 
-  def initialize(username, password, security_question, service)
+  def initialize(username, password, security_question, service, browser: :chrome)
     @username = username
     @password = password
     @security_question = security_question
     @service = service
+    @browser = browser
     @logger = Logger.new(STDOUT)
 
-    # Configure Chrome options to run in headless mode
-    options = Selenium::WebDriver::Chrome::Options.new
-    options.add_argument('--headless') # Run in headless mode
-    options.add_argument('--no-sandbox')
-    options.add_argument('--disable-dev-shm-usage')
-    options.add_argument('--disable-gpu') # Disable GPU hardware acceleration
-    options.add_argument('--window-size=1920,1080') # Set a default window size
-    options.add_argument('--disable-software-rasterizer')
-    options.add_argument('--remote-debugging-port=9222')
-    options.add_argument('--single-process')
-
-    @driver = Selenium::WebDriver.for :chrome, options: options
+    @driver = initialize_driver
   rescue Selenium::WebDriver::Error::WebDriverError => e
-    @logger.error "Failed to initialize Chrome driver: #{e.message}"
+    @logger.error "Failed to initialize #{@browser.capitalize} driver: #{e.message}"
     raise
   end
 
@@ -38,6 +28,24 @@ class IdentityiqService
   end
 
   private
+
+  def initialize_driver
+    case @browser
+    when :chrome
+      options = Selenium::WebDriver::Chrome::Options.new
+      options.add_argument('--headless')
+      Selenium::WebDriver.for :chrome, options: options
+    when :firefox
+      options = Selenium::WebDriver::Firefox::Options.new
+      options.add_argument('--headless')
+      Selenium::WebDriver.for :firefox, options: options
+    # when :safari
+    #   options = Selenium::WebDriver::Safari::Options.new
+    #   Selenium::WebDriver.for :safari, options: options
+    else
+      raise ArgumentError, "Unsupported browser: #{@browser}"
+    end
+  end
 
   def login
     @logger.info "Navigating to login page"

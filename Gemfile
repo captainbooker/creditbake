@@ -51,6 +51,7 @@ gem 'friendly_id', '~> 5.5.0'
 gem 'rollbar'
 gem 'country_select', '~> 8.0'
 gem "meta-tags"
+gem 'browser'
 
 gem 'dotenv', groups: [:development, :test]
 group :development, :test do

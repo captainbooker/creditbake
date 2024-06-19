@@ -11,6 +11,7 @@ class CreditReportsController < ApplicationController
   end
 
   def credit_report
+    @user_browser = detect_browser(request.user_agent)
     @credit_reports = current_user.credit_reports
   end
 
@@ -45,6 +46,8 @@ class CreditReportsController < ApplicationController
   end
   
   def import
+    user_browser = detect_browser(request.user_agent)
+
     service = params[:service]
     username = params[:username]
     password = params[:password]
@@ -52,7 +55,7 @@ class CreditReportsController < ApplicationController
 
     case service
     when 'identityiq'
-      idq = IdentityiqService.new(username, password, security_question, service)
+      idq = IdentityiqService.new(username, password, security_question, service, browser: user_browser)
       json_content = idq.fetch_credit_report
       import_credit_report_json(json_content, username, password, security_question, service)
     when 'creditdyno'

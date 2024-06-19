@@ -1926,6 +1926,31 @@ body {
   }
   .iframe-container iframe {
     width: 350px;
-    height: 800px;
+    height: 600px;
   }
+}
+
+.promo-banner {
+  background-color: #000;
+  color: #fff;
+  text-align: center;
+  padding: 10px;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.promo-banner span {
+  margin-right: 10px;
+}
+
+.promo-redeem {
+  color: #00CE57; /* Gold color */
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.promo-redeem:hover {
+  text-decoration: underline;
 }

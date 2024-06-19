@@ -8,6 +8,12 @@ class ApplicationController < ActionController::Base
 
   before_action :ensure_profile_complete, if: :user_signed_in?
 
+  helper_method :user_browser
+
+  def user_browser
+    detect_browser(request.user_agent)
+  end
+
   private
 
   def ensure_profile_complete
@@ -23,6 +29,20 @@ class ApplicationController < ActionController::Base
   def ensure_required_documents
     if current_user.ssn_last4.blank? || !current_user.id_document.attached? || !current_user.utility_bill.attached?
       redirect_to user_settings_path, alert: "Please upload the required fields and documents before proceeding (SSN, ID & Utility Bill)"
+    end
+  end
+
+  def detect_browser(user_agent)
+    browser = Browser.new(user_agent)
+    
+    if browser.chrome?
+      :chrome
+    elsif browser.firefox?
+      :firefox
+    elsif browser.safari?
+      :safari
+    else
+      raise "Unsupported browser: #{browser.name}"
     end
   end
 
