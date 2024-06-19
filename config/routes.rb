@@ -48,6 +48,7 @@ Rails.application.routes.draw do
   post '/payment', to: 'payments#create'
   get 'credit_reports', to: 'dashboards#index'
   get 'credit_reports/scores', to: 'dashboards#scores'
+  post 'webhooks/authorize_net', to: 'webhooks#authorize_net'
 
   resources :contacts, only: [:new, :create]
 
