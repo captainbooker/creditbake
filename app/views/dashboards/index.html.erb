@@ -170,6 +170,10 @@
 document.addEventListener("turbolinks:load", function() {
   initializeCreateAttackDropdown();
   initializeMailModal();
+  fetchAndDisplayScores();
+});
+
+function getColorAndLabel(score) {
   const scoreRanges = [
     { min: 300, max: 579, label: 'Poor', color: 'text-red-500' },
     { min: 580, max: 669, label: 'Fair', color: 'text-yellow-500' },
@@ -178,98 +182,102 @@ document.addEventListener("turbolinks:load", function() {
     { min: 800, max: 850, label: 'Excellent', color: 'text-purple-500' }
   ];
 
-  function getColorAndLabel(score) {
-    for (let range of scoreRanges) {
-      if (score >= range.min && score <= range.max) {
-        return { color: range.color, label: range.label };
-      }
-    }
-    return { color: 'text-gray-500', label: 'Unknown' };
-  }
-
-  function setProgress(elementId, score, maxScore = 850) {
-    const element = document.getElementById(elementId);
-    const percent = (score / maxScore) * 100;
-    const dashOffset = 251.2 - (percent / 100) * 251.2;
-
-    element.style.strokeDashoffset = dashOffset;
-    
-    // Animate the strokeDashoffset
-    element.animate([
-      { strokeDashoffset: 251.2 },
-      { strokeDashoffset: dashOffset }
-    ], {
-      duration: 2000,
-      easing: 'ease-out',
-      fill: 'forwards'
-    });
-  }
-
-  async function fetchScores() {
-    try {
-      const response = await fetch('/credit_reports/scores');
-      const data = await response.json();
-      return data;
-    } catch (error) {
-      console.error('Error fetching scores:', error);
-      return { experian_score: 0, transunion_score: 0, equifax_score: 0 };
+  for (let range of scoreRanges) {
+    if (score >= range.min && score <= range.max) {
+      return { color: range.color, label: range.label };
     }
   }
+  return { color: 'text-gray-500', label: 'Unknown' };
+}
 
+function updateScoreUI(prefix, score, color, label) {
+  const scoreText = document.getElementById(`${prefix}-score-text`);
+  scoreText.textContent = score;
+  scoreText.parentElement.classList.add(color);
+  scoreText.parentElement.nextElementSibling.textContent = label;
+  setProgress(`${prefix}-progress`, score, 800);
+}
+
+function setProgress(elementId, score, maxScore = 850) {
+  const element = document.getElementById(elementId);
+  const percent = (score / maxScore) * 100;
+  const dashOffset = 251.2 - (percent / 100) * 251.2;
+
+  element.style.strokeDashoffset = dashOffset;
+
+  // Animate the strokeDashoffset
+  element.animate([
+    { strokeDashoffset: 251.2 },
+    { strokeDashoffset: dashOffset }
+  ], {
+    duration: 2000,
+    easing: 'ease-out',
+    fill: 'forwards'
+  });
+}
+
+async function fetchScores() {
+  try {
+    const response = await fetch('/credit_reports/scores');
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error('Error fetching scores:', error);
+    return { experian_score: 0, transunion_score: 0, equifax_score: 0 };
+  }
+}
+
+function fetchAndDisplayScores() {
   fetchScores().then(scores => {
     if (scores.experian_score) {
       const { color, label } = getColorAndLabel(scores.experian_score);
-      document.getElementById('experian-score-text').textContent = scores.experian_score;
-      document.getElementById('experian-score-text').parentElement.classList.add(color);
-      document.getElementById('experian-score-text').parentElement.nextElementSibling.textContent = label;
-      setProgress('experian-progress', scores.experian_score, 800);
+      updateScoreUI('experian', scores.experian_score, color, label);
     }
 
     if (scores.transunion_score) {
       const { color, label } = getColorAndLabel(scores.transunion_score);
-      document.getElementById('transunion-score-text').textContent = scores.transunion_score;
-      document.getElementById('transunion-score-text').parentElement.classList.add(color);
-      document.getElementById('transunion-score-text').parentElement.nextElementSibling.textContent = label;
-      setProgress('transunion-progress', scores.transunion_score, 800);
+      updateScoreUI('transunion', scores.transunion_score, color, label);
     }
 
     if (scores.equifax_score) {
       const { color, label } = getColorAndLabel(scores.equifax_score);
-      document.getElementById('equifax-score-text').textContent = scores.equifax_score;
-      document.getElementById('equifax-score-text').parentElement.classList.add(color);
-      document.getElementById('equifax-score-text').parentElement.nextElementSibling.textContent = label;
-      setProgress('equifax-progress', scores.equifax_score, 800);
+      updateScoreUI('equifax', scores.equifax_score, color, label);
     }
   });
-});
+}
 
 function initializeCreateAttackDropdown() {
   const attackButton = document.getElementById('create-attack-button');
   const attackDropdown = document.getElementById('attack-dropdown');
   const roundButtons = document.querySelectorAll('[data-round]');
 
-  if (attackButton && attackDropdown && roundButtons.length > 0) {
-    attackButton.addEventListener('click', function() {
-      attackDropdown.classList.toggle('hidden');
-    });
+  if (attackButton && attackDropdown) {
+    attackButton.addEventListener('click', toggleDropdown);
+    document.addEventListener('click', closeDropdownOnClickOutside);
+  }
 
-    document.addEventListener('click', function(event) {
-      if (!attackButton.contains(event.target) && !attackDropdown.contains(event.target)) {
-        attackDropdown.classList.add('hidden');
-      }
-    });
+  roundButtons.forEach(button => {
+    button.addEventListener('click', handleRoundButtonClick);
+  });
 
-    roundButtons.forEach(button => {
-      button.addEventListener('click', function() {
-        const round = this.getAttribute('data-round');
-        if (parseFloat('<%= current_user.credits %>') < 24.99) {
-          alert("You don't have enough credits. Please add credits.");
-          window.location.href = '<%= payment_path %>';
-        } else {
-          createAttack(round);
-        }
-      });
-    });
+  function toggleDropdown() {
+    attackDropdown.classList.toggle('hidden');
+  }
+
+  function closeDropdownOnClickOutside(event) {
+    if (!attackButton.contains(event.target) && !attackDropdown.contains(event.target)) {
+      attackDropdown.classList.add('hidden');
+    }
+  }
+
+  function handleRoundButtonClick() {
+    const round = this.getAttribute('data-round');
+    if (parseFloat('<%= current_user.credits %>') < 24.99) {
+      alert("You don't have enough credits. Please add credits.");
+      window.location.href = '<%= payment_path %>';
+    } else {
+      createAttack(round);
+    }
   }
 }
 
@@ -333,28 +341,13 @@ document.addEventListener("turbolinks:before-cache", function() {
   const attackDropdown = document.getElementById('attack-dropdown');
   const roundButtons = document.querySelectorAll('[data-round]');
 
-  if (attackButton && attackDropdown && roundButtons.length > 0) {
-    attackButton.removeEventListener('click', function() {
-      attackDropdown.classList.toggle('hidden');
-    });
-
-    document.removeEventListener('click', function(event) {
-      if (!attackButton.contains(event.target) && !attackDropdown.contains(event.target)) {
-        attackDropdown.classList.add('hidden');
-      }
-    });
-
-    roundButtons.forEach(button => {
-      button.removeEventListener('click', function() {
-        const round = this.getAttribute('data-round');
-        if (parseFloat('<%= current_user.credits %>') < 24.99) {
-          alert("You don't have enough credits. Please add credits.");
-          window.location.href = '<%= payment_path %>';
-        } else {
-          createAttack(round);
-        }
-      });
-    });
+  if (attackButton && attackDropdown) {
+    attackButton.removeEventListener('click', toggleDropdown);
+    document.removeEventListener('click', closeDropdownOnClickOutside);
   }
+
+  roundButtons.forEach(button => {
+    button.removeEventListener('click', handleRoundButtonClick);
+  });
 });
 </script>

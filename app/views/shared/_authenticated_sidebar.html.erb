@@ -159,17 +159,35 @@
 <!-- Include the JavaScript to handle the toggle functionality -->
 <script>
 document.addEventListener("turbolinks:load", function() {
+  initializeSidebarToggle();
+});
+
+function initializeSidebarToggle() {
   const sidebarToggle = document.getElementById('sidebarToggle');
   const mobileSidebar = document.getElementById('mobileSidebar');
   const menuIcon = document.getElementById('menuIcon');
   const closeIcon = document.getElementById('closeIcon');
 
   if (sidebarToggle && mobileSidebar && menuIcon && closeIcon) {
-    sidebarToggle.addEventListener('click', function () {
-      mobileSidebar.classList.toggle('-translate-x-full');
-      menuIcon.classList.toggle('hidden');
-      closeIcon.classList.toggle('hidden');
-    });
+    sidebarToggle.addEventListener('click', toggleSidebar);
+  }
+}
+
+function toggleSidebar() {
+  const mobileSidebar = document.getElementById('mobileSidebar');
+  const menuIcon = document.getElementById('menuIcon');
+  const closeIcon = document.getElementById('closeIcon');
+
+  mobileSidebar.classList.toggle('-translate-x-full');
+  menuIcon.classList.toggle('hidden');
+  closeIcon.classList.toggle('hidden');
+}
+
+document.addEventListener("turbolinks:before-cache", function() {
+  const sidebarToggle = document.getElementById('sidebarToggle');
+  if (sidebarToggle) {
+    sidebarToggle.removeEventListener('click', toggleSidebar);
   }
 });
+
 </script>

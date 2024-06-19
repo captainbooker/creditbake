@@ -98,18 +98,23 @@
 <div id="loading-overlay" class="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50 z-50 hidden">
   <div class="text-center">
     <div class="loader mb-4"></div>
-    <p class="text-white text-lg">Importing credit report, please do not close browser</p>
+    <p class="text-white text-lg">This might take a few minutes. Importing your credit report, please do not close the browser.</p>
   </div>
 </div>
 
 <script>
 document.addEventListener("turbolinks:load", function() {
+  initializePasswordToggle();
+  initializeFormSubmission();
+});
+
+function initializePasswordToggle() {
   const passwordField = document.getElementById("password");
   const togglePasswordButton = document.getElementById("toggle_password_visibility");
   const eyeIconPassword = document.getElementById("eye_icon_password");
   const eyeOffIconPassword = document.getElementById("eye_off_icon_password");
 
-  togglePasswordButton.addEventListener("click", function() {
+  function togglePasswordVisibility() {
     if (passwordField.type === "password") {
       passwordField.type = "text";
       eyeIconPassword.classList.remove("hidden");
@@ -119,12 +124,35 @@ document.addEventListener("turbolinks:load", function() {
       eyeIconPassword.classList.add("hidden");
       eyeOffIconPassword.classList.remove("hidden");
     }
-  });
+  }
 
-  // Show loading overlay on form submission
+  if (togglePasswordButton) {
+    togglePasswordButton.addEventListener("click", togglePasswordVisibility);
+  }
+}
+
+function initializeFormSubmission() {
   const form = document.getElementById("credit-report-form");
-  form.addEventListener("submit", function(event) {
+  function showLoadingOverlay() {
     document.getElementById("loading-overlay").classList.add("show");
-  });
+  }
+
+  if (form) {
+    form.addEventListener("submit", showLoadingOverlay);
+  }
+}
+
+document.addEventListener("turbolinks:before-cache", function() {
+  const togglePasswordButton = document.getElementById("toggle_password_visibility");
+  const form = document.getElementById("credit-report-form");
+
+  if (togglePasswordButton) {
+    togglePasswordButton.removeEventListener("click", togglePasswordVisibility);
+  }
+
+  if (form) {
+    form.removeEventListener("submit", showLoadingOverlay);
+  }
 });
+
 </script>

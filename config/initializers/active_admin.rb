@@ -5,6 +5,7 @@ ActiveAdmin.setup do |config|
   # for each of the active admin pages.
   #
   config.site_title = "Creditbake"
+  config.register_stylesheet 'active_admin_custom.css'
 
   # Set the link url for the title. For example, to take
   # users to your main site. Defaults to no link.

@@ -6,7 +6,7 @@
   <%= csrf_meta_tags %>
   <%= csp_meta_tag %>
 
-  <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %>
+  <%= stylesheet_link_tag 'custom_layout', media: 'all', 'data-turbolinks-track': 'reload' %>
   <%= javascript_pack_tag 'application', 'data-turbolinks-track': 'reload' %>
   <script src="https://unpkg.com/alpinejs" defer></script>
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
@@ -26,6 +26,9 @@
     </div>
   </div>
 
+   <script>
+    var referrer = "<%= request.referrer %>";
+  </script>
   <script type="text/javascript" src="https://creditbakellc.formstack.com/forms/js/lightbox.js"></script>
   <script type="text/javascript">
     var fsLightbox5820917 = new FSLightbox({

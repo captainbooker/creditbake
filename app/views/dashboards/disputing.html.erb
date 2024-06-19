@@ -115,17 +115,23 @@
 
 <script>
 document.addEventListener("turbolinks:load", function() {
-  document.querySelectorAll('.account-card').forEach(card => {
-    card.addEventListener('click', function(event) {
-      const checkbox = card.querySelector('input[type="checkbox"]');
-      if (event.target !== checkbox) {
-        checkbox.checked = !checkbox.checked;
-        card.classList.toggle('peer-checked:border-custom-blue', checkbox.checked);
-        card.classList.toggle('peer-checked:text-lg', checkbox.checked);
-        card.classList.toggle('peer-checked:scale-105', checkbox.checked);
-        card.classList.toggle('peer-checked:shadow-lg', checkbox.checked);
-      }
+  function addEventListeners() {
+    document.querySelectorAll('.account-card').forEach(card => {
+      card.addEventListener('click', function(event) {
+        const checkbox = card.querySelector('input[type="checkbox"]');
+        if (event.target !== checkbox) {
+          checkbox.checked = !checkbox.checked;
+          card.classList.toggle('peer-checked:border-custom-blue', checkbox.checked);
+          card.classList.toggle('peer-checked:text-lg', checkbox.checked);
+          card.classList.toggle('peer-checked:scale-105', checkbox.checked);
+          card.classList.toggle('peer-checked:shadow-lg', checkbox.checked);
+        }
+      });
     });
-  });
+  }
+
+  // Call the function to add event listeners
+  addEventListeners();
 });
+
 </script>
