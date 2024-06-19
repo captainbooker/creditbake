@@ -1,5 +1,6 @@
 require 'selenium-webdriver'
 require 'json'
+require 'logger'
 
 class IdentityiqService
   BASE_URL = 'https://member.identityiq.com'
@@ -10,6 +11,7 @@ class IdentityiqService
     @password = password
     @security_question = security_question
     @service = service
+    @logger = Logger.new(STDOUT)
 
     # Configure Chrome options to run in headless mode
     options = Selenium::WebDriver::Chrome::Options.new
@@ -20,8 +22,12 @@ class IdentityiqService
     options.add_argument('--window-size=1920,1080') # Set a default window size
     options.add_argument('--disable-software-rasterizer')
     options.add_argument('--remote-debugging-port=9222')
+    options.add_argument('--single-process')
 
     @driver = Selenium::WebDriver.for :chrome, options: options
+  rescue Selenium::WebDriver::Error::WebDriverError => e
+    @logger.error "Failed to initialize Chrome driver: #{e.message}"
+    raise
   end
 
   def fetch_credit_report
@@ -34,6 +40,7 @@ class IdentityiqService
   private
 
   def login
+    @logger.info "Navigating to login page"
     @driver.navigate.to "#{BASE_URL}/"
     username_field = @driver.find_element(name: 'username')
     password_field = @driver.find_element(name: 'password')
@@ -43,9 +50,11 @@ class IdentityiqService
 
     login_button = @driver.find_element(css: 'button[type="submit"]')
     login_button.click
+    @logger.info "Submitted login form"
   end
 
   def fetch_credit_report_json
+    @logger.info "Fetching credit report JSON"
     @driver.navigate.to "#{BASE_URL}/CreditReport.aspx?view=json"
     wait = Selenium::WebDriver::Wait.new(timeout: 10)
 
@@ -55,7 +64,7 @@ class IdentityiqService
     }
 
     json_content = json_content.sub(/^JSON_CALLBACK\(/, '').sub(/\);?$/, '')
-
+    @logger.info "Credit report JSON fetched successfully"
     json_content
   end
 end

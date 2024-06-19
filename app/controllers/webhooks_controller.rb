@@ -6,8 +6,8 @@ class WebhooksController < ApplicationController
     payload = params
 
     # Extract user_id and amount from the payload
-    user_id = payload.dig("USER_ID", "value")
-    amount = payload.dig("Total", "value").to_f
+    user_id = payload["USER_ID"].match(/value = (\d+)/)[1]
+    amount = payload["Total"].match(/value = (\d+)/)[1].to_f
 
     # Find the user
     user = User.find_by(id: user_id)
