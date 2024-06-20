@@ -37,7 +37,7 @@
             </div>
           </div>
           <div class="text-center md:col-span-2">
-            <%= f.submit "Import Credit Report", class: "px-6 py-3 font-medium rounded-lg transition duration-300 #{'bg-gray-500 cursor-not-allowed' if @user_browser == :safari } #{'bg-blue-500 hover:bg-blue-600 text-white' unless @user_browser  == :safari }", disabled: @user_browser == :safari %>
+            <%= f.submit "Import Credit Report", class: "px-6 py-3 font-medium rounded-lg transition duration-300 bg-blue-500 hover:bg-blue-600 text-white" %>
           </div>
         </div>
       <% end %>
