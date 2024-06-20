@@ -29,7 +29,9 @@
    <script>
     var referrer = "<%= request.referrer %>";
   </script>
-  <script type="text/javascript" src="https://creditbakellc.formstack.com/forms/js/lightbox.js"></script>
+  <%
+=begin%>
+ <script type="text/javascript" src="https://creditbakellc.formstack.com/forms/js/lightbox.js"></script>
   <script type="text/javascript">
     var fsLightbox5820917 = new FSLightbox({
       form: 5820917,
@@ -43,7 +45,9 @@
     var formUrl = "https://creditbakellc.formstack.com/forms/payment_form?USER_ID=" + userId;
 
     document.getElementById("fsLightboxContent5820917").innerHTML = '<iframe src="' + formUrl + '" title="Formstack Form" style="height:450px; width:100%; border: none;"></iframe>';
-  </script>
+  </script> 
+<%
+=end%>
 
 
   <div class="flex h-screen overflow-hidden">
@@ -54,7 +58,7 @@
     <div class="relative flex flex-1 flex-col overflow-y-auto overflow-x-hidden">
       <% if user_browser == :safari %>
         <div class="promo-banner">
-          <span>Our credit report parser doesn't support Safari</span>
+          <span>Our credit report parser doesn't support Safari right now</span>
           <a href="#" class="promo-redeem">Use Chrome or Firefox</a>
         </div>
       <% end %>

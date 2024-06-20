@@ -53,7 +53,7 @@
         <div class="flex flex-col items-center justify-between border p-4 rounded-lg shadow-md bg-white">
           <div class="flex flex-col items-center">
             <div class="text-sm font-medium font-semibold text-gray-700">Open Accounts</div>
-            <div class="text-3xl font-semibold text-red-500"><%= @accounts.count %></div>
+            <div class="text-3xl font-semibold text-gray-900"><%= @accounts.count %></div>
           </div>
           <div class="mt-4">
             <%= link_to 'Take Action', letters_path, class: "px-6 py-3 font-medium rounded-lg transition duration-300 #{ 'bg-gray-400 text-gray-700 cursor-not-allowed' if @accounts.count.zero? } #{ 'custom-blue text-white hover:bg-blue-700' unless @accounts.count.zero? }", disabled: @accounts.count.zero? %>
