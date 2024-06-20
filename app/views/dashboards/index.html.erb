@@ -17,6 +17,7 @@
         <p id="transunion-score-indicator" class="score-indicator">Import Credit Report</p>
         <p class="updated-date">Updated <%= @credit_report&.created_at&.strftime("%m/%d/%Y") %></p>
         <p class="font-semibold">TransUnion</p>
+        <%= image_tag "transunion.png", width: "200", height: "200", class: "mx-auto mt-4"  %>
       </div>
 
       <div class="score-card">
@@ -29,10 +30,10 @@
         </div>
         <p id="experian-score-indicator" class="score-indicator">Import Credit Report</p>
         <p class="updated-date">Updated <%= @credit_report&.created_at&.strftime("%m/%d/%Y") %></p>
-        <p class="font-semibold">Experian</p>
+         <%= image_tag "experian.png", width: "200", height: "200", class: "mx-auto mt-8"  %>
       </div>
 
-      <div class="score-card">
+      <div class="score-card flex flex-col items-center">
         <div class="score-circle">
           <svg viewBox="0 0 100 100" class="w-full h-full">
             <circle class="text-gray-300" stroke-width="10" stroke="currentColor" fill="transparent" r="40" cx="50" cy="50" />
@@ -40,12 +41,13 @@
           </svg>
           <div id="equifax-score-text" class="score-text">0</div>
         </div>
-        <p id="equifax-score-indicator" class="score-indicator">Import Credit Report</p>
+        <p id="equifax-score-indicator" class="score-indicator sm:mt-4 md:mt-6">Import Credit Report</p>
         <p class="updated-date">Updated <%= @credit_report&.created_at&.strftime("%m/%d/%Y") %></p>
-        <p class="font-semibold">Equifax</p>
+        <%= image_tag "equifax.png", width: "200", height: "200", class: "mx-auto mt-8" %>
       </div>
     </div>
     
+    <br>
     <!-- New Section -->
     <div class="mt-8">
       <h2 class="text-xl font-semibold mb-6">Credit Summary</h2>
@@ -56,7 +58,7 @@
             <div class="text-3xl font-semibold text-gray-900"><%= @accounts.count %></div>
           </div>
           <div class="mt-4">
-            <%= link_to 'Take Action', letters_path, class: "px-6 py-3 font-medium rounded-lg transition duration-300 #{ 'bg-gray-400 text-gray-700 cursor-not-allowed' if @accounts.count.zero? } #{ 'custom-blue text-white hover:bg-blue-700' unless @accounts.count.zero? }", disabled: @accounts.count.zero? %>
+            <%= link_to 'Take Action', letters_path, class: "px-6 py-3 font-medium rounded-lg transition duration-300 #{ 'bg-gray-400 text-white cursor-not-allowed' if @accounts.count.zero? } #{ 'custom-blue text-white hover:bg-blue-700' unless @accounts.count.zero? }", disabled: @accounts.count.zero? %>
           </div>
         </div>
 
@@ -66,7 +68,7 @@
             <div class="text-3xl font-semibold text-red-500"><%= @inquiries.count %></div>
           </div>
           <div class="mt-4">
-            <%= link_to 'Take Action', letters_path, class: "px-6 py-3 font-medium rounded-lg transition duration-300 #{ 'bg-gray-400 text-gray-700 cursor-not-allowed' if @inquiries.count.zero? } #{ 'custom-blue text-white hover:bg-blue-700' unless @inquiries.count.zero? }", disabled: @inquiries.count.zero? %>
+            <%= link_to 'Take Action', letters_path, class: "px-6 py-3 font-medium rounded-lg transition duration-300 #{ 'bg-gray-400 text-white cursor-not-allowed' if @inquiries.count.zero? } #{ 'custom-blue text-white hover:bg-blue-700' unless @inquiries.count.zero? }", disabled: @inquiries.count.zero? %>
           </div>
         </div>
 
@@ -76,7 +78,7 @@
             <div class="text-3xl font-semibold text-red-500"><%= @negative_accounts.count %></div>
           </div>
           <div class="mt-4">
-            <%= link_to 'Take Action', letters_path, class: "px-6 py-3 font-medium rounded-lg transition duration-300 #{ 'bg-gray-400 text-gray-700 cursor-not-allowed' if @negative_accounts.count.zero? } #{ 'custom-blue text-white hover:bg-blue-700' unless @negative_accounts.count.zero? }", disabled: @negative_accounts.count.zero? %>
+            <%= link_to 'Take Action', letters_path, class: "px-6 py-3 font-medium rounded-lg transition duration-300 #{ 'bg-gray-400 text-white cursor-not-allowed' if @negative_accounts.count.zero? } #{ 'custom-blue text-white hover:bg-blue-700' unless @negative_accounts.count.zero? }", disabled: @negative_accounts.count.zero? %>
           </div>
         </div>
       </div>
