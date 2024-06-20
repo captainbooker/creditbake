@@ -52,6 +52,7 @@ Rails.application.routes.draw do
   get 'privacy_policy', to: 'pages#privacy_policy', as: 'privacy_policy'
   get 'terms_of_use', to: 'pages#terms_of_use', as: 'terms_of_use'
   get 'refund_policy', to: 'pages#refund_policy', as: 'refund_policy'
+  get '/sitemap.xml', to: 'pages#sitemap', defaults: { format: 'xml' }
 
   resources :contacts, only: [:new, :create]
 
