@@ -9,9 +9,14 @@ class ApplicationController < ActionController::Base
   before_action :ensure_profile_complete, if: :user_signed_in?
 
   helper_method :user_browser
+  helper_method :mobile?
 
   def user_browser
     detect_browser(request.user_agent)
+  end
+
+  def mobile?
+    request.user_agent.include?("Mobile") || request.user_agent.include?("iPhone")
   end
 
   private
