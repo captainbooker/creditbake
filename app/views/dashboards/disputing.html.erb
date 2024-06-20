@@ -1,7 +1,7 @@
 <div class="mx-auto max-w-screen-3xl p-4 md:p-6 2xl:p-10">
   <div class="mx-auto max-w-270">
     <div class="flex items-center justify-between mb-6">
-      <h1 class="text-2xl font-bold">Challenege</h1>
+      <h1 class="text-2xl font-bold">Challenge</h1>
     </div>
     <%= form_with url: save_challenges_path, method: :patch do %>
       <%= hidden_field_tag :authenticity_token, form_authenticity_token %>
@@ -44,10 +44,10 @@
           </div>
           <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4" data-tabs-target="content">
             <% @accounts.each do |account| %>
-              <label for="account_<%= account.id %>" class="block relative transform transition-transform duration-300 ease-in-out hover:scale-105 hover:shadow-lg border rounded cursor-pointer bg-white peer-checked:border-custom-blue peer-checked:text-lg peer-checked:bg-custom-blue peer-checked:text-white peer-checked:border-4">
+              <label for="account_<%= account.id %>" class="flex flex-col relative transform transition-transform duration-300 ease-in-out hover:scale-105 hover:shadow-lg border rounded cursor-pointer bg-white peer-checked:border-custom-blue peer-checked:text-lg peer-checked:bg-custom-blue peer-checked:text-white peer-checked:border-4">
                 <input type="hidden" name="account_ids[<%= account.id %>]" value="false">
                 <input type="checkbox" id="account_<%= account.id %>" name="account_ids[<%= account.id %>]" value="true" class="form-checkbox hidden peer" <%= 'checked' if account.challenge %>>
-                <div class="peer-checked:border-custom-blue peer-checked:text-lg">
+                <div class="flex-grow peer-checked:border-custom-blue peer-checked:text-lg min-h-full">
                   <div class="flex justify-between px-4 pt-2">
                     <p class="font-semibold text-gray-800 peer-checked:text-white"><%= account.name %></p>
                   </div>
