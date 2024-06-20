@@ -5,4 +5,10 @@ class PagesController < ApplicationController
 
   def dashboard
   end
+
+  def privacy_policy
+  end
+
+  def terms_of_use
+  end
 end

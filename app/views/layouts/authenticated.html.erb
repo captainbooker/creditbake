@@ -14,42 +14,9 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/signature_pad@4.1.7/dist/signature_pad.umd.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/js-confetti@latest/dist/js-confetti.browser.js"></script>
+  <%= favicon_link_tag asset_path('favicon.jpg') %>
 </head>
 <body class="body-background-color">
-
-  <div id="fsLightbox5820917" class="fsLightbox" style="display:none;">
-    <div align="right" style="padding-bottom:5px;">
-      <a id="fsLightboxClose5820917" href="#" title="close"><img src="https://creditbakellc.formstack.com/forms/images/2/cross.gif" border="0" /></a>
-    </div>
-    <div id="fsLightboxContent5820917" style="height:450px; width:650px; padding-top:0px; overflow:auto;">
-      <script type="text/javascript" src="https://creditbakellc.formstack.com/forms/js.php/payment_form"></script>
-      <div style="text-align:right; font-size:x-small;"><a href="http://www.formstack.com?utm_source=jsembed&utm_medium=product&utm_campaign=product+branding&fa=h,5820917" title="Powered by Formstack">Powered by Formstack</a></div>
-    </div>
-  </div>
-
-   <script>
-    var referrer = "<%= request.referrer %>";
-  </script>
-  <%
-=begin%>
- <script type="text/javascript" src="https://creditbakellc.formstack.com/forms/js/lightbox.js"></script>
-  <script type="text/javascript">
-    var fsLightbox5820917 = new FSLightbox({
-      form: 5820917,
-      handleText: "Payment Form",
-      handlePosition: "right",
-      handleImage: "https://creditbakellc.formstack.com/forms/lightboxHandle.php?str=Payment+Form",
-      handle: null
-    });
-
-    var userId = "<%= current_user.id %>";
-    var formUrl = "https://creditbakellc.formstack.com/forms/payment_form?USER_ID=" + userId;
-
-    document.getElementById("fsLightboxContent5820917").innerHTML = '<iframe src="' + formUrl + '" title="Formstack Form" style="height:450px; width:100%; border: none;"></iframe>';
-  </script> 
-<%
-=end%>
-
 
   <div class="flex h-screen overflow-hidden">
     <% unless current_page?(edit_profile_path) %>

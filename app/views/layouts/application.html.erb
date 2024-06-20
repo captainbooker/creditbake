@@ -10,6 +10,17 @@
     <%= javascript_pack_tag 'application', 'data-turbolinks-track': 'reload' %>
     <%= stylesheet_link_tag 'custom_layout', media: 'all' %>
     <%= display_meta_tags site: "CreditBake" %>
+    <%= favicon_link_tag asset_path('favicon.jpg') %>
+    <meta name="description" content="CreditBake offers AI-powered credit repair solutions to help users repair their credit efficiently. Our platform integrates with credit monitoring services to import reports and generate dispute letters based on Metro 2 compliance.">
+    <meta name="keywords" content="Credit Repair, AI Credit Repair, CreditBake, Metro 2 Compliance, Credit Dispute Letters, Credit Monitoring, Do it yourself credit repair, DIY Credit Repair">
+    <meta property="og:title" content= "CreditBake - DIY Credit Repair Solution powered by AI">
+    <meta property="og:description" content="CreditBake offers AI-powered credit repair solutions to help users repair their credit efficiently. Our platform integrates with credit monitoring services to import reports and generate dispute letters based on Metro 2 compliance.">
+    <meta property="og:image" content="<%= image_url('logo.png') %>">
+    <meta property="og:url" content="<%= request.original_url %>">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="CreditBake - DIY Credit Repair Solution powered by AI">
+    <meta name="twitter:description" content="CreditBake offers AI-powered credit repair solutions to help users repair their credit efficiently. Our platform integrates with credit monitoring services to import reports and generate dispute letters based on Metro 2 compliance.>">
+    <meta name="twitter:image" content="<%=  image_url('logo.png') %>">
   </head>
 
   <body>

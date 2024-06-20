@@ -1,3 +1,12 @@
+<% content_for :meta_tags do %>
+  <%= set_meta_tags(
+    title: 'Sign Up',
+    description: 'Join CreditBake today and take control of your credit repair journey with our advanced AI-powered tools. Sign up to start improving your credit score efficiently.',
+    keywords: 'Credit Repair, AI Credit Repair, Sign Up, CreditBake, DIY Credit Repair, Credit Score Improvement',
+    canonical: new_user_registration_url
+  ) %>
+<% end %>
+
 <section class="bg-[#F4F7FF] py-20 lg:py-32 dark:bg-dark">
   <div class="container">
     <div class="flex flex-wrap -mx-4">
@@ -25,7 +34,7 @@
             <div class="mb-[22px] text-left">
               <label class="inline-flex items-center">
                 <input type="checkbox" id="terms-checkbox" class="form-checkbox text-primary" />
-                <span class="ml-2">I agree to the <a href="/privacy" target="_blank" class="text-primary hover:underline">Privacy Policy</a> and <a href="/terms" target="_blank" class="text-primary hover:underline">Terms of Use</a>.</span>
+                <span class="ml-2">I agree to the <%= link_to "Privacy Policy", privacy_policy_path, class: "text-primary hover:underline" %> and <%= link_to "Terms of Service", terms_of_use_path, class: "text-primary hover:underline0" %>.</span>
               </label>
             </div>
             <%= f.hidden_field :agreement, value: false %>
@@ -36,13 +45,10 @@
 
           <p class="mb-4 text-base text-body-secondary">
             By creating an account you agree with our
-            <a href="/privacy" target="_blank" class="text-primary hover:underline">
-              Privacy Policy
-            </a>
+             <%= link_to "Privacy Policy", privacy_policy_path, class: "text-primary hover:underline" %>
             and
-            <a href="/terms" target="_blank" class="text-primary hover:underline">
-              Terms of Use
-            </a>.
+            <%= link_to "Terms of Service", terms_of_use_path, class: "text-primary hover:underline" %>
+            .
           </p>
 
           <p class="text-base text-body-secondary">
