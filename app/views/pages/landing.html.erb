@@ -1,16 +1,17 @@
-<%= set_meta_tags(
-  title: "DIY Credit Repair Solution powered by AI",
-  description: "CreditBake offers AI-powered credit repair solutions to help users repair their credit efficiently. Our platform integrates with credit monitoring services to import reports and generate dispute letters based on Metro 2 compliance.",
-  keywords: "Credit Repair, AI Credit Repair, CreditBake, Metro 2 Compliance, Credit Dispute Letters, Credit Monitoring, DIY Credit Repair",
-  canonical: unauthenticated_root_url,
-  og: {
-    title: "CreditBake - DIY Credit Repair Solution powered by AI",
+<% content_for :meta_tags do %>
+  <%= set_meta_tags(
+    title: "DIY Credit Repair Solution powered by AI",
     description: "CreditBake offers AI-powered credit repair solutions to help users repair their credit efficiently. Our platform integrates with credit monitoring services to import reports and generate dispute letters based on Metro 2 compliance.",
-    image: image_url('logo.png'),
-    url: unauthenticated_root_url
-  }
-) %>
-
+    keywords: "Credit Repair, AI Credit Repair, CreditBake, Metro 2 Compliance, Credit Dispute Letters, Credit Monitoring, DIY Credit Repair",
+    canonical: unauthenticated_root_url,
+    og: {
+      title: "CreditBake - DIY Credit Repair Solution powered by AI",
+      description: "CreditBake offers AI-powered credit repair solutions to help users repair their credit efficiently. Our platform integrates with credit monitoring services to import reports and generate dispute letters based on Metro 2 compliance.",
+      image: image_url('logo.png'),
+      url: unauthenticated_root_url
+    }
+  ) %>
+<% end %>
 <section class="custom-blue pb-20 pt-32" id="home">
   <div class="container mx-auto flex flex-col lg:flex-row items-center">
     <div class="lg:w-1/2 mb-12 lg:mb-0 lg:mr-8 text-center lg:text-left">

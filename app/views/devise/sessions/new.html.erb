@@ -1,9 +1,11 @@
-<%= set_meta_tags(
-  title: 'Sign In',
-  description: 'Access your CreditBake account to manage your credit repair process. Sign in to continue improving your credit score with our AI-powered tools.',
-  keywords: 'Credit Repair, AI Credit Repair, Sign In, CreditBake, DIY Credit Repair, Credit Score Management',
-  canonical: new_user_session_url
-) %>
+<% content_for :meta_tags do %>
+  <%= set_meta_tags(
+    title: 'Sign In',
+    description: 'Access your CreditBake account to manage your credit repair process. Sign in to continue improving your credit score with our AI-powered tools.',
+    keywords: 'Credit Repair, AI Credit Repair, Sign In, CreditBake, DIY Credit Repair, Credit Score Management',
+    canonical: new_user_session_url
+  ) %>
+<% end %>
 
 <section class="bg-[#F4F7FF] py-20 lg:py-32 dark:bg-dark">
   <div class="container">
