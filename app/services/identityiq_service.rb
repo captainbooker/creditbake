@@ -6,12 +6,13 @@ class IdentityiqService
   BASE_URL = 'https://member.identityiq.com'
   attr_reader :username, :password, :security_question, :service
 
-  def initialize(username, password, security_question, service, browser: :chrome)
+  def initialize(username, password, security_question, service, browser: :chrome, mobile: false)
     @username = username
     @password = password
     @security_question = security_question
     @service = service
     @browser = browser
+    @mobile = mobile
     @logger = Logger.new(STDOUT)
 
     @driver = initialize_driver
@@ -31,19 +32,21 @@ class IdentityiqService
 
   def initialize_driver
     case @browser
-    when :chrome
-      options = Selenium::WebDriver::Chrome::Options.new
-      options.add_argument('--headless')
-      Selenium::WebDriver.for :chrome, options: options
-    when :firefox
-      options = Selenium::WebDriver::Firefox::Options.new
-      options.add_argument('--headless')
-      Selenium::WebDriver.for :firefox, options: options
-    when :safari
-      options = Selenium::WebDriver::Safari::Options.new
-      Selenium::WebDriver.for :safari, options: options
-    else
-      raise ArgumentError, "Unsupported browser: #{@browser}"
+      when :chrome
+        options = Selenium::WebDriver::Chrome::Options.new
+        @mobile && options.add_argument('--user-agent=Mozilla/5.0 (iPhone; CPU iPhone OS 17_5_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.5 Mobile/15E148 Safari/604.1')
+        options.add_argument('--headless')
+        Selenium::WebDriver.for :chrome, options: options
+      when :firefox
+        options = Selenium::WebDriver::Firefox::Options.new
+        @mobile && options.add_argument('--user-agent=Mozilla/5.0 (iPhone; CPU iPhone OS 17_5_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.5 Mobile/15E148 Safari/604.1')
+        options.add_argument('--headless')
+        Selenium::WebDriver.for :firefox, options: options
+      when :safari
+        options = Selenium::WebDriver::Safari::Options.new
+        Selenium::WebDriver.for :safari, options: options
+      else
+        raise ArgumentError, "Unsupported browser: #{@browser}"
     end
   end
 
