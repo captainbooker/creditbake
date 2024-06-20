@@ -36,11 +36,17 @@ class IdentityiqService
         options = Selenium::WebDriver::Chrome::Options.new
         @mobile && options.add_argument('--user-agent=Mozilla/5.0 (iPhone; CPU iPhone OS 17_5_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.5 Mobile/15E148 Safari/604.1')
         options.add_argument('--headless')
+        options.add_argument("--no-sandbox")
+        options.add_argument("--disable-gpu")
+        options.add_argument("--remote-debugging-port=9222")
         Selenium::WebDriver.for :chrome, options: options
       when :firefox
         options = Selenium::WebDriver::Firefox::Options.new
         @mobile && options.add_argument('--user-agent=Mozilla/5.0 (iPhone; CPU iPhone OS 17_5_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.5 Mobile/15E148 Safari/604.1')
         options.add_argument('--headless')
+        options.add_argument("--no-sandbox")
+        options.add_argument("--disable-gpu")
+        options.add_argument("--remote-debugging-port=9222")
         Selenium::WebDriver.for :firefox, options: options
       when :safari
         options = Selenium::WebDriver::Safari::Options.new
