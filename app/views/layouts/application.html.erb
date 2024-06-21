@@ -9,12 +9,15 @@
     <%= javascript_pack_tag 'application', 'data-turbolinks-track': 'reload' %>
     <%= stylesheet_link_tag 'custom_layout', media: 'all' %>
     <%= display_meta_tags site: "CreditBake" %>
-    <%= favicon_link_tag asset_path('favicon.jpg') %>
-    <link rel="icon" href="<%= asset_path 'favicon.jpg' %>" type="image/x-icon">
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="CreditBake - DIY Credit Repair Solution powered by AI">
-    <meta name="twitter:description" content="CreditBake offers AI-powered credit repair solutions to help users repair their credit efficiently. Our platform integrates with credit monitoring services to import reports and generate dispute letters based on Metro 2 compliance.>">
-    <meta name="twitter:image" content="<%=  image_url('logo.png') %>">
+    <%= favicon_link_tag asset_path('favicon.ico') %>
+    <link rel="icon" href="<%= asset_path 'favicon.ico' %>" type="image/x-icon">
+    <link rel="shortcut icon" href="<%= asset_path 'favicon.ico' %>" type="image/x-icon">
+    <link rel="apple-touch-icon" sizes="180x180" href="<%= asset_path 'apple-touch-icon.png' %>">
+    <link rel="icon" type="image/png" sizes="32x32" href="<%= asset_path 'favicon-32x32.png' %>">
+    <link rel="icon" type="image/png" sizes="16x16" href="<%= asset_path 'favicon-16x16.png' %>">
+    <link rel="manifest" href="<%= asset_path 'site.webmanifest' %>">
+    <link rel="icon" type="image/png" sizes="192x192" href="<%= asset_path 'android-chrome-192x192.png' %>">
+    <link rel="icon" type="image/png" sizes="512x512" href="<%= asset_path 'android-chrome-512x512.png' %>">
   </head>
 
   <body>
