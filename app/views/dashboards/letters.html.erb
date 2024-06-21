@@ -6,11 +6,21 @@
     </div>
     <div class="mt-4 sm:ml-16 sm:mt-0 sm:flex-none relative">
       <button type="button" class="block rounded-md custom-blue px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600" id="create-attack-button">Create Attack</button>
-      <div class="absolute right-0 mt-2 w-48 bg-white border border-gray-300 rounded shadow-lg hidden" id="attack-dropdown">
+      <div class="absolute right-0 mt-2 w-96 bg-white border border-gray-300 rounded shadow-lg hidden" id="attack-dropdown">
         <ul>
-          <% (1..7).each do |round| %>
+          <% (1..10).each do |round| %>
+            <% phase_info = attack_phase_info(round) %>
             <li>
-              <button class="block w-full px-4 py-2 text-left text-black hover:bg-gray-200" data-round="<%= round %>">Round <%= round %></button>
+              <button class="block w-full px-4 py-2 text-left text-black hover:bg-gray-200" data-round="<%= round %>">
+                <span class="flex items-center">
+                  <span class="mr-2"><%= phase_info[:icon] %></span>
+                  <span>
+                    <strong><%= phase_info[:title] %></strong>
+                    <br>
+                    <small><%= phase_info[:description] %></small>
+                  </span>
+                </span>
+              </button>
             </li>
           <% end %>
         </ul>

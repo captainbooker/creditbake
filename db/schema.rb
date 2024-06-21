@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2024_06_19_011452) do
+ActiveRecord::Schema.define(version: 2024_06_21_080653) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -26,6 +26,7 @@ ActiveRecord::Schema.define(version: 2024_06_19_011452) do
     t.bigint "user_id", null: false
     t.string "creditor_name"
     t.string "name"
+    t.string "reason"
     t.index ["user_id"], name: "index_accounts_on_user_id"
   end
 
@@ -41,6 +42,20 @@ ActiveRecord::Schema.define(version: 2024_06_19_011452) do
     t.index ["author_type", "author_id"], name: "index_active_admin_comments_on_author"
     t.index ["namespace"], name: "index_active_admin_comments_on_namespace"
     t.index ["resource_type", "resource_id"], name: "index_active_admin_comments_on_resource"
+  end
+
+  create_table "active_analytics_views_per_days", force: :cascade do |t|
+    t.string "site", null: false
+    t.string "page", null: false
+    t.date "date", null: false
+    t.bigint "total", default: 1, null: false
+    t.string "referrer_host"
+    t.string "referrer_path"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["date"], name: "index_active_analytics_views_per_days_on_date"
+    t.index ["referrer_host", "referrer_path", "date"], name: "index_active_analytics_views_per_days_on_referrer_and_date"
+    t.index ["site", "page", "date"], name: "index_active_analytics_views_per_days_on_site_and_date"
   end
 
   create_table "active_storage_attachments", force: :cascade do |t|

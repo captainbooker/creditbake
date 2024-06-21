@@ -3,6 +3,9 @@ Rails.application.routes.draw do
   get 'contacts/new'
   get 'contacts/create'
   get 'stripe_payments/create'
+  authenticate :user do
+    mount ActiveAnalytics::Engine, at: "analytics" # http://localhost:3000/analytics
+  end
   devise_for :admin_users, ActiveAdmin::Devise.config
   ActiveAdmin.routes(self)
 

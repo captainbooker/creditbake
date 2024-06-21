@@ -1,5 +1,6 @@
 # app/controllers/dashboards_controller.rb
 class DashboardsController < ApplicationController
+  include ApplicationHelper
   include OpenaiPromptable
   before_action :authenticate_user!
   before_action :ensure_required_documents, only: [:create_attack]
@@ -42,7 +43,10 @@ class DashboardsController < ApplicationController
     # Set challenge for selected accounts
     if params[:account_ids].present?
       selected_accounts = params[:account_ids].select { |_, v| v == 'true' }.keys
-      Account.where(id: selected_accounts, user_id: current_user.id).update_all(challenge: true)
+      selected_accounts.each do |account_id|
+        reason = params[:account_reasons][account_id]
+        Account.where(id: account_id, user_id: current_user.id).update_all(challenge: true, reason: reason)
+      end
     end
   
     redirect_to letters_path, notice: 'Challenged items saved successfully.'
@@ -77,6 +81,7 @@ class DashboardsController < ApplicationController
       {
         name: account.name,
         number: account.account_number,
+        reason: account.reason,
         bureau_details: account.bureau_details.map do |detail|
           {
             bureau: detail.bureau,
@@ -104,7 +109,8 @@ class DashboardsController < ApplicationController
     )
 
     generate_pdfs(letter)
-    current_user.decrement!(:credits, 24.99)  # Deduct the credits for the attack letter
+    current_user.decrement!(:credits, 24.99)
+    Spending.create!(user: current_user, amount: 24.99, description: "Letter Generated: #{letter.id}")
   end
 
   def generate_pdfs(letter)

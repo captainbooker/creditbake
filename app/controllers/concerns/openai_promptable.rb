@@ -1,4 +1,3 @@
-# app/controllers/concerns/openai_promptable.rb
 module OpenaiPromptable
   extend ActiveSupport::Concern
 
@@ -21,9 +20,8 @@ module OpenaiPromptable
   end
 
   def send_prompt(round, inquiries, accounts, bureau)
-    formatted_table = format_accounts_with_bureau_details(accounts)
   
-    prompt = get_prompt(round, inquiries, accounts, bureau, formatted_table)
+    prompt = get_prompt(round, inquiries, accounts, bureau)
     response = @client.chat(
       parameters: {
         model: "gpt-4",
@@ -37,25 +35,112 @@ module OpenaiPromptable
     response_text = response['choices'].first['message']['content']
     inject_sensitive_data(response_text, current_user.ssn_last4)
   end
-  
 
-  def get_prompt(round, inquiries, accounts, bureau, formatted_table)
+  def get_prompt(round, inquiries, accounts, bureau)
     case round
-    when 1 then round_1_prompt(inquiries, accounts, bureau, formatted_table)
+    when 1 then round_1_prompt(inquiries, accounts, bureau)
     when 2 then round_2_prompt(inquiries, accounts, bureau)
     when 3 then round_3_prompt(inquiries, accounts, bureau)
     when 4 then round_4_prompt(inquiries, accounts, bureau)
     when 5 then round_5_prompt(inquiries, accounts, bureau)
     when 6 then round_6_prompt(inquiries, accounts, bureau)
     when 7 then round_7_prompt(inquiries, accounts, bureau)
+    when 8 then inquiries_all_in(inquiries, accounts, bureau)
+    when 9 then account_validation(inquiries, accounts, bureau)
+    when 10 then final_demand_prompt(inquiries, accounts, bureau)
     else
       "Invalid round selected."
     end
   end
 
-  def round_1_prompt(inquiries, accounts, bureau, formatted_table)
+  def inquiries_all_in(inquiries, accounts, bureau, formatted_details)
     <<-PROMPT
-      You are a credit repair expert using Metro 2 compliance standards, so please use Metro 2 codes in the letter. Draft a detailed dispute letter to the #{bureau.capitalize} regarding the inquiries below. Highlight the inaccuracies in the inquiry and request its immediate removal, citing relevant Metro 2 compliance regulations. The letter should be professional, concise, and emphasize the need for accurate reporting.
+    You are tasked with generating a unique comprehensive, Metro 2 compliant dispute letter for inquiries that do not belong to me. The letter should be detailed and at least six pages long worth of content/details(dont include page count in response), incorporating relevant laws, Metro 2 codes, and any necessary references. Below are the account and inquiry details that need to be addressed in the letter #{bureau.capitalize}
+    
+      User info for address:
+      first_name: #{current_user.first_name}
+      last_name: #{current_user.last_name}
+      street_address: #{current_user.street_address}
+      city: #{current_user.city}
+      state: #{current_user.state}
+      postal_code: #{current_user.postal_code}
+      country: "USA"
+      SSN Last 4: ###SSN_LAST4### (Include under sender address)
+      current_date: #{Date.today.strftime("%B %d, %Y")}
+  
+      Inquiries:
+      #{format_inquiries(inquiries, bureau, 100)}
+
+      Additional Requirements:
+      The letter must include relevant legal references, such as the Fair Credit Reporting Act (FCRA) and any other pertinent federal or state laws.
+      It must cite specific Metro 2 codes and explain how the reported information violates these standards.
+      The tone of the letter should be professional, assertive, and clear, emphasizing the legal rights of the consumer.
+      The letter should request a prompt and thorough investigation, correction, or removal of the disputed information from the credit report.
+      Include any necessary supporting documentation references, though the actual documents are not provided here.
+
+      Example Structure:
+      Introduction: Brief introduction of the purpose of the letter.
+      Consumer Rights Overview: Summary of the consumer's rights under relevant laws.
+      Dispute Details: Detailed explanation of the disputed account information.
+      Inquiry Dispute: Detailed explanation of the disputed inquiry.
+      Legal References: Citation of relevant laws and Metro 2 codes that support the dispute.
+      Request for Action: Clear request for investigation and correction of the disputed information.
+      Conclusion: Summarize the urgency and importance of resolving the dispute.
+
+      Tone and Style:
+      Professional and assertive
+      Detailed and thorough
+      Legally informed and compliant
+      (DO NOT NEED SIGNATURE)
+    PROMPT
+  end
+
+  def account_validation(inquiries, accounts, bureau, formatted_details)
+    <<-PROMPT
+      You are tasked with generating a unique comprehensive Metro 2 account validation letter. The letter should be detailed and at least six pages long worth of content/details(dont include page count in response), incorporating relevant laws, Metro 2 codes, and any necessary references. Below are the account and inquiry details that need to be addressed in the letter #{bureau.capitalize}.
+
+      User info for address:
+      first_name: #{current_user.first_name}
+      last_name: #{current_user.last_name}
+      street_address: #{current_user.street_address}
+      city: #{current_user.city}
+      state: #{current_user.state}
+      postal_code: #{current_user.postal_code}
+      country: "USA"
+      SSN Last 4: ###SSN_LAST4### (Include under sender address)
+      current_date: #{Date.today.strftime("%B %d, %Y")}
+  
+  
+      Accounts:
+      #{format_accounts_by_bureau(accounts, bureau, 7)}
+
+      Additional Requirements:
+      The letter must include relevant legal references, such as the Fair Credit Reporting Act (FCRA) and any other pertinent federal or state laws.
+      It must cite specific Metro 2 codes and explain how the reported information violates these standards.
+      The tone of the letter should be professional, assertive, and clear, emphasizing the legal rights of the consumer.
+      The letter should request a prompt and thorough investigation, correction, or removal of the disputed information from the credit report.
+      Include any necessary supporting documentation references, though the actual documents are not provided here.
+
+      Example Structure:
+      Introduction: Brief introduction of the purpose of the letter.
+      Consumer Rights Overview: Summary of the consumer's rights under relevant laws.
+      Dispute Details: Detailed explanation of the disputed account information.
+      Inquiry Dispute: Detailed explanation of the disputed inquiry.
+      Legal References: Citation of relevant laws and Metro 2 codes that support the dispute.
+      Request for Action: Clear request for investigation and correction of the disputed information.
+      Conclusion: Summarize the urgency and importance of resolving the dispute.
+
+      Tone and Style:
+      Professional and assertive
+      Detailed and thorough
+      Legally informed and compliant
+      (DO NOT NEED SIGNATURE)
+    PROMPT
+  end
+
+  def round_1_prompt(inquiries, accounts, bureau, formatted_details)
+    <<-PROMPT
+      You are tasked with generating a unique comprehensive, Metro 2 compliant dispute letter. The letter should be detailed and at least six pages long worth of content/details(dont include page count in response), incorporating relevant laws, Metro 2 codes, and any necessary references. Below are the account and inquiry details that need to be addressed in the letter #{bureau.capitalize}
   
       User info for address:
       first_name: #{current_user.first_name}
@@ -69,18 +154,39 @@ module OpenaiPromptable
       current_date: #{Date.today.strftime("%B %d, %Y")}
   
       Inquiries:
-      #{format_inquiries(inquiries, bureau)}
+      #{format_inquiries(inquiries, bureau, 100)}
   
-      Use Metro 2 codes for the accounts below to dispute the compliance. Highlight the inaccuracies in the account information and request its immediate removal, citing relevant Metro 2 compliance regulations. The letter should be professional, concise, and emphasize the need for accurate reporting. Be sure to use FCRA as well and I should only be contacted at the address provided.
   
-      Accounts: (I am providing you with a table of data with headers, table_separator & table_rows. Take all the data and put it in a table)
-      #{formatted_table}
+      Accounts:
+      #{format_accounts_by_bureau(accounts, bureau, 100)}
+
+      Additional Requirements:
+      The letter must include relevant legal references, such as the Fair Credit Reporting Act (FCRA) and any other pertinent federal or state laws.
+      It must cite specific Metro 2 codes and explain how the reported information violates these standards.
+      The tone of the letter should be professional, assertive, and clear, emphasizing the legal rights of the consumer.
+      The letter should request a prompt and thorough investigation, correction, or removal of the disputed information from the credit report.
+      Include any necessary supporting documentation references, though the actual documents are not provided here.
+
+      Example Structure:
+      Introduction: Brief introduction of the purpose of the letter.
+      Consumer Rights Overview: Summary of the consumer's rights under relevant laws.
+      Dispute Details: Detailed explanation of the disputed account information.
+      Inquiry Dispute: Detailed explanation of the disputed inquiry.
+      Legal References: Citation of relevant laws and Metro 2 codes that support the dispute.
+      Request for Action: Clear request for investigation and correction of the disputed information.
+      Conclusion: Summarize the urgency and importance of resolving the dispute.
+
+      Tone and Style:
+      Professional and assertive
+      Detailed and thorough
+      Legally informed and compliant
+      (DO NOT NEED SIGNATURE)
     PROMPT
   end
 
   def round_2_prompt(inquiries, accounts, bureau)
     <<-PROMPT
-    You are a credit repair expert using Metro 2 compliance standards, so please use Metro 2 codes in the letter. Draft a follow-up dispute letter to the #{bureau.capitalize} regarding the inquiries and accounts provided. Reference the previous dispute letter sent and emphasize the lack of response or correction. Reiterate the inaccuracies and request immediate removal, citing relevant Metro 2 compliance regulations and potential consequences of non-compliance.
+    You are tasked with generating a unique comprehensive Metro 2 reinvestigation letter. The letter should be detailed and at least six pages long worth of content/details(dont include page count in response), incorporating relevant laws, Metro 2 codes, and any necessary references. Below are the account and inquiry details that need to be addressed in the letter #{bureau.capitalize}.
 
       User info for address:
       first_name: #{current_user.first_name}
@@ -94,18 +200,39 @@ module OpenaiPromptable
       current_date: #{Date.today.strftime("%B %d, %Y")}
 
       Inquiries:
-      #{format_inquiries(inquiries, bureau)}
+      #{format_inquiries(inquiries, bureau, 5)}
 
       Accounts:
-      #{format_accounts(accounts, bureau)}
+      #{format_accounts_by_bureau(accounts, bureau, 5)}
 
-      Please ensure the credit bureaus remove any inaccurate information immediately and use Metro 2 compliance and FCRA and I should only be contacted at the address provided.
+      Additional Requirements:
+      The letter must include relevant legal references, such as the Fair Credit Reporting Act (FCRA) and any other pertinent federal or state laws.
+      It must cite specific Metro 2 codes and explain how the reported information violates these standards.
+      The tone of the letter should be professional, assertive, and clear, emphasizing the legal rights of the consumer.
+      The letter should request a thorough reinvestigation of the disputed information, focusing on Metro 2 compliance.
+      Include any necessary supporting documentation references, though the actual documents are not provided here.
+
+      Example Structure:
+      Introduction: Brief introduction of the purpose of the letter.
+      Consumer Rights Overview: Summary of the consumer's rights under relevant laws.
+      Dispute Details: Detailed explanation of the disputed account information.
+      Inquiry Dispute: Detailed explanation of the disputed inquiry.
+      Legal References: Citation of relevant laws and Metro 2 codes that support the dispute.
+      Evidence and Documentation: References to any supporting documents that bolster the dispute.
+      Request for Reinvestigation: Clear request for a thorough reinvestigation of the disputed information.
+      Conclusion: Summarize the urgency and importance of resolving the dispute.
+
+      Tone and Style:
+      Professional and assertive
+      Detailed and thorough
+      Legally informed and compliant
+      (DO NOT NEED SIGNATURE)
     PROMPT
   end
 
   def round_3_prompt(inquiries, accounts, bureau)
     <<-PROMPT
-      This is a Metro 2 compliance dispute letter, so please use Metro 2 codes in the letter followed by previous challnege letters for the #{bureau.capitalize} bureau. We have the following inquiries and accounts that need to be disputed using metro 2 and FCRA. The credit bureau has failed to investigate/comply to remove inquiries and accounts per FCRA.
+      You are tasked with generating a comprehensive Metro 2 compliance review letter. The letter should be detailed and at least six pages long worth of content/details(dont include page count in response), incorporating relevant laws, Metro 2 codes, and any necessary references. Below are the account and inquiry details that need to be addressed in the letter #{bureau.capitalize}.
 
       User info for address:
       first_name: #{current_user.first_name}
@@ -119,18 +246,38 @@ module OpenaiPromptable
       current_date: #{Date.today.strftime("%B %d, %Y")}
 
       Inquiries:
-      #{format_inquiries(inquiries, bureau)}
+      #{format_inquiries(inquiries, bureau, 100)}
 
       Accounts:
-      #{format_accounts(accounts, bureau)}
+      #{format_accounts_by_bureau(accounts, bureau, 100)}
 
-      Please ensure the credit bureaus remove any inaccurate information immediately and use Metro 2 compliance and FCRA and I should only be contacted at the address provided.
+      Additional Requirements:
+      The letter must include relevant legal references, such as the Fair Credit Reporting Act (FCRA) and any other pertinent federal or state laws.
+      It must cite specific Metro 2 codes and explain how the reported information violates these standards.
+      The tone of the letter should be professional, assertive, and clear, emphasizing the legal rights of the consumer.
+      The letter should request a prompt and thorough investigation, correction, or removal of the disputed information from the credit report.
+      Include any necessary supporting documentation references, though the actual documents are not provided here.
+
+      Example Structure:
+      Introduction: Brief introduction of the purpose of the letter.
+      Consumer Rights Overview: Summary of the consumer's rights under relevant laws.
+      Dispute Details: Detailed explanation of the disputed account information.
+      Inquiry Dispute: Detailed explanation of the disputed inquiry.
+      Legal References: Citation of relevant laws and Metro 2 codes that support the dispute.
+      Request for Action: Clear request for investigation and correction of the disputed information.
+      Conclusion: Summarize the urgency and importance of resolving the dispute.
+
+      Tone and Style:
+      Professional and assertive
+      Detailed and thorough
+      Legally informed and compliant
+      (DO NOT NEED SIGNATURE)
     PROMPT
   end
 
   def round_4_prompt(inquiries, accounts, bureau)
     <<-PROMPT
-    You are a credit repair expert using Metro 2 compliance standards, so please use Metro 2 codes in the letter. Draft a detailed dispute letter to the #{bureau.capitalize} regarding the inquiries and accounts provided. Request that they reinvestigate and comply with metro 2 and fcra. Be unique with letter and threaten to complain and file a law suit if accounts and inquires are not removed. Include detailed evidence and documentation supporting the inaccuracies. Emphasize the importance of compliance with Metro 2 regulations and request immediate removal of the inaccurate inquiry
+      You are tasked with generating a comprehensive Metro 2 dispute escalation and threaten to file a complaint letter. The letter should be detailed and at least six pages long worth of content/details(dont include page count in response), incorporating relevant laws, Metro 2 codes, and any necessary references. Below are the account and inquiry details that need to be addressed in the letter #{bureau.capitalize}.
 
       User info for address:
       first_name: #{current_user.first_name}
@@ -144,19 +291,38 @@ module OpenaiPromptable
       current_date: #{Date.today.strftime("%B %d, %Y")}
 
       Inquiries:
-      #{format_inquiries(inquiries, bureau)}
+      #{format_inquiries(inquiries, bureau, 10)}
 
       Accounts:
-      #{format_accounts(accounts, bureau)}
+      #{format_accounts_by_bureau(accounts, bureau, 4)}
 
-      Please ensure the credit bureaus remove any inaccurate information immediately and use Metro 2 compliance and FCRA and I should only be contacted at the address provided.
+      Additional Requirements:
+      The letter must include relevant legal references, such as the Fair Credit Reporting Act (FCRA) and any other pertinent federal or state laws.
+      It must cite specific Metro 2 codes and explain how the reported information violates these standards.
+      The tone of the letter should be professional, assertive, and clear, emphasizing the legal rights of the consumer.
+      The letter should request a prompt and thorough investigation, correction, or removal of the disputed information from the credit report.
+      Include any necessary supporting documentation references, though the actual documents are not provided here.
+
+      Example Structure:
+      Introduction: Brief introduction of the purpose of the letter.
+      Consumer Rights Overview: Summary of the consumer's rights under relevant laws.
+      Dispute Details: Detailed explanation of the disputed account information.
+      Inquiry Dispute: Detailed explanation of the disputed inquiry.
+      Legal References: Citation of relevant laws and Metro 2 codes that support the dispute.
+      Request for Action: Clear request for investigation and correction of the disputed information.
+      Conclusion: Summarize the urgency and importance of resolving the dispute.
+
+      Tone and Style:
+      Professional and assertive
+      Detailed and thorough
+      Legally informed and compliant
+      (DO NOT NEED SIGNATURE)
     PROMPT
   end
 
   def round_5_prompt(inquiries, accounts, bureau)
     <<-PROMPT
-    You are a credit repair expert using Metro 2 compliance standards, so please use Metro 2 codes in the letter. Draft a strongly worded dispute letter to the #{bureau.capitalize} regarding the inquires and accounts provided. Set a firm deadline for action. State that failure to address the inaccuracies within the specified time frame will result in further action, including complaints to regulatory authorities.
-
+      You are tasked with generating a comprehensive Metro 2 data reconciliation letter. The letter should be detailed and at least six pages long worth of content/details(dont include page count in response), incorporating relevant laws, Metro 2 codes, and any necessary references. Below are the account and inquiry details that need to be addressed in the letter #{bureau.capitalize}.
       User info for address:
       first_name: #{current_user.first_name}
       last_name: #{current_user.last_name}
@@ -169,19 +335,38 @@ module OpenaiPromptable
       current_date: #{Date.today.strftime("%B %d, %Y")}
 
       Inquiries:
-      #{format_inquiries(inquiries, bureau)}
+      #{format_inquiries(inquiries, bureau, 4)}
 
       Accounts:
-      #{format_accounts(accounts, bureau)}
+      #{format_accounts_by_bureau(accounts, bureau, 10)}
 
-      Please ensure the credit bureaus remove any inaccurate information immediately and use Metro 2 compliance and FCRA and I should only be contacted at the address provided.
+      Additional Requirements:
+      The letter must include relevant legal references, such as the Fair Credit Reporting Act (FCRA) and any other pertinent federal or state laws.
+      It must cite specific Metro 2 codes and explain how the reported information violates these standards.
+      The tone of the letter should be professional, assertive, and clear, emphasizing the legal rights of the consumer.
+      The letter should request a prompt and thorough investigation, correction, or removal of the disputed information from the credit report.
+      Include any necessary supporting documentation references, though the actual documents are not provided here.
+
+      Example Structure:
+      Introduction: Brief introduction of the purpose of the letter.
+      Consumer Rights Overview: Summary of the consumer's rights under relevant laws.
+      Dispute Details: Detailed explanation of the disputed account information.
+      Inquiry Dispute: Detailed explanation of the disputed inquiry.
+      Legal References: Citation of relevant laws and Metro 2 codes that support the dispute.
+      Request for Action: Clear request for investigation and correction of the disputed information.
+      Conclusion: Summarize the urgency and importance of resolving the dispute.
+
+      Tone and Style:
+      Professional and assertive
+      Detailed and thorough
+      Legally informed and compliant
+      (DO NOT NEED SIGNATURE)
     PROMPT
   end
 
   def round_6_prompt(inquiries, accounts, bureau)
     <<-PROMPT
-    You are a credit repair expert using Metro 2 compliance standards, so please use Metro 2 codes in the letter. Draft a final warning dispute letter to the #{bureau.capitalize} regarding an inquiries and accounts provided. Emphasize that this is the final attempt to resolve the issue amicably. State clearly that failure to correct the inaccuracies will result in legal action and formal complaints to regulatory authorities.
-
+      You are tasked with generating a comprehensive Metro 2 dispute resolution demand letter. The letter should be detailed and at least six pages long worth of content/details(dont include page count in response), incorporating relevant laws, Metro 2 codes, and any necessary references. Below are the account and inquiry details that need to be addressed in the letter #{bureau.capitalize}.
       User info for address:
       first_name: #{current_user.first_name}
       last_name: #{current_user.last_name}
@@ -194,19 +379,38 @@ module OpenaiPromptable
       current_date: #{Date.today.strftime("%B %d, %Y")}
 
       Inquiries:
-      #{format_inquiries(inquiries, bureau)}
+      #{format_inquiries(inquiries, bureau, 100)}
 
       Accounts:
-      #{format_accounts(accounts, bureau)}
+      #{format_accounts_by_bureau(accounts, bureau, 100)}
 
-      Please ensure the credit bureaus remove any inaccurate information immediately and use Metro 2 compliance and FCRA and I should only be contacted at the address provided.
+      Additional Requirements:
+      The letter must include relevant legal references, such as the Fair Credit Reporting Act (FCRA) and any other pertinent federal or state laws.
+      It must cite specific Metro 2 codes and explain how the reported information violates these standards.
+      The tone of the letter should be professional, assertive, and clear, emphasizing the legal rights of the consumer.
+      The letter should request a prompt and thorough investigation, correction, or removal of the disputed information from the credit report.
+      Include any necessary supporting documentation references, though the actual documents are not provided here.
+
+      Example Structure:
+      Introduction: Brief introduction of the purpose of the letter.
+      Consumer Rights Overview: Summary of the consumer's rights under relevant laws.
+      Dispute Details: Detailed explanation of the disputed account information.
+      Inquiry Dispute: Detailed explanation of the disputed inquiry.
+      Legal References: Citation of relevant laws and Metro 2 codes that support the dispute.
+      Request for Action: Clear request for investigation and correction of the disputed information.
+      Conclusion: Summarize the urgency and importance of resolving the dispute.
+
+      Tone and Style:
+      Professional and assertive
+      Detailed and thorough
+      Legally informed and compliant
+      (DO NOT NEED SIGNATURE)
     PROMPT
   end
 
   def round_7_prompt(inquiries, accounts, bureau)
     <<-PROMPT
-    You are a credit repair expert using Metro 2 compliance standards, so please use Metro 2 codes in the letter. Draft a letter to the #{bureau.capitalize} regarding an inquiries and accounts provided, initiating legal action and filing formal complaints to regulatory authorities. Reference detail the lack of response or correction. State the legal actions being taken and include copies of the complaints filed with regulatory authorities.
-
+      You are tasked with generating a comprehensive Metro 2 compliance and accuracy verification letter. The letter should be detailed and at least six pages long worth of content/details(dont include page count in response), incorporating relevant laws, Metro 2 codes, and any necessary references. Below are the account and inquiry details that need to be addressed in the letter #{bureau.capitalize}
       User info for address:
       first_name: #{current_user.first_name}
       last_name: #{current_user.last_name}
@@ -219,37 +423,104 @@ module OpenaiPromptable
       current_date: #{Date.today.strftime("%B %d, %Y")}
 
       Inquiries:
-      #{format_inquiries(inquiries, bureau)}
+      #{format_inquiries(inquiries, bureau, 15)}
 
-      Accounts: (I am proving you with a table of data with headers, table_separator & table_rows. Take all the data and put it in a table)
-      #{format_accounts(accounts, bureau)}
+      Accounts:
+      #{format_accounts_by_bureau(accounts, bureau, 8)}
 
-      Please ensure the credit bureaus remove any inaccurate information immediately and use Metro 2 compliance and FCRA and I should only be contacted at the address provided.
+      Additional Requirements:
+      The letter must include relevant legal references, such as the Fair Credit Reporting Act (FCRA) and any other pertinent federal or state laws.
+      It must cite specific Metro 2 codes and explain how the reported information violates these standards.
+      The tone of the letter should be professional, assertive, and clear, emphasizing the legal rights of the consumer.
+      The letter should request a prompt and thorough investigation, correction, or removal of the disputed information from the credit report.
+      Include any necessary supporting documentation references, though the actual documents are not provided here.
+
+      Example Structure:
+      Introduction: Brief introduction of the purpose of the letter.
+      Consumer Rights Overview: Summary of the consumer's rights under relevant laws.
+      Dispute Details: Detailed explanation of the disputed account information.
+      Inquiry Dispute: Detailed explanation of the disputed inquiry.
+      Legal References: Citation of relevant laws and Metro 2 codes that support the dispute.
+      Request for Action: Clear request for investigation and correction of the disputed information.
+      Conclusion: Summarize the urgency and importance of resolving the dispute.
+
+      Tone and Style:
+      Professional and assertive
+      Detailed and thorough
+      Legally informed and compliant
+      (DO NOT NEED SIGNATURE)
     PROMPT
   end
 
-  def format_inquiries(inquiries, bureau)
+  def final_demand_prompt(inquiries, accounts, bureau)
+    <<-PROMPT
+    You are tasked with generating a comprehensive, final demand for resolution letter or threaten to go to court. The letter should be detailed and at least six pages long worth of content/details(dont include page count in response, incorporating relevant laws, Metro 2 codes, and any necessary references. Below are the account and inquiry details that need to be addressed in the letter #{bureau.capitalize}
+      User info for address MUST BE PRESENT IN HEADER:
+      first_name: #{current_user.first_name}
+      last_name: #{current_user.last_name}
+      street_address: #{current_user.street_address}
+      city: #{current_user.city}
+      state: #{current_user.state}
+      postal_code: #{current_user.postal_code}
+      country: USA
+      SSN Last 4: ###SSN_LAST4### (Include under sender address)
+      current_date: #{Date.today.strftime("%B %d, %Y")}
+
+      Inquiries:
+      #{format_inquiries(inquiries, bureau, 100)}
+
+      Accounts:
+      #{format_accounts_by_bureau(accounts, bureau, 100)}
+
+      Additional Requirements:
+      The letter must include relevant legal references, such as the Fair Credit Reporting Act (FCRA) and any other pertinent federal or state laws.
+      It must cite specific Metro 2 codes and explain how the reported information violates these standards.
+      The tone of the letter should be professional, assertive, and clear, emphasizing the legal rights of the consumer.
+      The letter should request a prompt and thorough investigation, correction, or removal of the disputed information from the credit report.
+      Include any necessary supporting documentation references, though the actual documents are not provided here.
+
+      Example Structure:
+      Introduction: Brief introduction of the purpose of the letter.
+      Consumer Rights Overview: Summary of the consumer's rights under relevant laws.
+      Dispute Details: Detailed explanation of the disputed account information.
+      Inquiry Dispute: Detailed explanation of the disputed inquiry.
+      Legal References: Citation of relevant laws and Metro 2 codes that support the dispute.
+      Request for Action: Clear request for investigation and correction of the disputed information.
+      Conclusion: Summarize the urgency and importance of resolving the dispute.
+
+      Tone and Style:
+      Professional and assertive
+      Detailed and thorough
+      Legally informed and compliant
+      (DO NOT NEED SIGNATURE)
+    PROMPT
+  end
+
+  def format_inquiries(inquiries, bureau, limit = 5)
     inquiries.select { |inquiry| inquiry[:bureau].downcase == bureau.downcase }
+             .first(limit)
              .map { |inquiry| "- Name: #{inquiry[:name]}, Bureau: #{inquiry[:bureau].capitalize}" }
              .join("\n")
   end
+  
 
-  def format_accounts_with_bureau_details(accounts)
-    table_headers = "| Account Name | Account Number | Experian Balance | TransUnion Balance | Equifax Balance | Experian Status | TransUnion Status | Equifax Status | Date Opened |\n"
-    table_separator = "|--------------|----------------|------------------|--------------------|-----------------|----------------|-------------------|----------------|-------------|\n"
-  
-    table_rows = accounts.map do |account|
-      experian_details = account[:bureau_details].find { |detail| detail[:bureau].downcase == 'experian' }
-      transunion_details = account[:bureau_details].find { |detail| detail[:bureau].downcase == 'transunion' }
-      equifax_details = account[:bureau_details].find { |detail| detail[:bureau].downcase == 'equifax' }
-  
-      "| #{account[:name]} | #{account[:number]} | #{experian_details&.dig(:balance_owed) || '-'} | #{transunion_details&.dig(:balance_owed) || '-'} | #{equifax_details&.dig(:balance_owed) || '-'} | #{experian_details&.dig(:payment_status) || '-'} | #{transunion_details&.dig(:payment_status) || '-'} | #{equifax_details&.dig(:payment_status) || '-'} | #{experian_details&.dig(:date_opened) || '-'} |"
-    end.join("\n")
-  
-    table_headers + table_separator + table_rows
+  def format_accounts_by_bureau(accounts, bureau, limit = 5)
+    bureau_accounts = accounts.select do |account|
+      account[:bureau_details].any? { |detail| detail[:bureau].downcase == bureau.downcase }
+    end
+
+    bureau_accounts.first(limit).map do |account|
+      details = account[:bureau_details].find { |detail| detail[:bureau].downcase == bureau.downcase }
+      <<-DETAILS
+        Account Name: #{account[:name]}
+        Account Number: #{account[:number]}
+        Dispute Reason: #{account[:reason]}
+        Balance Owed: #{details[:balance_owed] || '-'}
+        Payment Status: #{details[:payment_status] || '-'}
+        Date Opened: #{details[:date_opened] || '-'}
+      DETAILS
+    end.join("\n\n")
   end
-  
-  
 
   def inject_sensitive_data(letter_text, ssn_last4)
     placeholder = "###SSN_LAST4###"

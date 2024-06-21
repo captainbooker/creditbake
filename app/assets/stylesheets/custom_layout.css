@@ -1750,6 +1750,10 @@ body {
   color: white;
 }
 
+.border-custom-blue {
+  border-color: #059DE2; /* Tailwind's 'blue-500' color */
+}
+
 .custom-blue {
   background-color: #059DE2;
 }

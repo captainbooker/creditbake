@@ -14,18 +14,16 @@
           </div>
           <div class="grid grid-cols-1 sm:grid-cols-4 lg:grid-cols-4 gap-4" data-tabs-target="content">
             <% @inquiries.each do |inquiry| %>
-              <div class="border rounded relative bg-white rounded-lg <%= 'custom-blue white-text' if inquiry.challenge %> transform transition-transform duration-300 ease-in-out hover:scale-105 hover:shadow-lg">
+              <div class="border rounded relative bg-white rounded-lg <%= 'custom-blue white-text' if inquiry.challenge %> transform transition-transform duration-300 ease-in-out hover:scale-105 hover:shadow-lg peer-checked:border-custom-blue">
                 <label class="flex items-center w-full cursor-pointer">
                   <input type="hidden" name="inquiry_ids[<%= inquiry.id %>]" value="false">
                   <input type="checkbox" name="inquiry_ids[<%= inquiry.id %>]" value="true" class="form-checkbox h-4 w-4 hidden peer" <%= 'checked' if inquiry.challenge %>>
-                  <div class="flex-grow content p-4 peer-checked:font-semibold peer-checked:text-white text-gray-800">
+                  <div class="flex-grow content p-4 text-gray-800 peer-checked:font-semibold peer-checked:text-white">
                     <p class="font-small ml-2 font-normal peer-checked:font-semibold peer-checked:text-white"><%= inquiry.inquiry_name %></p>
-                    <% if inquiry.inquiry_date.present? %>
-                      <div class="flex items-center mt-1 ml-2 peer-checked:text-white text-gray-800">
-                        <%= image_tag "calendar.svg", class: "peer-checked:invert" %>
-                        <span class="ml-2 text-sm peer-checked:text-white text-gray-800"><%= inquiry.inquiry_date.strftime("%b %d, %Y") %></span>
-                      </div>
-                    <% end %>
+                    <div class="flex items-center mt-1 ml-2 peer-checked:text-white">
+                      <%= image_tag "calendar.svg", class: "peer-checked:invert peer-checked:filter-white" %>
+                      <span class="ml-2 text-sm peer-checked:text-white"><%= inquiry.inquiry_date&.strftime("%b %d, %Y") %></span>
+                    </div>
                   </div>
                 </label>
               </div>
@@ -44,10 +42,10 @@
           </div>
           <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4" data-tabs-target="content">
             <% @accounts.each do |account| %>
-              <label for="account_<%= account.id %>" class="flex flex-col relative transform transition-transform duration-300 ease-in-out hover:scale-105 hover:shadow-lg border rounded cursor-pointer bg-white peer-checked:border-custom-blue peer-checked:text-lg peer-checked:bg-custom-blue peer-checked:text-white peer-checked:border-4">
+              <label for="account_<%= account.id %>" class="account-card flex flex-col relative transform transition-transform duration-300 ease-in-out hover:scale-105 hover:shadow-lg border rounded cursor-pointer bg-white">
                 <input type="hidden" name="account_ids[<%= account.id %>]" value="false">
                 <input type="checkbox" id="account_<%= account.id %>" name="account_ids[<%= account.id %>]" value="true" class="form-checkbox hidden peer" <%= 'checked' if account.challenge %>>
-                <div class="flex-grow peer-checked:border-custom-blue peer-checked:text-lg min-h-full">
+                <div class="flex-grow min-h-full">
                   <div class="flex justify-between px-4 pt-2">
                     <p class="font-semibold text-gray-800 peer-checked:text-white"><%= account.name %></p>
                   </div>
@@ -95,6 +93,21 @@
                       <p>Last Payment Date</p>
                       <p><%= account.bureau_details.first&.date_of_last_payment %></p>
                     </div>
+                    <div class="px-4 pb-2">
+                      <p>Dispute Reason</p>
+                      <select id="reason_<%= account.id %>" name="account_reasons[<%= account.id %>]" class="w-full text-black rounded">
+                        <option value="Inaccurate Account Info">Inaccurate Account Information</option>
+                        <option value="Duplicate Accounts">Duplicate Accounts</option>
+                        <option value="Fraudulent Activity">Fraudulent Activity/Identity Theft</option>
+                        <option value="Outdated Information">Outdated Information</option>
+                        <option value="Inaccurate Collection Accounts">Inaccurate Collection Account</option>
+                        <option value="Incorrect Account Ownership">Account does not belong to me</option>
+                        <option value="Incorrect Account Closure">Incorrect Account Closure</option>
+                        <option value="Incorrect Late Payments">Incorrect late payments</option>
+                        <option value="Incorrect Balance">Incorrect balance</option>
+                        <option value="Incorrect Status">Incorrect status</option>
+                      </select>
+                    </div>
                   </div>
                 </div>
               </label>
@@ -117,14 +130,31 @@
 document.addEventListener("turbolinks:load", function() {
   function addEventListeners() {
     document.querySelectorAll('.account-card').forEach(card => {
+      const checkbox = card.querySelector('input[type="checkbox"]');
+      
+      // Apply styles on page load if checkbox is checked
+      if (checkbox.checked) {
+        card.classList.add('bg-indigo-50', 'text-indigo-900', 'ring-indigo-200');
+      } else {
+        card.classList.remove('bg-indigo-50', 'text-indigo-900', 'ring-indigo-200');
+      }
+
       card.addEventListener('click', function(event) {
-        const checkbox = card.querySelector('input[type="checkbox"]');
-        if (event.target !== checkbox) {
+        if (event.target !== checkbox && event.target.tagName !== 'SELECT') {
+          // Prevent default label behavior to avoid double triggering
+          event.preventDefault();
+
+          // Toggle the checkbox state
           checkbox.checked = !checkbox.checked;
-          card.classList.toggle('peer-checked:border-custom-blue', checkbox.checked);
-          card.classList.toggle('peer-checked:text-lg', checkbox.checked);
-          card.classList.toggle('peer-checked:scale-105', checkbox.checked);
-          card.classList.toggle('peer-checked:shadow-lg', checkbox.checked);
+
+          // Apply styles and log based on the new state
+          if (checkbox.checked) {
+            console.log("Checkbox is now checked");
+            card.classList.add('bg-indigo-50', 'text-indigo-900', 'ring-indigo-200');
+          } else {
+            console.log("Checkbox is now unchecked");
+            card.classList.remove('bg-indigo-50', 'text-indigo-900', 'ring-indigo-200');
+          }
         }
       });
     });
@@ -133,5 +163,7 @@ document.addEventListener("turbolinks:load", function() {
   // Call the function to add event listeners
   addEventListeners();
 });
+
+
 
 </script>

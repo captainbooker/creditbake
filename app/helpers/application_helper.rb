@@ -1,5 +1,22 @@
 # app/helpers/application_helper.rb
 module ApplicationHelper
+  ATTACK_PHASES = {
+    1 => { icon: '⚔️', title: 'Initial Strike', description: 'Start your attack on inaccurate information.' },
+    2 => { icon: '🔍', title: 'Second Wave', description: 'Follow up with a thorough reinvestigation.' },
+    4 => { icon: '⚖️', title: 'Order in the Court', description: 'Review for legal compliance and accuracy.' },
+    3 => { icon: '🔥', title: 'Not Compliant', description: 'Attack based on compliancy' },
+    5 => { icon: '🔄', title: 'Reconciliation', description: 'Reconcile discrepancies in your report.' },
+    6 => { icon: '🗂️', title: 'Comprehensive Review', description: 'Conduct a comprehensive review of your report.' },
+    7 => { icon: '🛡️', title: 'Verification', description: 'Verify the accuracy of updated information.' },
+    8 => { icon: '📜', title: 'Inquiries Only', description: 'Inquiries only Attack' },
+    9 => { icon: '📜', title: 'Accounts Only', description: 'Accounts only Attack' },
+    10 => { icon: '🚨', title: 'Final Demand', description: 'Issue a final demand for corrections.' },
+  }.freeze
+
+  def attack_phase_info(round)
+    ATTACK_PHASES[round]
+  end
+
   def flash_class(level)
     case level
     when 'notice' then 'border-[#34D399] bg-[#34D399] bg-opacity-[15%]'
