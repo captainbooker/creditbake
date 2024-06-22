@@ -10,4 +10,5 @@ class SpendingMailer < ApplicationMailer
     @spending = spending
 
     mail to: @user.email, subject: "You've spent Credits"
+  end
 end
