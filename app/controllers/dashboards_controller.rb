@@ -104,9 +104,10 @@ class DashboardsController < ApplicationController
     end
 
     responses = send_prompts_for_round(round, inquiry_details, account_details)
-
+    phase_info = attack_phase_info(round)
+    
     letter = Letter.create!(
-      name: "Round #{round}",
+      name: phase_info[:title],
       experian_document: responses[:experian],
       transunion_document: responses[:transunion],
       equifax_document: responses[:equifax],

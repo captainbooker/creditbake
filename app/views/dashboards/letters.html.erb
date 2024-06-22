@@ -113,6 +113,8 @@
   </div>
 </div>
 
+<button type="button" class="block rounded-md custom-blue px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600" id="create-attack-button">Create Attack</button>
+
 <script>
 function initializeCreateAttackDropdown() {
   const attackButton = document.getElementById('create-attack-button');
@@ -121,29 +123,54 @@ function initializeCreateAttackDropdown() {
   const loadingOverlay = document.getElementById('loading-overlay');
 
   if (attackButton && attackDropdown && roundButtons.length > 0) {
-    attackButton.addEventListener('click', function() {
-      attackDropdown.classList.toggle('hidden');
-    });
-
-    document.addEventListener('click', function(event) {
-      if (!attackButton.contains(event.target) && !attackDropdown.contains(event.target)) {
-        attackDropdown.classList.add('hidden');
-      }
-    });
-
+    attackButton.addEventListener('click', toggleAttackDropdown);
+    document.addEventListener('click', handleClickOutside);
     roundButtons.forEach(button => {
-      button.addEventListener('click', function() {
-        const round = this.getAttribute('data-round');
-        if (parseFloat('<%= current_user.credits %>') < 24.99) {
-          alert("You don't have enough credits. Please add credits.");
-          window.location.href = '<%= payment_path %>';
-        } else {
-          loadingOverlay.classList.add('show'); // Show the loading overlay
-          createAttack(round);
-        }
-      });
+      button.addEventListener('click', handleRoundButtonClick);
     });
   }
+
+  function toggleAttackDropdown() {
+    attackDropdown.classList.toggle('hidden');
+  }
+
+  function handleClickOutside(event) {
+    if (!attackButton.contains(event.target) && !attackDropdown.contains(event.target)) {
+      attackDropdown.classList.add('hidden');
+    }
+  }
+
+  function handleRoundButtonClick() {
+    const round = this.getAttribute('data-round');
+    if (parseFloat('<%= current_user.credits %>') < 24.99) {
+      alert("You don't have enough credits. Please add credits.");
+      window.location.href = '<%= payment_path %>';
+    } else {
+      loadingOverlay.classList.add('show'); // Show the loading overlay
+      createAttack(round);
+    }
+  }
+
+  function createAttack(round) {
+    const form = document.createElement('form');
+    form.method = 'get';
+    form.action = '<%= create_attack_path %>';
+    form.innerHTML = `
+      <input type="hidden" name="round" value="${round}">
+      <input type="hidden" name="payment_success" value="true">
+      <input type="hidden" name="${document.querySelector('meta[name=csrf-param]').content}" value="${document.querySelector('meta[name=csrf-token]').content}">
+    `;
+    document.body.appendChild(form);
+    form.submit();
+  }
+
+  return function cleanup() {
+    attackButton.removeEventListener('click', toggleAttackDropdown);
+    document.removeEventListener('click', handleClickOutside);
+    roundButtons.forEach(button => {
+      button.removeEventListener('click', handleRoundButtonClick);
+    });
+  };
 }
 
 function initializeMailModal() {
@@ -157,7 +184,7 @@ function initializeMailModal() {
     `;
     document.body.appendChild(form);
     form.submit();
-  }
+  };
 
   window.showMailModal = function(letterId) {
     fetch(`/letters/${letterId}/calculate_cost?color=false`)
@@ -178,7 +205,7 @@ function initializeMailModal() {
           modal.classList.remove('opacity-0', 'scale-95');
         }, 10);
       });
-  }
+  };
 
   window.closeMailModal = function() {
     const modal = document.getElementById('mailModal');
@@ -186,7 +213,7 @@ function initializeMailModal() {
     setTimeout(() => {
       modal.classList.add('hidden');
     }, 300);
-  }
+  };
 
   window.mailLetter = function(letterId, color) {
     const form = document.createElement('form');
@@ -198,55 +225,15 @@ function initializeMailModal() {
     `;
     document.body.appendChild(form);
     form.submit();
-  }
+  };
 }
 
 document.addEventListener("turbolinks:load", function() {
-  initializeCreateAttackDropdown();
+  const cleanupCreateAttackDropdown = initializeCreateAttackDropdown();
   initializeMailModal();
+
+  document.addEventListener("turbolinks:before-cache", function() {
+    cleanupCreateAttackDropdown();
+  }, { once: true });
 });
-
-document.addEventListener("turbolinks:before-cache", function() {
-  const attackButton = document.getElementById('create-attack-button');
-  const attackDropdown = document.getElementById('attack-dropdown');
-  const roundButtons = document.querySelectorAll('[data-round]');
-  
-  if (attackButton && attackDropdown && roundButtons.length > 0) {
-    attackButton.removeEventListener('click', function() {
-      attackDropdown.classList.toggle('hidden');
-    });
-
-    document.removeEventListener('click', function(event) {
-      if (!attackButton.contains(event.target) && !attackDropdown.contains(event.target)) {
-        attackDropdown.classList.add('hidden');
-      }
-    });
-
-    roundButtons.forEach(button => {
-      button.removeEventListener('click', function() {
-        const round = this.getAttribute('data-round');
-        if (parseFloat('<%= current_user.credits %>') < 24.99) {
-          alert("You don't have enough credits. Please add credits.");
-          window.location.href = '<%= payment_path %>';
-        } else {
-          createAttack(round);
-        }
-      });
-    });
-  }
-});
-
-function createAttack(round) {
-  const form = document.createElement('form');
-  form.method = 'get';
-  form.action = '<%= create_attack_path %>';
-  form.innerHTML = `
-    <input type="hidden" name="round" value="${round}">
-    <input type="hidden" name="payment_success" value="true">
-    <input type="hidden" name="${document.querySelector('meta[name=csrf-param]').content}" value="${document.querySelector('meta[name=csrf-token]').content}">
-  `;
-  document.body.appendChild(form);
-  form.submit();
-}
 </script>
-

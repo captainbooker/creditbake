@@ -24,12 +24,12 @@ module OpenaiPromptable
     prompt = get_prompt(round, inquiries, accounts, bureau)
     response = @client.chat(
       parameters: {
-        model: "gpt-4",
+        model: "gpt-4o",
         messages: [
           { role: "system", content: "You are an AI that generates Metro 2 compliance dispute letters for credit inquiries and accounts." },
           { role: "user", content: prompt }
         ],
-        max_tokens: 1000
+        max_tokens: 4096
       }
     )
     response_text = response['choices'].first['message']['content']
@@ -109,7 +109,7 @@ module OpenaiPromptable
       current_date: #{Date.today.strftime("%B %d, %Y")}
   
   
-      Accounts:(SHOULD BE LISTED IN LETTER)
+      Accounts:(SHOULD BE LISTED IN LETTER: Account Name, Account Number, Dispute Reason, Balance Owed, Payment Status, Date Opened)
       #{format_accounts_by_bureau(accounts, bureau, 7)}
 
       Additional Requirements:
@@ -154,7 +154,7 @@ module OpenaiPromptable
       #{format_inquiries(inquiries, bureau, 100)}
   
   
-      Accounts:(SHOULD BE LISTED IN LETTER)
+      Accounts:(SHOULD BE LISTED IN LETTER: Account Name, Account Number, Dispute Reason, Balance Owed, Payment Status, Date Opened)
       #{format_accounts_by_bureau(accounts, bureau, 100)}
 
       Additional Requirements:
@@ -198,7 +198,7 @@ module OpenaiPromptable
       Inquiries:(SHOULD BE LISTED IN LETTER)
       #{format_inquiries(inquiries, bureau, 5)}
 
-      Accounts:(SHOULD BE LISTED IN LETTER)
+      Accounts:(SHOULD BE LISTED IN LETTER: Account Name, Account Number, Dispute Reason, Balance Owed, Payment Status, Date Opened)
       #{format_accounts_by_bureau(accounts, bureau, 5)}
 
       Additional Requirements:
@@ -243,7 +243,7 @@ module OpenaiPromptable
       Inquiries:(SHOULD BE LISTED IN LETTER)
       #{format_inquiries(inquiries, bureau, 100)}
 
-      Accounts:(SHOULD BE LISTED IN LETTER)
+      Accounts:(SHOULD BE LISTED IN LETTER: Account Name, Account Number, Dispute Reason, Balance Owed, Payment Status, Date Opened)
       #{format_accounts_by_bureau(accounts, bureau, 100)}
 
       Additional Requirements:
@@ -287,7 +287,7 @@ module OpenaiPromptable
       Inquiries:(SHOULD BE LISTED IN LETTER)
       #{format_inquiries(inquiries, bureau, 10)}
 
-      Accounts:(SHOULD BE LISTED IN LETTER)
+      Accounts: (SHOULD BE LISTED IN LETTER: Account Name, Account Number, Dispute Reason, Balance Owed, Payment Status, Date Opened)
       #{format_accounts_by_bureau(accounts, bureau, 4)}
 
       Additional Requirements:
@@ -331,7 +331,7 @@ module OpenaiPromptable
       Inquiries:(SHOULD BE LISTED IN LETTER)
       #{format_inquiries(inquiries, bureau, 4)}
 
-      Accounts:(SHOULD BE LISTED IN LETTER)
+      Accounts:(SHOULD BE LISTED IN LETTER: Account Name, Account Number, Dispute Reason, Balance Owed, Payment Status, Date Opened)
       #{format_accounts_by_bureau(accounts, bureau, 10)}
 
       Additional Requirements:
@@ -375,7 +375,7 @@ module OpenaiPromptable
       Inquiries:(SHOULD BE LISTED IN LETTER)
       #{format_inquiries(inquiries, bureau, 100)}
 
-      Accounts:(SHOULD BE LISTED IN LETTER)
+      Accounts:(SHOULD BE LISTED IN LETTER: Account Name, Account Number, Dispute Reason, Balance Owed, Payment Status, Date Opened)
       #{format_accounts_by_bureau(accounts, bureau, 100)}
 
       Additional Requirements:
@@ -419,7 +419,7 @@ module OpenaiPromptable
       Inquiries:(SHOULD BE LISTED IN LETTER)
       #{format_inquiries(inquiries, bureau, 15)}
 
-      Accounts:(SHOULD BE LISTED IN LETTER)
+      Accounts:(SHOULD BE LISTED IN LETTER: Account Name, Account Number, Dispute Reason, Balance Owed, Payment Status, Date Opened)
       #{format_accounts_by_bureau(accounts, bureau, 8)}
 
       Additional Requirements:
@@ -463,7 +463,7 @@ module OpenaiPromptable
       Inquiries:(SHOULD BE LISTED IN LETTER)
       #{format_inquiries(inquiries, bureau, 100)}
 
-      Accounts:(SHOULD BE LISTED IN LETTER)
+      Accounts:(SHOULD BE LISTED IN LETTER: Account Name, Account Number, Dispute Reason, Balance Owed, Payment Status, Date Opened)
       #{format_accounts_by_bureau(accounts, bureau, 100)}
 
       Additional Requirements:
@@ -486,7 +486,7 @@ module OpenaiPromptable
       Professional and assertive
       Detailed and thorough
       Legally informed and compliant
-      Documents that are included in this file (Signature, ID & Utility Bill)
+      (DO NOT NEED SIGNATURE)
     PROMPT
   end
 
