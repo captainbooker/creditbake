@@ -6,6 +6,7 @@
     <%= form_with url: save_challenges_path, method: :patch do %>
       <%= hidden_field_tag :authenticity_token, form_authenticity_token %>
     
+      <!-- Inquiries Section Start -->
       <div class="rounded-lg border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark mb-8">
         <div class="p-7 custom-background-color">
           <div class="mb-12 mt-4">
@@ -117,6 +118,79 @@
       </div>
       <!-- Accounts Section End -->
 
+      <!-- Public Information Section Start -->
+      <div class="rounded-lg border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark mb-8">
+        <div class="p-7 custom-background-color">
+          <div class="mb-12 mt-4">
+            <h3 class="font-semibold text-black text-xl">Public Information</h3>
+            <p>Select all the public information records you would like to attack 👊</p>
+          </div>
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4" data-tabs-target="content">
+            <% @public_records.each do |public_record| %>
+              <label for="public_record_<%= public_record.id %>" class="account-card flex flex-col relative transform transition-transform duration-300 ease-in-out hover:scale-105 hover:shadow-lg border rounded cursor-pointer bg-white">
+                <input type="hidden" name="public_record_ids[<%= public_record.id %>]" value="false">
+                <input type="checkbox" id="public_record_<%= public_record.id %>" name="public_record_ids[<%= public_record.id %>]" value="true" class="form-checkbox hidden peer" <%= 'checked' if public_record.challenge %>>
+                <div class="flex-grow min-h-full">
+                  <div class="flex justify-between px-4 pt-2">
+                    <p class="font-semibold text-gray-800 peer-checked:text-white"><%= public_record.public_record_type %></p>
+                  </div>
+                  <div class="flex justify-between px-4 pt-2">
+                    <p class="font-normal text-gray-800 peer-checked:text-white">Reference Number:</p>
+                    <p class="font-semibold text-black peer-checked:text-white"><%= public_record.bureau_details.first&.reference_number %></p>
+                  </div>
+                  <div class="flex justify-between px-4">
+                    <p class="font-normal text-gray-800 peer-checked:text-white">Type</p>
+                    <p class="font-semibold text-black peer-checked:text-white"><%= public_record.public_record_type %></p>
+                  </div>
+                  <div class="mt-4 font-semibold text-black peer-checked:text-white p-4">Public Record Details</div>
+                  <div class="flex justify-between px-4">
+                    <p class="font-normal text-gray-800 peer-checked:text-white">Status</p>
+                    <p class="font-semibold text-black peer-checked:text-white"><%= public_record.bureau_details.first&.status %></p>
+                  </div>
+                  <div class="flex justify-between px-4">
+                    <p class="font-normal text-gray-800 peer-checked:text-white">Date Filed/Reported</p>
+                    <p class="font-semibold text-black peer-checked:text-white"><%= public_record.bureau_details.first&.date_filed_reported %></p>
+                  </div>
+                  <div class="flex justify-between px-4">
+                    <p class="font-normal text-gray-800 peer-checked:text-white">Closing Date</p>
+                    <p class="font-semibold text-black peer-checked:text-white"><%= public_record.bureau_details.first&.closing_date %></p>
+                  </div>
+                  <div class="flex justify-between px-4">
+                    <p class="font-normal text-gray-800 peer-checked:text-white">Asset Amount</p>
+                    <p class="font-semibold text-black peer-checked:text-white"><%= public_record.bureau_details.first&.asset_amount %></p>
+                  </div>
+                  <div class="flex justify-between px-4">
+                    <p class="font-normal text-gray-800 peer-checked:text-white">Court</p>
+                    <p class="font-semibold text-black peer-checked:text-white"><%= public_record.bureau_details.first&.court %></p>
+                  </div>
+                  <div class="flex justify-between px-4">
+                    <p class="font-normal text-gray-800 peer-checked:text-white">Liability</p>
+                    <p class="font-semibold text-black peer-checked:text-white"><%= public_record.bureau_details.first&.liability %></p>
+                  </div>
+                  <div class="flex justify-between px-4">
+                    <p class="font-normal text-gray-800 peer-checked:text-white">Exempt Amount</p>
+                    <p class="font-semibold text-black peer-checked:text-white"><%= public_record.bureau_details.first&.exempt_amount %></p>
+                  </div>
+                  <div class="custom-blue text-white rounded-b-md peer-checked:bg-blue-600">
+                    <div class="px-4 pb-6">
+                      <p>Dispute Reason</p>
+                      <select id="reason_<%= public_record.id %>" name="public_record_reasons[<%= public_record.id %>]" class="w-full text-black rounded">
+                        <option value="Inaccurate Information">Inaccurate Information</option>
+                        <option value="Duplicate Records">Duplicate Records</option>
+                        <option value="Fraudulent Activity">Fraudulent Activity/Identity Theft</option>
+                        <option value="Outdated Information">Outdated Information</option>
+                        <option value="Incorrect Ownership">Incorrect Ownership</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+              </label>
+            <% end %>
+          </div>
+        </div>
+      </div>
+      <!-- Public Information Section End -->
+
       <!-- Next Button -->
       <div class="flex justify-end mt-6">
         <button type="submit" class="px-6 py-2 font-medium text-white bg-primary rounded hover:bg-opacity-90">Next</button>
@@ -163,7 +237,4 @@ document.addEventListener("turbolinks:load", function() {
   // Call the function to add event listeners
   addEventListeners();
 });
-
-
-
 </script>

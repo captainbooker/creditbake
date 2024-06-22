@@ -29,9 +29,10 @@ class MailingsController < ApplicationController
       mailings.each do |mailing|
         current_user.decrement!(:credits, mailing[:cost])
         Mailing.create!(user: current_user, letter: letter, cost: mailing[:cost])
-        Spending.create!(user: current_user, amount: mailing[:cost], description: "Mailing cost for #{mailing[:name]} of letter #{letter.id}")
+        Spending.create!(user: current_user, amount: mailing[:cost], description: "Mailing for #{mailing[:name]} of letter #{letter.id}")
       end
 
+      SpendingMailer.mailing_cost_notification(current_user, mailings).deliver_now
       letter.update(mailed: true)
 
       redirect_to letters_path, notice: "Letters mailed successfully"

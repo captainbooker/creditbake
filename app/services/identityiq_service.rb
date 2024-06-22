@@ -32,29 +32,41 @@ class IdentityiqService
     case @browser
     when :chrome
       options = Selenium::WebDriver::Chrome::Options.new
-      @mobile && options.add_argument('--user-agent=Mozilla/5.0 (iPhone; CPU iPhone OS 17_5_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.5 Mobile/15E148 Safari/604.1')
+      if @mobile
+        options.add_argument('--user-agent=Mozilla/5.0 (iPhone; CPU iPhone OS 17_5_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.5 Mobile/15E148 Safari/604.1')
+      end
       options.add_argument('--headless')
-      options.add_argument("--no-sandbox")
-      options.add_argument("--disable-gpu")
-      options.add_argument("--remote-debugging-port=9222")
+      options.add_argument('--no-sandbox')
+      options.add_argument('--disable-gpu')
+      # Add secure way to handle remote debugging port, e.g., environment variable
+      if ENV['ENABLE_REMOTE_DEBUGGING']
+        options.add_argument('--remote-debugging-port=9222')
+      end
       Selenium::WebDriver.for :chrome, options: options
+  
     when :firefox
       options = Selenium::WebDriver::Firefox::Options.new
-      @mobile && options.add_argument('--user-agent=Mozilla/5.0 (iPhone; CPU iPhone OS 17_5_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.5 Mobile/15E148 Safari/604.1')
+      if @mobile
+        options.add_argument('--user-agent=Mozilla/5.0 (iPhone; CPU iPhone OS 17_5_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.5 Mobile/15E148 Safari/604.1')
+      end
       options.add_argument('--headless')
-      options.add_argument("--no-sandbox")
-      options.add_argument("--disable-gpu")
+      options.add_argument('--no-sandbox')
+      options.add_argument('--disable-gpu')
       Selenium::WebDriver.for :firefox, options: options
+  
     when :safari
-      options = Selenium::WebDriver::Chrome::Options.new
-      Selenium::WebDriver.for :chrome, options: options
+      Selenium::WebDriver.for :safari
+  
     when :edge
-      options = Selenium::WebDriver::Options.edge
-      @mobile && options.add_argument('--user-agent=Mozilla/5.0 (iPhone; CPU iPhone OS 17_5_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.5 Mobile/15E148 Safari/604.1')
+      options = Selenium::WebDriver::Edge::Options.new
+      if @mobile
+        options.add_argument('--user-agent=Mozilla/5.0 (iPhone; CPU iPhone OS 17_5_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.5 Mobile/15E148 Safari/604.1')
+      end
       options.add_argument('--headless')
-      options.add_argument("--no-sandbox")
-      options.add_argument("--disable-gpu")
-      @driver = Selenium::WebDriver.for :edge, options: options
+      options.add_argument('--no-sandbox')
+      options.add_argument('--disable-gpu')
+      Selenium::WebDriver.for :edge, options: options
+  
     else
       raise ArgumentError, "Unsupported browser: #{@browser}"
     end
@@ -72,6 +84,8 @@ class IdentityiqService
     login_button = @driver.find_element(css: 'button[type="submit"]')
     login_button.click
     @logger.info "Submitted login form"
+  rescue Selenium::WebDriver::Error::NoSuchElementError, Selenium::WebDriver::Error::TimeoutError
+    return "Wrong username or password"
   end
 
   def fetch_credit_report_json
@@ -87,5 +101,8 @@ class IdentityiqService
     json_content = json_content.sub(/^JSON_CALLBACK\(/, '').sub(/\);?$/, '')
     @logger.info "Credit report JSON fetched successfully"
     json_content
+
+  rescue Selenium::WebDriver::Error::NoSuchElementError, Selenium::WebDriver::Error::TimeoutError
+    return "Wrong username or password"
   end
 end

@@ -15,6 +15,7 @@ class User < ApplicationRecord
   has_many :letters
   has_many :spendings
   has_many :mailings
+  has_many :public_records
 
   has_one_attached :id_document
   has_one_attached :utility_bill

@@ -1,0 +1,22 @@
+<div class="max-w-3xl mx-auto p-4 bg-white shadow-md rounded-lg">
+  <header class="text-center py-4">
+    <%= image_tag 'logo.png', alt: 'Company Logo', class: "mx-auto h-16" %>
+  </header>
+  <main class="p-4">
+    <h1 class="text-2xl font-bold mb-4">Mailing Cost Notification</h1>
+    <p class="mb-4">Dear <%= @user.first_name %>,</p>
+    <p class="mb-4">This is a notification for the mailing costs incurred:</p>
+    <ul class="list-disc list-inside mb-4">
+      <% @mailings.each do |mailing| %>
+        <li class="mb-2">
+          <strong><%= mailing[:name] %>:</strong> <%= number_to_currency(mailing[:cost], unit: "$", precision: 2, format: "%u%n", strip_insignificant_zeros: true) %>
+        </li>
+      <% end %>
+    </ul>
+    <p class="mb-4 font-bold">Total Cost: <%= number_to_currency(@mailings.sum { |mailing| mailing[:cost] }, unit: "$", precision: 2, format: "%u%n", strip_insignificant_zeros: true) %></p>
+    <p class="mb-4">Thank you for using our service.</p>
+  </main>
+  <footer class="text-center py-4 border-t">
+    <p>&copy; <%= Time.now.year %> CreditBake. All rights reserved.</p>
+  </footer>
+</div>

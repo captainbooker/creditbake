@@ -21,7 +21,9 @@ class SmartCreditService
   end
 
   def fetch_credit_report
-    login
+    login_result = login
+    return login_result if login_result.is_a?(String)  # Return the error message if login failed
+
     json_content = fetch_credit_report_json
     extract_scores(json_content)
     parse_credit_report_json(json_content)  # Call to parse the credit report
@@ -75,7 +77,10 @@ class SmartCreditService
     password_field.send_keys(:return)
     @logger.info "Submitted login form"
 
-    sleep(10) # Adjust as needed to wait for the dashboard to load
+    wait = Selenium::WebDriver::Wait.new(timeout: 10)
+    wait.until { @driver.find_element(css: 'body.member-home') }  # Adjust the selector as needed to confirm successful login
+  rescue Selenium::WebDriver::Error::NoSuchElementError, Selenium::WebDriver::Error::TimeoutError
+    return "Wrong username or password"
   end
 
   def fetch_credit_report_json
@@ -102,9 +107,6 @@ class SmartCreditService
     @logger.info "Credit report JSON fetched successfully"
     json_content = JSON.pretty_generate(report)
     json_content
-  rescue => e
-    @logger.error "Error fetching or formatting credit report JSON: #{e.message}"
-    raise
   end
 
   def parse_account_div(div)
@@ -167,15 +169,20 @@ class SmartCreditService
 
     public_records_sections.each do |section|
       next unless section.find_element(css: 'h5.fw-bold').text.strip == 'Public Information'
-      
+
       labels = section.find_elements(css: '.labels .grid-cell')
       transunion_values = section.find_elements(css: '.bg-transunion ~ .grid-cell')
       experian_values = section.find_elements(css: '.bg-experian ~ .grid-cell')
       equifax_values = section.find_elements(css: '.bg-equifax ~ .grid-cell')
 
-      public_records << format_public_record_data(labels, transunion_values, "Transunion")
-      public_records << format_public_record_data(labels, experian_values, "Experian")
-      public_records << format_public_record_data(labels, equifax_values, "Equifax")
+      public_record = format_public_record_data(labels, transunion_values, "Transunion")
+      public_records << public_record unless public_record.empty?
+
+      public_record = format_public_record_data(labels, experian_values, "Experian")
+      public_records << public_record unless public_record.empty?
+
+      public_record = format_public_record_data(labels, equifax_values, "Equifax")
+      public_records << public_record unless public_record.empty?
     end
 
     public_records
@@ -225,7 +232,7 @@ class SmartCreditService
 
   def extract_all_scores(json)
     scores = { experian: nil, transunion: nil, equifax: nil }
-  
+
     json.dig("CreditReport", "Scores")&.each do |bureau, score|
       case bureau.downcase
       when 'experian'
@@ -236,7 +243,7 @@ class SmartCreditService
         scores[:equifax] = score.to_i
       end
     end
-  
+
     scores
   end
 
@@ -250,11 +257,14 @@ class SmartCreditService
   def process_parsed_content(content, credit_report)
     inquiries = content.dig("CreditReport", "Inquiries")
     accounts = content.dig("CreditReport", "Accounts")
+    public_records = content.dig("CreditReport", "PublicRecords")
 
     ActiveRecord::Base.transaction do
       ActiveRecord::Base.connection.execute("DELETE FROM inquiries WHERE user_id = #{@current_user.id}")
       BureauDetail.where(account_id: @current_user.accounts.pluck(:id)).delete_all
       ActiveRecord::Base.connection.execute("DELETE FROM accounts WHERE user_id = #{@current_user.id}")
+      BureauDetail.where(public_record_id: @current_user.public_records.pluck(:id)).delete_all
+      ActiveRecord::Base.connection.execute("DELETE FROM public_records WHERE user_id = #{@current_user.id}")
     end
 
     inquiries.each do |inquiry_attrs|
@@ -287,7 +297,36 @@ class SmartCreditService
           past_due_amount: details["Past Due Amount:"],
           payment_status: details["Payment Status:"],
           date_opened: details["Date Opened:"],
-          date_of_last_payment: details["Last Payment:"]
+          date_of_last_payment: details["Last Payment:"],
+          public_record_id: nil
+        )
+      end
+    end
+
+    public_records.each do |public_attrs|
+      next if public_attrs.dig("Type") == "--"
+
+      public_record = PublicRecord.find_or_create_by!(
+        public_record_type: public_attrs.dig("Type"),
+        user_id: @current_user.id
+      )
+
+      ["Transunion", "Experian", "Equifax"].each do |bureau|
+        details = public_attrs[bureau]
+        next unless details
+
+        BureauDetail.find_or_create_by!(
+          public_record: public_record,
+          bureau: bureau.downcase.to_sym,
+          status: details["Status"],
+          date_filed_reported: details["Date Filed/Reported"],
+          reference_number: details["Reference#"],
+          closing_date: details["Closing Date"],
+          asset_amount: details["Asset Amount"],
+          court: details["Court"],
+          liability: details["Liability"],
+          exempt_amount: details["Exempt Amount"],
+          account_id: nil
         )
       end
     end

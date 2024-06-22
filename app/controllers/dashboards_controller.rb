@@ -27,6 +27,7 @@ class DashboardsController < ApplicationController
   def disputing
     @inquiries = current_user.inquiries.order(created_at: :desc)
     @accounts = current_user.accounts.includes(:bureau_details).order(created_at: :desc)
+    @public_records = current_user.public_records.includes(:bureau_details).order(created_at: :desc)
   end  
 
   def save_challenges
@@ -46,6 +47,14 @@ class DashboardsController < ApplicationController
       selected_accounts.each do |account_id|
         reason = params[:account_reasons][account_id]
         Account.where(id: account_id, user_id: current_user.id).update_all(challenge: true, reason: reason)
+      end
+    end
+
+    if params[:public_record_ids].present?
+      selected_public_records = params[:public_record_ids].select { |_, v| v == 'true' }.keys
+      selected_public_records.each do |public_record_id|
+        reason = params[:public_record_reasons][public_record_id]
+        PublicRecord.where(id: public_record_id, user_id: current_user.id).update_all(challenge: true, reason: reason)
       end
     end
   
@@ -80,7 +89,7 @@ class DashboardsController < ApplicationController
   def create_attack_logic(round)
     inquiries = current_user.inquiries.where(challenge: true)
     accounts = current_user.accounts.where(challenge: true).includes(:bureau_details)
-
+    public_records = current_user.public_records.where(challenge: true).includes(:bureau_details)
     inquiry_details = inquiries.map { |inquiry| { name: inquiry.inquiry_name, bureau: inquiry.credit_bureau } }
     account_details = accounts.map do |account|
       {
@@ -103,7 +112,7 @@ class DashboardsController < ApplicationController
       }
     end
 
-    responses = send_prompts_for_round(round, inquiry_details, account_details)
+    responses = send_prompts_for_round(round, inquiry_details, account_details, public_records)
     phase_info = attack_phase_info(round)
     
     letter = Letter.create!(
@@ -116,7 +125,8 @@ class DashboardsController < ApplicationController
 
     generate_pdfs(letter)
     current_user.decrement!(:credits, 24.99)
-    Spending.create!(user: current_user, amount: 24.99, description: "Letter Generated: #{letter.id}")
+    spending = Spending.create!(user: current_user, amount: 24.99, description: "Letter Generated: #{letter.id}")
+    SpendingMailer.spending_notification(spending, current_user).deliver_later
   end
 
   def generate_pdfs(letter)

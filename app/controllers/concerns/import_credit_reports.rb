@@ -3,25 +3,34 @@ module ImportCreditReports
 
   def import
     user_browser = detect_browser(request.user_agent)
-
+  
     service = params[:service]
     username = params[:username]
     password = params[:password]
     security_question = params[:security_question]
-
+  
     case service
     when 'identityiq'
       idq = IdentityiqService.new(username, password, security_question, browser: user_browser, mobile: request.user_agent.include?("Mobile") || request.user_agent.include?("iPhone"))
       json_content = idq.fetch_credit_report
+      if json_content.is_a?(String) && json_content == "Wrong username or password"
+        redirect_to credit_report_path, alert: json_content
+        return
+      end
       import_credit_report_json(json_content, username, password, security_question, service)
     when 'smartcredit'
       driver = SmartCreditService.new(username, password, current_user, browser: user_browser, mobile: request.user_agent.include?("Mobile") || request.user_agent.include?("iPhone"))
       json_content = driver.fetch_credit_report
+      if json_content.is_a?(String) && json_content == "Wrong username or password"
+        redirect_to credit_report_path, alert: json_content
+        return
+      end
       import_credit_report_json(json_content, username, password, security_question, service)
     else
-      redirect_to new_credit_report_path, alert: 'Invalid service selected.'
+      redirect_to credit_report_path, alert: 'Invalid service selected.'
+      return
     end
-  end
+  end  
 
   private
 
@@ -45,10 +54,10 @@ module ImportCreditReports
         parse_credit_report(@credit_report)  if service == "identityiq"
         redirect_to challenge_path, notice: 'Credit report successfully imported and parsed.'
       else
-        redirect_to new_credit_report_path, alert: 'Failed to save the credit report.'
+        redirect_to credit_report_path, alert: 'Failed to save the credit report.'
       end
     else
-      redirect_to new_credit_report_path, alert: 'Failed to import credit report.'
+      redirect_to credit_report_path, alert: 'Failed to import credit report.'
     end
   end
 end

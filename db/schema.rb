@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2024_06_21_084015) do
+ActiveRecord::Schema.define(version: 2024_06_22_224845) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -155,7 +155,7 @@ ActiveRecord::Schema.define(version: 2024_06_21_084015) do
   end
 
   create_table "bureau_details", force: :cascade do |t|
-    t.bigint "account_id", null: false
+    t.bigint "account_id"
     t.integer "bureau", null: false
     t.string "balance_owed"
     t.string "high_credit"
@@ -167,7 +167,17 @@ ActiveRecord::Schema.define(version: 2024_06_21_084015) do
     t.string "last_reported"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.bigint "public_record_id"
+    t.string "status"
+    t.string "date_filed_reported"
+    t.string "reference_number"
+    t.string "closing_date"
+    t.string "asset_amount"
+    t.string "court"
+    t.string "liability"
+    t.string "exempt_amount"
     t.index ["account_id"], name: "index_bureau_details_on_account_id"
+    t.index ["public_record_id"], name: "index_bureau_details_on_public_record_id"
   end
 
   create_table "client_profiles", force: :cascade do |t|
@@ -305,6 +315,16 @@ ActiveRecord::Schema.define(version: 2024_06_21_084015) do
     t.index ["user_id"], name: "index_mailings_on_user_id"
   end
 
+  create_table "public_records", force: :cascade do |t|
+    t.string "public_record_type"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.bigint "user_id", null: false
+    t.boolean "challenge", default: false
+    t.string "reason"
+    t.index ["user_id"], name: "index_public_records_on_user_id"
+  end
+
   create_table "roles", force: :cascade do |t|
     t.string "name"
     t.string "resource_type"
@@ -366,6 +386,7 @@ ActiveRecord::Schema.define(version: 2024_06_21_084015) do
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "bureau_details", "accounts"
+  add_foreign_key "bureau_details", "public_records"
   add_foreign_key "client_profiles", "clients"
   add_foreign_key "clients", "users"
   add_foreign_key "credit_reports", "clients"
@@ -375,5 +396,6 @@ ActiveRecord::Schema.define(version: 2024_06_21_084015) do
   add_foreign_key "inquiries", "users"
   add_foreign_key "mailings", "letters"
   add_foreign_key "mailings", "users"
+  add_foreign_key "public_records", "users"
   add_foreign_key "spendings", "users"
 end

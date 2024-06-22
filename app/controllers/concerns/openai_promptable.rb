@@ -5,11 +5,11 @@ module OpenaiPromptable
     before_action :initialize_openai_client
   end
 
-  def send_prompts_for_round(round, inquiries, accounts)
+  def send_prompts_for_round(round, inquiries, accounts, public_record)
     {
-      experian: send_prompt(round, inquiries, accounts, 'experian'),
-      transunion: send_prompt(round, inquiries, accounts, 'transunion'),
-      equifax: send_prompt(round, inquiries, accounts, 'equifax')
+      experian: send_prompt(round, inquiries, accounts, public_record, 'experian'),
+      transunion: send_prompt(round, inquiries, accounts, public_record, 'transunion'),
+      equifax: send_prompt(round, inquiries, accounts, public_record, 'equifax')
     }
   end
 
@@ -19,9 +19,9 @@ module OpenaiPromptable
     @client = OpenAI::Client.new(access_token: ENV['OPENAI_ACCESS_TOKEN'])
   end
 
-  def send_prompt(round, inquiries, accounts, bureau)
+  def send_prompt(round, inquiries, accounts, public_record, bureau)
   
-    prompt = get_prompt(round, inquiries, accounts, bureau)
+    prompt = get_prompt(round, inquiries, accounts, public_record, bureau)
     response = @client.chat(
       parameters: {
         model: "gpt-4o",
@@ -36,24 +36,24 @@ module OpenaiPromptable
     inject_sensitive_data(response_text, current_user.ssn_last4)
   end
 
-  def get_prompt(round, inquiries, accounts, bureau)
+  def get_prompt(round, inquiries, accounts, public_record, bureau)
     case round
-    when 1 then round_1_prompt(inquiries, accounts, bureau)
-    when 2 then round_2_prompt(inquiries, accounts, bureau)
-    when 3 then round_3_prompt(inquiries, accounts, bureau)
-    when 4 then round_4_prompt(inquiries, accounts, bureau)
-    when 5 then round_5_prompt(inquiries, accounts, bureau)
-    when 6 then round_6_prompt(inquiries, accounts, bureau)
-    when 7 then round_7_prompt(inquiries, accounts, bureau)
-    when 8 then inquiries_all_in(inquiries, accounts, bureau)
-    when 9 then account_validation(inquiries, accounts, bureau)
-    when 10 then final_demand_prompt(inquiries, accounts, bureau)
+    when 1 then round_1_prompt(inquiries, accounts, public_record, bureau)
+    when 2 then round_2_prompt(inquiries, accounts, public_record, bureau)
+    when 3 then round_3_prompt(inquiries, accounts, public_record, bureau)
+    when 4 then round_4_prompt(inquiries, accounts, public_record, bureau)
+    when 5 then round_5_prompt(inquiries, accounts, public_record, bureau)
+    when 6 then round_6_prompt(inquiries, accounts, public_record, bureau)
+    when 7 then round_7_prompt(inquiries, accounts, public_record, bureau)
+    when 8 then inquiries_all_in(inquiries, accounts, public_record, bureau)
+    when 9 then account_validation(inquiries, accounts, public_record, bureau)
+    when 10 then final_demand_prompt(inquiries, accounts, public_record, bureau)
     else
       "Invalid round selected."
     end
   end
 
-  def inquiries_all_in(inquiries, accounts, bureau)
+  def inquiries_all_in(inquiries, accounts, public_record, bureau)
     <<-PROMPT
     You are tasked with generating a unique comprehensive, Metro 2 compliant dispute letter for inquiries that do not belong to me. The letter should be detailed and at least six pages long worth of content/details(dont include page count in response), incorporating relevant laws, Metro 2 codes, and any necessary references. Below are the account and inquiry details that need to be addressed in the letter #{bureau.capitalize}
     
@@ -94,7 +94,7 @@ module OpenaiPromptable
     PROMPT
   end
 
-  def account_validation(inquiries, accounts, bureau)
+  def account_validation(inquiries, accounts, public_record, bureau)
     <<-PROMPT
       You are tasked with generating a unique comprehensive Metro 2 account validation letter. The letter should be detailed and at least six pages long worth of content/details(dont include page count in response), incorporating relevant laws, Metro 2 codes, and any necessary references. Below are the account and inquiry details that need to be addressed in the letter #{bureau.capitalize}.
 
@@ -136,7 +136,7 @@ module OpenaiPromptable
     PROMPT
   end
 
-  def round_1_prompt(inquiries, accounts, bureau)
+  def round_1_prompt(inquiries, accounts, public_record, bureau)
     <<-PROMPT
       You are tasked with generating a unique comprehensive, Metro 2 compliant dispute letter. The letter should be detailed and at least six pages long worth of content/details(dont include page count in response), incorporating relevant laws, Metro 2 codes, and any necessary references. Below are the account and inquiry details that need to be addressed in the letter #{bureau.capitalize}
 
@@ -181,7 +181,7 @@ module OpenaiPromptable
     PROMPT
   end
 
-  def round_2_prompt(inquiries, accounts, bureau)
+  def round_2_prompt(inquiries, accounts, public_record, bureau)
     <<-PROMPT
     You are tasked with generating a unique comprehensive Metro 2 reinvestigation letter. The letter should be detailed and at least six pages long worth of content/details(dont include page count in response), incorporating relevant laws, Metro 2 codes, and any necessary references. Below are the account and inquiry details that need to be addressed in the letter #{bureau.capitalize}.
 
@@ -226,7 +226,7 @@ module OpenaiPromptable
     PROMPT
   end
 
-  def round_3_prompt(inquiries, accounts, bureau)
+  def round_3_prompt(inquiries, accounts, public_record, bureau)
     <<-PROMPT
       You are tasked with generating a comprehensive Metro 2 compliance review letter. The letter should be detailed and at least six pages long worth of content/details(dont include page count in response), incorporating relevant laws, Metro 2 codes, and any necessary references. Below are the account and inquiry details that need to be addressed in the letter #{bureau.capitalize}.
 
@@ -270,7 +270,7 @@ module OpenaiPromptable
     PROMPT
   end
 
-  def round_4_prompt(inquiries, accounts, bureau)
+  def round_4_prompt(inquiries, accounts, public_record, bureau)
     <<-PROMPT
       You are tasked with generating a comprehensive Metro 2 dispute escalation and threaten to file a complaint letter. The letter should be detailed and at least six pages long worth of content/details(dont include page count in response), incorporating relevant laws, Metro 2 codes, and any necessary references. Below are the account and inquiry details that need to be addressed in the letter #{bureau.capitalize}.
 
@@ -314,7 +314,7 @@ module OpenaiPromptable
     PROMPT
   end
 
-  def round_5_prompt(inquiries, accounts, bureau)
+  def round_5_prompt(inquiries, accounts, public_record, bureau)
     <<-PROMPT
       You are tasked with generating a comprehensive Metro 2 data reconciliation letter. The letter should be detailed and at least six pages long worth of content/details(dont include page count in response), incorporating relevant laws, Metro 2 codes, and any necessary references. Below are the account and inquiry details that need to be addressed in the letter #{bureau.capitalize}.
 
@@ -358,7 +358,7 @@ module OpenaiPromptable
     PROMPT
   end
 
-  def round_6_prompt(inquiries, accounts, bureau)
+  def round_6_prompt(inquiries, accounts public_record, bureau)
     <<-PROMPT
       You are tasked with generating a comprehensive Metro 2 dispute resolution demand letter. The letter should be detailed and at least six pages long worth of content/details(dont include page count in response), incorporating relevant laws, Metro 2 codes, and any necessary references. Below are the account and inquiry details that need to be addressed in the letter #{bureau.capitalize}.
 
@@ -402,7 +402,7 @@ module OpenaiPromptable
     PROMPT
   end
 
-  def round_7_prompt(inquiries, accounts, bureau)
+  def round_7_prompt(inquiries, accounts, public_record, bureau)
     <<-PROMPT
       You are tasked with generating a comprehensive Metro 2 compliance and accuracy verification letter. The letter should be detailed and at least six pages long worth of content/details(dont include page count in response), incorporating relevant laws, Metro 2 codes, and any necessary references. Below are the account and inquiry details that need to be addressed in the letter #{bureau.capitalize}
 
@@ -446,7 +446,7 @@ module OpenaiPromptable
     PROMPT
   end
 
-  def final_demand_prompt(inquiries, accounts, bureau)
+  def final_demand_prompt(inquiries, accounts, public_record, bureau)
     <<-PROMPT
     You are tasked with generating a comprehensive, final demand for resolution letter or threaten to go to court. The letter should be detailed and at least six pages long worth of content/details(dont include page count in response, incorporating relevant laws, Metro 2 codes, and any necessary references. Below are the account and inquiry details that need to be addressed in the letter #{bureau.capitalize}
 

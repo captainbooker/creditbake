@@ -1,5 +1,6 @@
 class BureauDetail < ApplicationRecord
-  belongs_to :account
+  belongs_to :account, optional: true
+  belongs_to :public_record, optional: true
   enum bureau: { experian: 0, equifax: 1, transunion: 2 }
 
   def self.ransackable_attributes(auth_object = nil)

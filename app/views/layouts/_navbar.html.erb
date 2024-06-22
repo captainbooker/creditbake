@@ -26,11 +26,13 @@
   </div>
   <div id="mobile-menu" class="hidden md:hidden">
     <nav class="px-4 pt-4 pb-4 space-y-1 bg-white shadow-md">
-      <a href="#home" class="block text-lg font-medium text-gray-700 hover-blue-text transition-colors duration-300">Home</a>
-      <a href="#about" class="block text-lg font-medium text-gray-700 hover-blue-text transition-colors duration-300">About</a>
-      <a href="#pricing" class="block text-lg font-medium text-gray-700 hover-blue-text transition-colors duration-300">Pricing</a>
-      <a href="#testimonials" class="block text-lg font-medium text-gray-700 hover-blue-text transition-colors duration-300">Testimonials</a>
-      <a href="#faq" class="block text-lg font-medium text-gray-700 hover-blue-text transition-colors duration-300">FAQ</a>
+      <% if current_page?(unauthenticated_root_path) %>
+        <a href="#home" class="block text-lg font-medium text-gray-700 hover-blue-text transition-colors duration-300">Home</a>
+        <a href="#about" class="block text-lg font-medium text-gray-700 hover-blue-text transition-colors duration-300">About</a>
+        <a href="#pricing" class="block text-lg font-medium text-gray-700 hover-blue-text transition-colors duration-300">Pricing</a>
+        <a href="#testimonials" class="block text-lg font-medium text-gray-700 hover-blue-text transition-colors duration-300">Testimonials</a>
+        <a href="#faq" class="block text-lg font-medium text-gray-700 hover-blue-text transition-colors duration-300">FAQ</a>
+      <% end %>
       <a href="<%= new_user_session_path %>" class="block text-lg font-medium text-gray-700 hover-blue-text transition-colors duration-300">Sign In</a>
       <a href="<%= new_user_registration_path %>" class="block px-6 py-2 text-lg font-medium text-white custom-blue rounded hover:bg-blue-600 transition-colors duration-300">Sign Up</a>
     </nav>
