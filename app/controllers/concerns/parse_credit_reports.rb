@@ -9,8 +9,8 @@ module ParseCreditReports
     parser = case credit_report.service
              when 'identityiq'
                IdentityiqParserService.new(document_content)
-             when 'creditdyno'
-               CreditDynoParserService.new(document_content)
+             when 'smartcredit'
+               SmartCreditParserService.new(document_content)
              else
                raise 'Unknown credit report service'
              end

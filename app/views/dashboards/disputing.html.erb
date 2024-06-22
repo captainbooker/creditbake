@@ -93,7 +93,7 @@
                       <p>Last Payment Date</p>
                       <p><%= account.bureau_details.first&.date_of_last_payment %></p>
                     </div>
-                    <div class="px-4 pb-2">
+                    <div class="px-4 pb-6">
                       <p>Dispute Reason</p>
                       <select id="reason_<%= account.id %>" name="account_reasons[<%= account.id %>]" class="w-full text-black rounded">
                         <option value="Inaccurate Account Info">Inaccurate Account Information</option>

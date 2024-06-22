@@ -455,7 +455,7 @@ module OpenaiPromptable
   def final_demand_prompt(inquiries, accounts, bureau)
     <<-PROMPT
     You are tasked with generating a comprehensive, final demand for resolution letter or threaten to go to court. The letter should be detailed and at least six pages long worth of content/details(dont include page count in response, incorporating relevant laws, Metro 2 codes, and any necessary references. Below are the account and inquiry details that need to be addressed in the letter #{bureau.capitalize}
-      User info for address MUST BE PRESENT IN HEADER:
+      User info for address mailing address:
       first_name: #{current_user.first_name}
       last_name: #{current_user.last_name}
       street_address: #{current_user.street_address}
@@ -492,7 +492,7 @@ module OpenaiPromptable
       Professional and assertive
       Detailed and thorough
       Legally informed and compliant
-      (DO NOT NEED SIGNATURE)
+      Documents that are included in this file (Signature, ID & Utility Bill)
     PROMPT
   end
 

@@ -53,6 +53,7 @@ gem 'country_select', '~> 8.0'
 gem "meta-tags"
 gem 'browser'
 gem 'active_analytics'
+gem "blazer"
 
 gem 'dotenv', groups: [:development, :test]
 group :development, :test do

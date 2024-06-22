@@ -4,6 +4,7 @@ Rails.application.routes.draw do
   get 'contacts/create'
   get 'stripe_payments/create'
   authenticate :user do
+    mount Blazer::Engine, at: "blazer"
     mount ActiveAnalytics::Engine, at: "analytics" # http://localhost:3000/analytics
   end
   devise_for :admin_users, ActiveAdmin::Devise.config
@@ -51,7 +52,7 @@ Rails.application.routes.draw do
   post '/payment', to: 'payments#create'
   get 'credit_reports', to: 'dashboards#index'
   get 'credit_reports/scores', to: 'dashboards#scores'
-  post 'webhooks/authorize_net', to: 'webhooks#authorize_net'
+  post 'webhooks/maverick', to: 'webhooks#authorize_net'
   get 'privacy_policy', to: 'pages#privacy_policy', as: 'privacy_policy'
   get 'terms_of_use', to: 'pages#terms_of_use', as: 'terms_of_use'
   get 'refund_policy', to: 'pages#refund_policy', as: 'refund_policy'

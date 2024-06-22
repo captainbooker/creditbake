@@ -6,11 +6,10 @@ class IdentityiqService
   BASE_URL = 'https://member.identityiq.com'
   attr_reader :username, :password, :security_question, :service
 
-  def initialize(username, password, security_question, service, browser: :chrome)
+  def initialize(username, password, security_question,  browser: :chrome)
     @username = username
     @password = password
     @security_question = security_question
-    @service = service
     @browser = browser
     @logger = Logger.new(STDOUT)
 

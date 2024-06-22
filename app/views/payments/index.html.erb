@@ -4,7 +4,27 @@
     <%= link_to 'Create Attack', letters_path, class: "bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-700" %>
   </div>
   <div class="iframe-container">
-    <iframe src="https://creditbakellc.formstack.com/forms/payment_form?USER_ID=<%= current_user.id %>" title="Formstack Form"></iframe>
+    <div id="payment-form"></div>
+    <script>
+      (function() {
+        const options = {"data":"eyJkYmFJZCI6IjE5MDI2NSIsInRlcm1pbmFsSWQiOiI0MTUzMDQiLCJ0aHJlZWRzIjoiRGlzYWJsZWQiLCJleHRlcm5hbElkIjoiIiwicmV0dXJuVXJsIjoiIiwicmV0dXJuVXJsTmF2aWdhdGlvbiI6InNlbGYiLCJsb2dvIjoiWWVzIiwidmlzaWJsZU5vdGUiOiJZZXMiLCJyZXF1ZXN0Q29udGFjdEluZm8iOiJZZXMiLCJyZXF1ZXN0QmlsbGluZ0luZm8iOiJZZXMiLCJzZW5kUmVjZWlwdCI6IlllcyIsIm9yaWdpbiI6Ikhvc3RlZEZvcm0iLCJoYXNoIjoiNzAxYTAxOWViM2M0YjJmYzYxOWQ2ZTM3YjJhMjY5N2UiLCJjb250YWN0SW5mbyI6eyJjb250YWN0TmFtZSI6IkRhcnJlbiBCb29rZXIiLCJjb250YWN0RW1haWwiOiJzdXBwb3J0QGNyZWRpdGJha2UuY29tIiwiY29udGFjdFBob25lIjoiIn0sImJpbGxpbmdJbmZvIjp7ImJpbGxpbmdDb3VudHJ5IjoiVW5pdGVkIFN0YXRlcyIsImJpbGxpbmdTdHJlZXQiOiIiLCJiaWxsaW5nU3RyZWV0MiI6IiIsImJpbGxpbmdDaXR5IjoiIiwiYmlsbGluZ1N0YXRlIjoiIiwiYmlsbGluZ1ppcCI6IiJ9fQ%3D%3D","feeType":"amount","contactInfo":{"name":"Darren Booker","email":"support@creditbake.com","phone":""},"billingInfo":{"country":"United States","street":"","street2":"","city":"","state":"","zip":""}};
+
+        const l = function() {
+          new PaymentGateway({
+            target: "payment-form",
+            options: options
+          });
+        };
+
+        if(typeof window.PaymentGateway === "undefined") {
+          window.webroot = "https://dashboard.maverickpayments.com";
+          const e = document.createElement("script"); e.async = true;
+          e.src = window.webroot + "/js/gateway/payment.js?v=" + Date.now();
+          document.getElementsByTagName("head")[0].appendChild(e);
+          e.onload = e.onreadystatechange = function() { l(); }
+        } else { l(); }
+      }());
+    </script>
   </div>
 
   <div class="flex items-center justify-between mb-6">
