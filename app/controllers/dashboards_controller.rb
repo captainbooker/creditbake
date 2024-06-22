@@ -126,7 +126,7 @@ class DashboardsController < ApplicationController
     generate_pdfs(letter)
     current_user.decrement!(:credits, 24.99)
     spending = Spending.create!(user: current_user, amount: 24.99, description: "Letter Generated: #{letter.id}")
-    SpendingMailer.spending_notification(spending, current_user).deliver_later
+    SpendingMailer.generate_letter_notification(spending, current_user).deliver_later
   end
 
   def generate_pdfs(letter)
