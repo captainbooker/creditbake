@@ -358,7 +358,7 @@ module OpenaiPromptable
     PROMPT
   end
 
-  def round_6_prompt(inquiries, accounts public_record, bureau)
+  def round_6_prompt(inquiries, accounts, public_record, bureau)
     <<-PROMPT
       You are tasked with generating a comprehensive Metro 2 dispute resolution demand letter. The letter should be detailed and at least six pages long worth of content/details(dont include page count in response), incorporating relevant laws, Metro 2 codes, and any necessary references. Below are the account and inquiry details that need to be addressed in the letter #{bureau.capitalize}.
 

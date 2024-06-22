@@ -8,6 +8,7 @@ class ApplicationController < ActionController::Base
 
   before_action :ensure_profile_complete, if: :user_signed_in?
   after_action :record_page_view
+  before_action :authorize_access
 
   helper_method :user_browser
   helper_method :mobile?
@@ -61,6 +62,18 @@ class ApplicationController < ActionController::Base
       :edge
     else
       raise "Unsupported browser: #{browser.name}"
+    end
+  end
+
+  def authorize_access
+    protected_paths = ["/blazer", "/analytics"]
+
+    if protected_paths.any? { |path| request.path.start_with?(path) }
+      authorized_emails = ["darren@creditbake.com", "dbooker.racing@gmail.com"]
+
+      unless authorized_emails.include?(current_user.email)
+        redirect_to root_path, alert: "Unauthorized access"
+      end
     end
   end
 
