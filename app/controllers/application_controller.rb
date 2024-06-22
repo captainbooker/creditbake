@@ -57,6 +57,8 @@ class ApplicationController < ActionController::Base
       :firefox
     elsif browser.safari?
       :safari
+    elsif browser.edge?
+      :edge
     else
       raise "Unsupported browser: #{browser.name}"
     end
