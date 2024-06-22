@@ -53,13 +53,12 @@ module OpenaiPromptable
     end
   end
 
-  def inquiries_all_in(inquiries, accounts, bureau, formatted_details)
+  def inquiries_all_in(inquiries, accounts, bureau)
     <<-PROMPT
     You are tasked with generating a unique comprehensive, Metro 2 compliant dispute letter for inquiries that do not belong to me. The letter should be detailed and at least six pages long worth of content/details(dont include page count in response), incorporating relevant laws, Metro 2 codes, and any necessary references. Below are the account and inquiry details that need to be addressed in the letter #{bureau.capitalize}
     
-      User info for address:
-      first_name: #{current_user.first_name}
-      last_name: #{current_user.last_name}
+      Create Heading(REQUIRED)
+      Name: #{current_user.first_name} #{current_user.last_name}
       street_address: #{current_user.street_address}
       city: #{current_user.city}
       state: #{current_user.state}
@@ -68,7 +67,7 @@ module OpenaiPromptable
       SSN Last 4: ###SSN_LAST4### (Include under sender address)
       current_date: #{Date.today.strftime("%B %d, %Y")}
   
-      Inquiries:
+      Inquiries:(SHOULD BE LISTED IN LETTER)
       #{format_inquiries(inquiries, bureau, 100)}
 
       Additional Requirements:
@@ -95,13 +94,12 @@ module OpenaiPromptable
     PROMPT
   end
 
-  def account_validation(inquiries, accounts, bureau, formatted_details)
+  def account_validation(inquiries, accounts, bureau)
     <<-PROMPT
       You are tasked with generating a unique comprehensive Metro 2 account validation letter. The letter should be detailed and at least six pages long worth of content/details(dont include page count in response), incorporating relevant laws, Metro 2 codes, and any necessary references. Below are the account and inquiry details that need to be addressed in the letter #{bureau.capitalize}.
 
-      User info for address:
-      first_name: #{current_user.first_name}
-      last_name: #{current_user.last_name}
+      Create Heading(REQUIRED)
+      Name: #{current_user.first_name} #{current_user.last_name}
       street_address: #{current_user.street_address}
       city: #{current_user.city}
       state: #{current_user.state}
@@ -111,7 +109,7 @@ module OpenaiPromptable
       current_date: #{Date.today.strftime("%B %d, %Y")}
   
   
-      Accounts:
+      Accounts:(SHOULD BE LISTED IN LETTER)
       #{format_accounts_by_bureau(accounts, bureau, 7)}
 
       Additional Requirements:
@@ -138,13 +136,12 @@ module OpenaiPromptable
     PROMPT
   end
 
-  def round_1_prompt(inquiries, accounts, bureau, formatted_details)
+  def round_1_prompt(inquiries, accounts, bureau)
     <<-PROMPT
       You are tasked with generating a unique comprehensive, Metro 2 compliant dispute letter. The letter should be detailed and at least six pages long worth of content/details(dont include page count in response), incorporating relevant laws, Metro 2 codes, and any necessary references. Below are the account and inquiry details that need to be addressed in the letter #{bureau.capitalize}
-  
-      User info for address:
-      first_name: #{current_user.first_name}
-      last_name: #{current_user.last_name}
+
+      Create Heading(REQUIRED)
+      Name: #{current_user.first_name} #{current_user.last_name}
       street_address: #{current_user.street_address}
       city: #{current_user.city}
       state: #{current_user.state}
@@ -152,12 +149,12 @@ module OpenaiPromptable
       country: "USA"
       SSN Last 4: ###SSN_LAST4### (Include under sender address)
       current_date: #{Date.today.strftime("%B %d, %Y")}
-  
-      Inquiries:
+
+      Inquiries:(SHOULD BE LISTED IN LETTER)
       #{format_inquiries(inquiries, bureau, 100)}
   
   
-      Accounts:
+      Accounts:(SHOULD BE LISTED IN LETTER)
       #{format_accounts_by_bureau(accounts, bureau, 100)}
 
       Additional Requirements:
@@ -188,21 +185,20 @@ module OpenaiPromptable
     <<-PROMPT
     You are tasked with generating a unique comprehensive Metro 2 reinvestigation letter. The letter should be detailed and at least six pages long worth of content/details(dont include page count in response), incorporating relevant laws, Metro 2 codes, and any necessary references. Below are the account and inquiry details that need to be addressed in the letter #{bureau.capitalize}.
 
-      User info for address:
-      first_name: #{current_user.first_name}
-      last_name: #{current_user.last_name}
+      Create Heading(REQUIRED)
+      Name: #{current_user.first_name} #{current_user.last_name}
       street_address: #{current_user.street_address}
       city: #{current_user.city}
       state: #{current_user.state}
       postal_code: #{current_user.postal_code}
-      country: USA
+      country: "USA"
       SSN Last 4: ###SSN_LAST4### (Include under sender address)
       current_date: #{Date.today.strftime("%B %d, %Y")}
 
-      Inquiries:
+      Inquiries:(SHOULD BE LISTED IN LETTER)
       #{format_inquiries(inquiries, bureau, 5)}
 
-      Accounts:
+      Accounts:(SHOULD BE LISTED IN LETTER)
       #{format_accounts_by_bureau(accounts, bureau, 5)}
 
       Additional Requirements:
@@ -234,21 +230,20 @@ module OpenaiPromptable
     <<-PROMPT
       You are tasked with generating a comprehensive Metro 2 compliance review letter. The letter should be detailed and at least six pages long worth of content/details(dont include page count in response), incorporating relevant laws, Metro 2 codes, and any necessary references. Below are the account and inquiry details that need to be addressed in the letter #{bureau.capitalize}.
 
-      User info for address:
-      first_name: #{current_user.first_name}
-      last_name: #{current_user.last_name}
+      Create Heading(REQUIRED)
+      Name: #{current_user.first_name} #{current_user.last_name}
       street_address: #{current_user.street_address}
       city: #{current_user.city}
       state: #{current_user.state}
       postal_code: #{current_user.postal_code}
-      country: USA
+      country: "USA"
       SSN Last 4: ###SSN_LAST4### (Include under sender address)
       current_date: #{Date.today.strftime("%B %d, %Y")}
 
-      Inquiries:
+      Inquiries:(SHOULD BE LISTED IN LETTER)
       #{format_inquiries(inquiries, bureau, 100)}
 
-      Accounts:
+      Accounts:(SHOULD BE LISTED IN LETTER)
       #{format_accounts_by_bureau(accounts, bureau, 100)}
 
       Additional Requirements:
@@ -279,21 +274,20 @@ module OpenaiPromptable
     <<-PROMPT
       You are tasked with generating a comprehensive Metro 2 dispute escalation and threaten to file a complaint letter. The letter should be detailed and at least six pages long worth of content/details(dont include page count in response), incorporating relevant laws, Metro 2 codes, and any necessary references. Below are the account and inquiry details that need to be addressed in the letter #{bureau.capitalize}.
 
-      User info for address:
-      first_name: #{current_user.first_name}
-      last_name: #{current_user.last_name}
+      Create Heading(REQUIRED)
+      Name: #{current_user.first_name} #{current_user.last_name}
       street_address: #{current_user.street_address}
       city: #{current_user.city}
       state: #{current_user.state}
       postal_code: #{current_user.postal_code}
-      country: USA
+      country: "USA"
       SSN Last 4: ###SSN_LAST4### (Include under sender address)
       current_date: #{Date.today.strftime("%B %d, %Y")}
 
-      Inquiries:
+      Inquiries:(SHOULD BE LISTED IN LETTER)
       #{format_inquiries(inquiries, bureau, 10)}
 
-      Accounts:
+      Accounts:(SHOULD BE LISTED IN LETTER)
       #{format_accounts_by_bureau(accounts, bureau, 4)}
 
       Additional Requirements:
@@ -323,21 +317,21 @@ module OpenaiPromptable
   def round_5_prompt(inquiries, accounts, bureau)
     <<-PROMPT
       You are tasked with generating a comprehensive Metro 2 data reconciliation letter. The letter should be detailed and at least six pages long worth of content/details(dont include page count in response), incorporating relevant laws, Metro 2 codes, and any necessary references. Below are the account and inquiry details that need to be addressed in the letter #{bureau.capitalize}.
-      User info for address:
-      first_name: #{current_user.first_name}
-      last_name: #{current_user.last_name}
+
+      Create Heading(REQUIRED)
+      Name: #{current_user.first_name} #{current_user.last_name}
       street_address: #{current_user.street_address}
       city: #{current_user.city}
       state: #{current_user.state}
       postal_code: #{current_user.postal_code}
-      country: USA
+      country: "USA"
       SSN Last 4: ###SSN_LAST4### (Include under sender address)
       current_date: #{Date.today.strftime("%B %d, %Y")}
 
-      Inquiries:
+      Inquiries:(SHOULD BE LISTED IN LETTER)
       #{format_inquiries(inquiries, bureau, 4)}
 
-      Accounts:
+      Accounts:(SHOULD BE LISTED IN LETTER)
       #{format_accounts_by_bureau(accounts, bureau, 10)}
 
       Additional Requirements:
@@ -367,21 +361,21 @@ module OpenaiPromptable
   def round_6_prompt(inquiries, accounts, bureau)
     <<-PROMPT
       You are tasked with generating a comprehensive Metro 2 dispute resolution demand letter. The letter should be detailed and at least six pages long worth of content/details(dont include page count in response), incorporating relevant laws, Metro 2 codes, and any necessary references. Below are the account and inquiry details that need to be addressed in the letter #{bureau.capitalize}.
-      User info for address:
-      first_name: #{current_user.first_name}
-      last_name: #{current_user.last_name}
+
+      Create Heading(REQUIRED)
+      Name: #{current_user.first_name} #{current_user.last_name}
       street_address: #{current_user.street_address}
       city: #{current_user.city}
       state: #{current_user.state}
       postal_code: #{current_user.postal_code}
-      country: USA
+      country: "USA"
       SSN Last 4: ###SSN_LAST4### (Include under sender address)
       current_date: #{Date.today.strftime("%B %d, %Y")}
 
-      Inquiries:
+      Inquiries:(SHOULD BE LISTED IN LETTER)
       #{format_inquiries(inquiries, bureau, 100)}
 
-      Accounts:
+      Accounts:(SHOULD BE LISTED IN LETTER)
       #{format_accounts_by_bureau(accounts, bureau, 100)}
 
       Additional Requirements:
@@ -411,21 +405,21 @@ module OpenaiPromptable
   def round_7_prompt(inquiries, accounts, bureau)
     <<-PROMPT
       You are tasked with generating a comprehensive Metro 2 compliance and accuracy verification letter. The letter should be detailed and at least six pages long worth of content/details(dont include page count in response), incorporating relevant laws, Metro 2 codes, and any necessary references. Below are the account and inquiry details that need to be addressed in the letter #{bureau.capitalize}
-      User info for address:
-      first_name: #{current_user.first_name}
-      last_name: #{current_user.last_name}
+
+      Create Heading(REQUIRED)
+      Name: #{current_user.first_name} #{current_user.last_name}
       street_address: #{current_user.street_address}
       city: #{current_user.city}
       state: #{current_user.state}
       postal_code: #{current_user.postal_code}
-      country: USA
+      country: "USA"
       SSN Last 4: ###SSN_LAST4### (Include under sender address)
       current_date: #{Date.today.strftime("%B %d, %Y")}
 
-      Inquiries:
+      Inquiries:(SHOULD BE LISTED IN LETTER)
       #{format_inquiries(inquiries, bureau, 15)}
 
-      Accounts:
+      Accounts:(SHOULD BE LISTED IN LETTER)
       #{format_accounts_by_bureau(accounts, bureau, 8)}
 
       Additional Requirements:
@@ -455,21 +449,21 @@ module OpenaiPromptable
   def final_demand_prompt(inquiries, accounts, bureau)
     <<-PROMPT
     You are tasked with generating a comprehensive, final demand for resolution letter or threaten to go to court. The letter should be detailed and at least six pages long worth of content/details(dont include page count in response, incorporating relevant laws, Metro 2 codes, and any necessary references. Below are the account and inquiry details that need to be addressed in the letter #{bureau.capitalize}
-      User info for address mailing address:
-      first_name: #{current_user.first_name}
-      last_name: #{current_user.last_name}
+
+      Create Heading(REQUIRED)
+      Name: #{current_user.first_name} #{current_user.last_name}
       street_address: #{current_user.street_address}
       city: #{current_user.city}
       state: #{current_user.state}
       postal_code: #{current_user.postal_code}
-      country: USA
+      country: "USA"
       SSN Last 4: ###SSN_LAST4### (Include under sender address)
       current_date: #{Date.today.strftime("%B %d, %Y")}
 
-      Inquiries:
+      Inquiries:(SHOULD BE LISTED IN LETTER)
       #{format_inquiries(inquiries, bureau, 100)}
 
-      Accounts:
+      Accounts:(SHOULD BE LISTED IN LETTER)
       #{format_accounts_by_bureau(accounts, bureau, 100)}
 
       Additional Requirements:

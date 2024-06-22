@@ -66,8 +66,13 @@ class DashboardsController < ApplicationController
       return
     end
 
-    create_attack_logic(round)
-    redirect_to letters_path, notice: 'Attack created successfully and letters saved.'
+    if current_user.accounts.where(challenge: true).any? || current_user.inquiries.where(challenge: true).any?
+      create_attack_logic(round)
+      redirect_to letters_path, notice: 'Attack created successfully and letters saved.'
+    else
+      redirect_to payment_path, alert: "Please select items to attack"
+      return
+    end
   end
 
   private
