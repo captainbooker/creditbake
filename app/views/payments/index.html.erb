@@ -7,7 +7,7 @@
     <div id="payment-form"></div>
     <script>
       (function() {
-        const options = {"data":"eyJkYmFJZCI6IjE5MDI2NSIsInRlcm1pbmFsSWQiOiI0MTUzMDQiLCJ0aHJlZWRzIjoiRGlzYWJsZWQiLCJleHRlcm5hbElkIjoiIiwicmV0dXJuVXJsIjoiIiwicmV0dXJuVXJsTmF2aWdhdGlvbiI6InNlbGYiLCJsb2dvIjoiWWVzIiwidmlzaWJsZU5vdGUiOiJZZXMiLCJyZXF1ZXN0Q29udGFjdEluZm8iOiJZZXMiLCJyZXF1ZXN0QmlsbGluZ0luZm8iOiJZZXMiLCJzZW5kUmVjZWlwdCI6IlllcyIsIm9yaWdpbiI6Ikhvc3RlZEZvcm0iLCJoYXNoIjoiNzAxYTAxOWViM2M0YjJmYzYxOWQ2ZTM3YjJhMjY5N2UiLCJjb250YWN0SW5mbyI6eyJjb250YWN0TmFtZSI6IkRhcnJlbiBCb29rZXIiLCJjb250YWN0RW1haWwiOiJzdXBwb3J0QGNyZWRpdGJha2UuY29tIiwiY29udGFjdFBob25lIjoiIn0sImJpbGxpbmdJbmZvIjp7ImJpbGxpbmdDb3VudHJ5IjoiVW5pdGVkIFN0YXRlcyIsImJpbGxpbmdTdHJlZXQiOiIiLCJiaWxsaW5nU3RyZWV0MiI6IiIsImJpbGxpbmdDaXR5IjoiIiwiYmlsbGluZ1N0YXRlIjoiIiwiYmlsbGluZ1ppcCI6IiJ9fQ%3D%3D","feeType":"amount","contactInfo":{"name":"Darren Booker","email":"support@creditbake.com","phone":""},"billingInfo":{"country":"United States","street":"","street2":"","city":"","state":"","zip":""}};
+        const options = {"data":"<%= ENV["MAVERICK_TOKEN"] %>","feeType":"amount","contactInfo":{"name":"Darren Booker","email":"support@creditbake.com","phone":""},"billingInfo":{"country":"United States","street":"","street2":"","city":"","state":"","zip":""}};
 
         const l = function() {
           new PaymentGateway({

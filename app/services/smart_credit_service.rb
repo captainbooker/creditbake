@@ -7,7 +7,7 @@ class SmartCreditService
   attr_reader :username, :password, :service, :current_user
   attr_accessor :experian_score, :transunion_score, :equifax_score
 
-  def initialize(username, password, current_user, browser: :chrome)
+  def initialize(username, password, current_user, browser: :chrome, mobile: false)
     @username = username
     @password = password
     @current_user = current_user
@@ -37,14 +37,21 @@ class SmartCreditService
     when :chrome
       options = Selenium::WebDriver::Chrome::Options.new
       options.add_argument('--headless')
+      options.add_argument("--no-sandbox")
+      options.add_argument("--disable-gpu")
+      options.add_argument("--remote-debugging-port=9222")
       Selenium::WebDriver.for :chrome, options: options
     when :firefox
       options = Selenium::WebDriver::Firefox::Options.new
       options.add_argument('--headless')
       Selenium::WebDriver.for :firefox, options: options
     when :safari
-      options = Selenium::WebDriver::Safari::Options.new
-      Selenium::WebDriver.for :safari, options: options
+      options = Selenium::WebDriver::Chrome::Options.new
+      options.add_argument('--headless')
+      options.add_argument("--no-sandbox")
+      options.add_argument("--disable-gpu")
+      options.add_argument("--remote-debugging-port=9222")
+      Selenium::WebDriver.for :chrome, options: options
     else
       raise ArgumentError, "Unsupported browser: #{@browser}"
     end
@@ -66,7 +73,7 @@ class SmartCreditService
 
   def fetch_credit_report_json
     @logger.info "Fetching credit report JSON"
-    @driver.navigate.to "#{BASE_URL}/member/credit-report/3b/?serviceBundleFulfillmentId=38c1a8d5-f8ee-4abc-a577-420547b673e9"
+    @driver.navigate.to "#{BASE_URL}/member/credit-report/3b/"
     wait = Selenium::WebDriver::Wait.new(timeout: 10)
 
     account_divs = wait.until { @driver.find_elements(css: '.my-3.border-b.border-5.border-color-gray-300') }

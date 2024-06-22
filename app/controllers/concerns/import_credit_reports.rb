@@ -11,11 +11,11 @@ module ImportCreditReports
 
     case service
     when 'identityiq'
-      idq = IdentityiqService.new(username, password, security_question, browser: user_browser)
+      idq = IdentityiqService.new(username, password, security_question, browser: user_browser, mobile: request.user_agent.include?("Mobile") || request.user_agent.include?("iPhone"))
       json_content = idq.fetch_credit_report
       import_credit_report_json(json_content, username, password, security_question, service)
     when 'smartcredit'
-      driver = SmartCreditService.new(username, password, current_user, browser: user_browser)
+      driver = SmartCreditService.new(username, password, current_user, browser: user_browser, mobile: request.user_agent.include?("Mobile") || request.user_agent.include?("iPhone"))
       json_content = driver.fetch_credit_report
       import_credit_report_json(json_content, username, password, security_question, service)
     else
