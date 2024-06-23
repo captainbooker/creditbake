@@ -163,7 +163,9 @@ function initializeCreateAttackDropdown() {
   }
 
   return function cleanup() {
-    attackButton.removeEventListener('click', toggleAttackDropdown);
+    if (attackButton) {
+      attackButton.removeEventListener('click', toggleAttackDropdown);
+    }
     document.removeEventListener('click', handleClickOutside);
     roundButtons.forEach(button => {
       button.removeEventListener('click', handleRoundButtonClick);
@@ -231,7 +233,9 @@ document.addEventListener("turbolinks:load", function() {
   initializeMailModal();
 
   document.addEventListener("turbolinks:before-cache", function() {
-    cleanupCreateAttackDropdown();
+    if (cleanupCreateAttackDropdown) {
+      cleanupCreateAttackDropdown();
+    }
   }, { once: true });
 });
 </script>
