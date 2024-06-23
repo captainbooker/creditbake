@@ -56,6 +56,8 @@ gem 'active_analytics'
 gem "blazer"
 gem "letter_opener", group: :development
 gem 'sidekiq'
+gem "judoscale-rails"
+gem "judoscale-sidekiq"
 
 gem 'dotenv', groups: [:development, :test]
 group :development, :test do
