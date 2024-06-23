@@ -91,7 +91,11 @@
                   <% ["id_document", "utility_bill", "additional_document1", "additional_document2"].each do |doc| %>
                     <div class="flex flex-col items-center justify-between border p-4 rounded-lg shadow-md bg-white">
                       <div class="flex flex-col items-center">
-                        <div class="text-sm font-medium text-gray-700 capitalize"><%= doc.humanize %></div>
+                        <% if doc == "id_document" || doc == "utility_bill" %>
+                          <div class="text-sm font-medium text-gray-700 capitalize">*<%= doc.humanize %></div>
+                        <% else %>
+                          <div class="text-sm font-medium text-gray-700 capitalize"><%= doc.humanize %></div>
+                        <% end %>
                         <% if @user.send(doc).attached? %>
                           <span class="text-gray-500 mb-2"><%= @user.send(doc).filename.to_s %></span>
                           <div class="mb-2">
