@@ -53,7 +53,7 @@ class FetchCreditReportJob < ApplicationJob
       credit_report.extract_and_save_smart_credit_scores(json) if service == "smartcredit"
 
       if credit_report.save
-        parse_credit_report(credit_report) if service == "identityiq"
+        parse_credit_report(credit_report, user) if service == "identityiq"
         notify_user(user, 'Credit report successfully imported and parsed.')
       else
         notify_user(user, 'Failed to save the credit report.')
