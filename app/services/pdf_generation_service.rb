@@ -95,10 +95,22 @@ class PdfGenerationService
 
 
   def save_attachment_to_temp(attachment)
-    attachment_path = Rails.root.join("tmp/#{attachment.filename}")
-    File.open(attachment_path, 'wb') do |file|
-      file.write(attachment.download)
+    tmp_dir = Rails.root.join('tmp')
+    Dir.mkdir(tmp_dir) unless Dir.exist?(tmp_dir) # Ensure tmp directory exists
+  
+    # Ensure the filename is unique
+    unique_filename = "#{SecureRandom.hex}_#{attachment.filename}"
+    attachment_path = tmp_dir.join(unique_filename)
+  
+    begin
+      File.open(attachment_path, 'wb') do |file|
+        file.write(attachment.download)
+      end
+    rescue => e
+      Rails.logger.error "Failed to save attachment to temp file: #{e.message}"
+      raise
     end
+  
     attachment_path
   end
 

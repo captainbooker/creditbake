@@ -1,0 +1,33 @@
+<div class="container">
+  <h1>Notification from CreditBake</h1>
+  <p>Hello <%= @user.full_name %>,</p>
+  <p><%= @message %></p>
+  <p>Thank you,</p>
+  <p>The CreditBake Team</p>
+</div>
+
+<style>
+.container {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+h1 {
+  font-size: 24px;
+  font-weight: 700;
+  color: #1a202c;
+}
+p {
+  font-size: 16px;
+  margin: 0 0 10px;
+  line-height: 1.5;
+}
+.footer {
+  font-size: 14px;
+  color: #4a5568;
+  margin-top: 20px;
+}
+</style>

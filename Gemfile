@@ -55,6 +55,7 @@ gem 'browser'
 gem 'active_analytics'
 gem "blazer"
 gem "letter_opener", group: :development
+gem 'sidekiq'
 
 gem 'dotenv', groups: [:development, :test]
 group :development, :test do

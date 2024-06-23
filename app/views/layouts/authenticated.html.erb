@@ -34,12 +34,6 @@
     <% end %>
 
     <div class="relative flex flex-1 flex-col overflow-y-auto overflow-x-hidden">
-      <% if user_browser == :safari && mobile? %>
-        <div class="promo-banner">
-          <span>Our credit report parser doesn't support Safari right now</span>
-          <a href="#" class="promo-redeem">Use Chrome or Firefox</a>
-        </div>
-      <% end %>
       <% unless current_page?(edit_profile_path) %>
         <%= render 'shared/flash_message' %>
       <% end %>

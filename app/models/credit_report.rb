@@ -4,6 +4,16 @@ class CreditReport < ApplicationRecord
   has_one_attached :document
   has_many :disputes
 
+  def extract_and_save_smart_credit_scores(json)
+    parsed_json = JSON.parse(json)
+    scores = parsed_json.dig("CreditReport", "Scores")
+  
+    if scores
+      self.transunion_score = scores["Transunion"]&.to_i
+      self.experian_score = scores["Experian"]&.to_i
+      self.equifax_score = scores["Equifax"]&.to_i
+    end
+  end
 
   def extract_scores(json_content)
     parsed_json = JSON.parse(json_content)

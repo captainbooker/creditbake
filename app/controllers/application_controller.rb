@@ -5,6 +5,7 @@ class ApplicationController < ActionController::Base
   rescue_from CanCan::AccessDenied do |exception|
     redirect_to root_path, alert: exception.message
   end
+  rescue_from StandardError, with: :handle_exception
 
   before_action :ensure_profile_complete, if: :user_signed_in?
   after_action :record_page_view
@@ -19,6 +20,12 @@ class ApplicationController < ActionController::Base
 
   def mobile?
     request.user_agent.include?("Mobile") || request.user_agent.include?("iPhone")
+  end
+
+  def handle_exception(exception)
+    Rollbar.error(exception)
+    flash[:alert] = "Something went wrong. Please try again."
+    redirect_to root_path # or any other path you consider safe
   end
 
   private
@@ -66,7 +73,7 @@ class ApplicationController < ActionController::Base
   end
 
   def authorize_access
-    protected_paths = ["/blazer", "/analytics"]
+    protected_paths = ["/blazer", "/analytics", "/sidekiq"]
 
     if protected_paths.any? { |path| request.path.start_with?(path) }
       authorized_emails = ["darren@creditbake.com", "dbooker.racing@gmail.com"]

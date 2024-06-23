@@ -1,3 +1,4 @@
+require 'sidekiq/web'
 # config/routes.rb
 Rails.application.routes.draw do
   get 'contacts/new'
@@ -6,6 +7,7 @@ Rails.application.routes.draw do
   authenticate :user do
     mount Blazer::Engine, at: "blazer"
     mount ActiveAnalytics::Engine, at: "analytics" # http://localhost:3000/analytics
+    mount Sidekiq::Web => "/sidekiq"
   end
   devise_for :admin_users, ActiveAdmin::Devise.config
   ActiveAdmin.routes(self)
