@@ -143,7 +143,7 @@ class CreateAttackJob < ApplicationJob
   end
 
   def add_id_document_to_pdf(pdf, user)
-    id_document_path = save_attachment_to_temp(user.additional_document2)
+    id_document_path = save_attachment_to_temp(user.id_document)
     case file_mime_type(id_document_path)
     when 'application/pdf'
       image_path = convert_pdf_to_image(id_document_path)
