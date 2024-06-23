@@ -3,7 +3,7 @@ class ApplicationController < ActionController::Base
   layout :layout_by_resource
   
   rescue_from CanCan::AccessDenied do |exception|
-    redirect_to root_path, alert: exception.message
+    redirect_to authenticated_root_path, alert: exception.message
   end
   rescue_from StandardError, with: :handle_exception
 
@@ -25,7 +25,7 @@ class ApplicationController < ActionController::Base
   def handle_exception(exception)
     Rollbar.error(exception)
     flash[:alert] = "Something went wrong. Please try again."
-    redirect_to root_path # or any other path you consider safe
+    redirect_to authenticated_root_path # or any other path you consider safe
   end
 
   private
@@ -79,7 +79,7 @@ class ApplicationController < ActionController::Base
       authorized_emails = ["darren@creditbake.com", "dbooker.racing@gmail.com"]
 
       unless authorized_emails.include?(current_user.email)
-        redirect_to root_path, alert: "Unauthorized access"
+        redirect_to authenticated_root_path, alert: "Unauthorized access"
       end
     end
   end
