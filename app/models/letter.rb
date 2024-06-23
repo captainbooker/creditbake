@@ -27,8 +27,14 @@ class Letter < ApplicationRecord
 
   def count_pages(attachment)
     return 0 unless attachment.attached?
-    pdf_path = ActiveStorage::Blob.service.send(:path_for, attachment.key)
-    reader = PDF::Reader.new(pdf_path)
-    reader.page_count
+  
+    Tempfile.open do |file|
+      file.binmode
+      file.write(attachment.download)
+      file.rewind
+  
+      reader = PDF::Reader.new(file.path)
+      reader.page_count
+    end
   end
 end

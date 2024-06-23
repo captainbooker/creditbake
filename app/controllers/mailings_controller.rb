@@ -32,7 +32,7 @@ class MailingsController < ApplicationController
         Spending.create!(user: current_user, amount: mailing[:cost], description: "Mailing for #{mailing[:name]} of letter #{letter.id}")
       end
 
-      # SpendingMailer.mailing_cost_notification(current_user, mailings).deliver_now
+      SpendingMailer.mailing_cost_notification(current_user, mailings).deliver_now
       letter.update(mailed: true)
 
       redirect_to letters_path, notice: "Letters mailed successfully"
@@ -89,8 +89,14 @@ class MailingsController < ApplicationController
 
   def count_pages(attachment)
     return 0 unless attachment.attached?
-    pdf_path = ActiveStorage::Blob.service.send(:path_for, attachment.key)
-    reader = PDF::Reader.new(pdf_path)
-    reader.page_count
+  
+    Tempfile.open do |file|
+      file.binmode
+      file.write(attachment.download)
+      file.rewind
+  
+      reader = PDF::Reader.new(file.path)
+      reader.page_count
+    end
   end
 end

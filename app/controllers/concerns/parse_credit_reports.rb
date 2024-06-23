@@ -8,7 +8,7 @@ module ParseCreditReports
 
     parser = case credit_report.service
              when 'identityiq'
-               IdentityiqParserService.new(document_content)
+               IdentityiqParserService.new(document_content)         
              when 'smartcredit'
                SmartCreditParserService.new(document_content)
              else
@@ -27,8 +27,10 @@ module ParseCreditReports
       ActiveRecord::Base.connection.execute("DELETE FROM inquiries WHERE user_id = #{current_user.id}")
       BureauDetail.where(account_id: current_user.accounts.pluck(:id)).delete_all
       ActiveRecord::Base.connection.execute("DELETE FROM accounts WHERE user_id = #{current_user.id}")
-    end
-
+      BureauDetail.where(public_record_id: current_user.public_records.pluck(:id)).delete_all
+      ActiveRecord::Base.connection.execute("DELETE FROM public_records WHERE user_id = #{@current_user.id}")
+    end 
+    
     inquiries.each do |inquiry_attrs|
       inquiry_attrs[:user] = current_user
       Inquiry.create!(inquiry_attrs)
