@@ -29,8 +29,10 @@ class PdfGenerationService
 
   def add_attachments_to_pdf(pdf)
     add_image_to_pdf(@user.signature, pdf, "Signature:", 100, 100) if @user.signature.attached?
-    add_image_to_pdf(@user.id_document, pdf, "ID Document:", 500, 400) if @user.id_document.attached?
+    add_id_document_to_pdf(pdf) if @user.id_document.attached?
     add_utility_bill_to_pdf(pdf) if @user.utility_bill.attached?
+    add_additional_document_1(pdf) if @user.additional_document1.attached?
+    add_additional_document_2(pdf) if @user.additional_document2.attached?
   end
 
   def add_utility_bill_to_pdf(pdf)
@@ -43,6 +45,45 @@ class PdfGenerationService
       add_image_to_pdf(utility_bill_path, pdf, "Utility Bill:", 400, 300)
     else
       Rails.logger.error "Unsupported file type: #{file_mime_type(utility_bill_path)}"
+    end
+  end
+
+  def add_additional_document_1
+    additional_document1_path = save_attachment_to_temp(@user.additional_document1)
+    case file_mime_type(additional_document1_path)
+    when 'application/pdf'
+      image_path = convert_pdf_to_image(additional_document1_path)
+      add_image_to_pdf(image_path, pdf, "Additional Documents 1:", 500, 400)
+    when 'image/jpeg', 'image/png'
+      add_image_to_pdf(additional_document1_path, pdf, "Additional Documents 1:", 400, 300)
+    else
+      Rails.logger.error "Unsupported file type: #{file_mime_type(additional_document1_path)}"
+    end
+  end
+
+  def add_additional_document_2(pdf)
+    additional_document2_path = save_attachment_to_temp(@user.additional_document2)
+    case file_mime_type(additional_document2_path)
+    when 'application/pdf'
+      image_path = convert_pdf_to_image(additional_document2_path)
+      add_image_to_pdf(image_path, pdf, "Additional Documents 2:", 500, 400)
+    when 'image/jpeg', 'image/png'
+      add_image_to_pdf(additional_document2_path, pdf, "Additional Documents 2:", 400, 300)
+    else
+      Rails.logger.error "Unsupported file type: #{file_mime_type(additional_document2_path)}"
+    end
+  end
+
+  def add_id_document_to_pdf(pdf)
+    id_document_path = save_attachment_to_temp(@user.additional_document2)
+    case file_mime_type(id_document_path)
+    when 'application/pdf'
+      image_path = convert_pdf_to_image(id_document_path)
+      add_image_to_pdf(image_path, pdf, "ID Document:", 500, 400)
+    when 'image/jpeg', 'image/png'
+      add_image_to_pdf(id_document_path, pdf, "ID Document:", 400, 300)
+    else
+      Rails.logger.error "Unsupported file type: #{file_mime_type(id_document_path)}"
     end
   end
 

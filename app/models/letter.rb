@@ -8,10 +8,11 @@ class Letter < ApplicationRecord
   has_many :mailings
 
   def total_pages
-    if creditor_dispute.attached?
-      count_pages(creditor_dispute)
-    else
-      count_pages(experian_pdf) + count_pages(transunion_pdf) + count_pages(equifax_pdf)
+    return 0 unless creditor_dispute.attached?
+    
+    creditor_dispute.open do |file|
+      reader = PDF::Reader.new(file.path)
+      reader.page_count
     end
   end
 

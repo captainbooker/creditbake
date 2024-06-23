@@ -12,7 +12,15 @@ class DashboardsController < ApplicationController
     @negative_accounts = current_user.accounts.joins(:bureau_details)
                               .where.not(bureau_details: { payment_status: ['As Agreed', 'Current'] })
                               .distinct
-    @letters = current_user.letters.order(created_at: :desc).page(params[:page]).per(10)
+    @letters = current_user.letters.includes(
+                                              creditor_dispute_attachment: :blob,
+                                              experian_pdf_attachment: :blob,
+                                              transunion_pdf_attachment: :blob,
+                                              equifax_pdf_attachment: :blob
+                                            )
+                                            .order(created_at: :desc)
+                                            .page(params[:page])
+                                            .per(10)
   end
 
   def scores
@@ -63,7 +71,16 @@ class DashboardsController < ApplicationController
   
 
   def letters
-    @letters = current_user.letters.order(created_at: :desc).page(params[:page]).per(10)
+    @letters = current_user.letters
+                           .includes(
+                             creditor_dispute_attachment: :blob,
+                             experian_pdf_attachment: :blob,
+                             transunion_pdf_attachment: :blob,
+                             equifax_pdf_attachment: :blob
+                           )
+                           .order(created_at: :desc)
+                           .page(params[:page])
+                           .per(10)
   end
 
   def create_attack
@@ -163,6 +180,67 @@ class DashboardsController < ApplicationController
     `file --brief --mime-type #{path}`.strip
   end
 
+  def add_attachments_to_pdf(pdf)
+    add_image_to_pdf(current_user.signature, pdf, "Signature:", 100, 100) if current_user.signature.attached?
+    add_id_document_to_pdf(pdf) if current_user.id_document.attached?
+    add_utility_bill_to_pdf(pdf) if current_user.utility_bill.attached?
+    add_additional_document_1(pdf) if current_user.additional_document1.attached?
+    add_additional_document_2(pdf) if current_user.additional_document2.attached?
+  end
+
+  def add_utility_bill_to_pdf(pdf)
+    utility_bill_path = save_attachment_to_temp(current_user.utility_bill)
+    case file_mime_type(utility_bill_path)
+    when 'application/pdf'
+      image_path = convert_pdf_to_image(utility_bill_path)
+      add_image_to_pdf(image_path, pdf, "Utility Bill:", 500, 400)
+    when 'image/jpeg', 'image/png'
+      add_image_to_pdf(utility_bill_path, pdf, "Utility Bill:", 400, 300)
+    else
+      Rails.logger.error "Unsupported file type: #{file_mime_type(utility_bill_path)}"
+    end
+  end
+
+  def add_additional_document_1(pdf)
+    additional_document1_path = save_attachment_to_temp(current_user.additional_document1)
+    case file_mime_type(additional_document1_path)
+    when 'application/pdf'
+      image_path = convert_pdf_to_image(additional_document1_path)
+      add_image_to_pdf(image_path, pdf, "Additional Documents 1:", 500, 400)
+    when 'image/jpeg', 'image/png'
+      add_image_to_pdf(additional_document1_path, pdf, "Additional Documents 1:", 400, 300)
+    else
+      Rails.logger.error "Unsupported file type: #{file_mime_type(additional_document1_path)}"
+    end
+  end
+
+  def add_additional_document_2(pdf)
+    additional_document2_path = save_attachment_to_temp(current_user.additional_document2)
+    case file_mime_type(additional_document2_path)
+    when 'application/pdf'
+      image_path = convert_pdf_to_image(additional_document2_path)
+      add_image_to_pdf(image_path, pdf, "Additional Documents 2:", 500, 400)
+    when 'image/jpeg', 'image/png'
+      add_image_to_pdf(additional_document2_path, pdf, "Additional Documents 2:", 400, 300)
+    else
+      Rails.logger.error "Unsupported file type: #{file_mime_type(additional_document2_path)}"
+    end
+  end
+
+  def add_id_document_to_pdf(pdf)
+    id_document_path = save_attachment_to_temp(current_user.additional_document2)
+    case file_mime_type(id_document_path)
+    when 'application/pdf'
+      image_path = convert_pdf_to_image(id_document_path)
+      add_image_to_pdf(image_path, pdf, "ID Document:", 500, 400)
+    when 'image/jpeg', 'image/png'
+      add_image_to_pdf(id_document_path, pdf, "ID Document:", 400, 300)
+    else
+      Rails.logger.error "Unsupported file type: #{file_mime_type(id_document_path)}"
+    end
+  end
+
+
   def generate_pdf(letter, document_field, pdf_attachment)
     document_content = letter.send(document_field)
     bureau_name = document_field.split('_').first.capitalize
@@ -173,28 +251,7 @@ class DashboardsController < ApplicationController
     Prawn::Document.generate(pdf_path) do |pdf|
       pdf.text document_content
 
-      if user.signature.attached?
-        signature_path = save_attachment_to_temp(user.signature)
-        add_image_to_pdf(signature_path, pdf, "Signature:", 100, 100)
-      end
-
-      if user.id_document.attached?
-        id_document_path = save_attachment_to_temp(user.id_document)
-        add_image_to_pdf(id_document_path, pdf, "ID Document:", 500, 400)
-      end
-
-      if user.utility_bill.attached?
-        utility_bill_path = save_attachment_to_temp(user.utility_bill)
-        case file_mime_type(utility_bill_path)
-        when 'application/pdf'
-          image_path = convert_pdf_to_image(utility_bill_path)
-          add_image_to_pdf(image_path, pdf, "Utility Bill:", 500, 400)
-        when 'image/jpeg', 'image/png'
-          add_image_to_pdf(utility_bill_path, pdf, "Utility Bill:", 400, 300)
-        else
-          Rails.logger.error "Unsupported file type: #{file_mime_type(utility_bill_path)}"
-        end
-      end
+      add_attachments_to_pdf(pdf)
     end
 
     letter.send(pdf_attachment).attach(io: File.open(pdf_path), filename: "#{bureau_name}_letter_#{letter.id}.pdf", content_type: 'application/pdf')
