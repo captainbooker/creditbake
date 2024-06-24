@@ -11,7 +11,7 @@ class FetchCreditReportJob < ApplicationJob
       idq = IdentityiqService.new(username, password, security_question, browser: user_browser, mobile: mobile)
       json_content = idq.fetch_credit_report
 
-      if json_content.is_a?(String) && json_content == "Wrong username or password"
+      if json_content.is_a?(String) && json_content == "Wrong username or password trying to access your credit report, try again."
         notify_user(user, json_content)
         return
       end
@@ -21,7 +21,7 @@ class FetchCreditReportJob < ApplicationJob
       driver = SmartCreditService.new(username, password, user, browser: user_browser, mobile: mobile)
       json_content = driver.fetch_credit_report
 
-      if json_content.is_a?(String) && json_content == "Wrong username or password"
+      if json_content.is_a?(String) && json_content == "Wrong username or password trying to access your credit report, try again."
         notify_user(user, json_content)
         return
       end

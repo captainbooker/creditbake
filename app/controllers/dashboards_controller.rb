@@ -83,19 +83,18 @@ class DashboardsController < ApplicationController
 
   def create_attack
     round = params[:round].to_i
-    attack_cost = 24.99
+    attack_cost = Letter::COST
 
-    if current_user.credits < attack_cost
-      redirect_to payment_path, alert: "You don't have enough credits to generate an attack letter. Please add credits."
-      return
-    end
-
-    if current_user.accounts.where(challenge: true).any? || current_user.inquiries.where(challenge: true).any?
-      create_attack_logic(round)
-      redirect_to letters_path, notice: 'We are creating your attack letters. They should be done in a few minutes and you will receive an email.'
+    if current_user.free_attack > 0 || current_user.credits >= attack_cost
+      if current_user.accounts.where(challenge: true).any? || current_user.inquiries.where(challenge: true).any?
+        create_attack_logic(round)
+        redirect_to letters_path, notice: 'We are creating your attack letters. They should be done in a few minutes and you will receive an email.'
+      else
+        redirect_to payment_path, alert: "Please select items to attack"
+        return
+      end
     else
-      redirect_to payment_path, alert: "Please select items to attack"
-      return
+      redirect_to payment_path, alert: "You don't have enough credits to generate an attack letter. Please add credits."
     end
   end
 

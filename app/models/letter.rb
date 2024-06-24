@@ -7,6 +7,8 @@ class Letter < ApplicationRecord
   belongs_to :user
   has_many :mailings
 
+  COST = 24.99
+
   def total_pages
     return 0 unless creditor_dispute.attached?
     

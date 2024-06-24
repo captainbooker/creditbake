@@ -8,6 +8,7 @@ Rails.application.routes.draw do
     mount Blazer::Engine, at: "blazer"
     mount ActiveAnalytics::Engine, at: "analytics" # http://localhost:3000/analytics
     mount Sidekiq::Web => "/sidekiq"
+    mount LetterOpenerWeb::Engine, at: "/letter_opener" if Rails.env.development?
   end
   devise_for :admin_users, ActiveAdmin::Devise.config
   ActiveAdmin.routes(self)

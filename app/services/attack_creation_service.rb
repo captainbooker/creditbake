@@ -26,7 +26,7 @@ class AttackCreationService
   private
 
   def sufficient_credits?
-    @user.credits >= 24.99
+    @user.credits >= Letter::COST
   end
 
   def format_inquiries(inquiries)
@@ -71,10 +71,10 @@ class AttackCreationService
   end
 
   def decrement_credits
-    @user.decrement!(:credits, 24.99)
+    @user.decrement!(:credits, Letter::COST)
   end
 
   def log_spending(letter)
-    Spending.create!(user: @user, amount: 24.99, description: "Letter Generated: #{letter.id}")
+    Spending.create!(user: @user, amount: Letter::COST, description: "Letter Generated: #{letter.id}")
   end
 end

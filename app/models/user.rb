@@ -1,12 +1,8 @@
 class User < ApplicationRecord
-  rolify
-  # Include default devise modules. Others available are:
-  # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable
 
-  # Callbacks to assign a default role to a new user
-  after_create :assign_default_role
+  after_create :send_welcome_email
 
   has_many :clients
   has_many :inquiries
@@ -26,14 +22,15 @@ class User < ApplicationRecord
   attr_encrypted :ssn_last4, key: [ENV['ENCRYPTION_KEY']].pack('H*')
   blind_index :ssn_last4, key: [ENV['ENCRYPTION_KEY']].pack('H*')
 
-
   validates :credits, numericality: { greater_than_or_equal_to: 0 }
+  validates :free_attack, numericality: { greater_than_or_equal_to: 0 }, allow_nil: true
   validate :password_complexity, on: :create
   validates :agreement, acceptance: true, on: :create
   validate :credits_cannot_be_negative
+  validate :free_attack_cannot_be_negative
 
-  def assign_default_role
-    self.add_role(:user) if self.roles.blank?
+  def send_welcome_email
+    UserMailer.welcome_email(self).deliver_later
   end
 
   def log_spending(amount, description)
@@ -55,8 +52,20 @@ class User < ApplicationRecord
     self[:credits] || 0
   end
 
+  def free_attack
+    self[:free_attack] || 0
+  end
+
+  def use_attack
+    if free_attack > 0
+      decrement!(:free_attack)
+    else
+      decrement!(:credits, 24.99)
+    end
+  end
+
   def self.ransackable_attributes(auth_object = nil)
-    %w[email phone_number first_name last_name street_address city state postal_code country credits slug created_at updated_at]
+    %w[email phone_number first_name last_name street_address city state postal_code country credits free_attack slug created_at updated_at]
   end
 
   def self.ransackable_associations(auth_object = nil)
@@ -74,6 +83,12 @@ class User < ApplicationRecord
   def credits_cannot_be_negative
     if credits < 0
       errors.add(:credits, "cannot be negative")
+    end
+  end
+
+  def free_attack_cannot_be_negative
+    if free_attack < 0
+      errors.add(:free_attack, "cannot be negative")
     end
   end
 end

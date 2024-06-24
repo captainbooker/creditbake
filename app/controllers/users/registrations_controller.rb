@@ -30,7 +30,7 @@ class Users::RegistrationsController < Devise::RegistrationsController
   protected
 
   def profile_params
-    params.require(:user).permit(:first_name, :agreement, :last_name, :phone_number, :street_address, :city, :state, :postal_code, :country, :ssn_last4)
+    params.require(:user).permit(:first_name, :last_name, :phone_number, :street_address, :city, :state, :postal_code, :country, :ssn_last4)
   end
 
   def after_sign_up_path_for(resource)

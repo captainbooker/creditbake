@@ -273,11 +273,14 @@ function initializeCreateAttackDropdown() {
 
   function handleRoundButtonClick() {
     const round = this.getAttribute('data-round');
-    if (parseFloat('<%= current_user.credits %>') < 24.99) {
-      alert("You don't have enough credits. Please add credits.");
-      window.location.href = '<%= payment_path %>';
-    } else {
+    const freeAttacks = parseInt('<%= current_user.free_attack %>', 10);
+    const credits = parseFloat('<%= current_user.credits %>');
+
+    if (freeAttacks > 0 || credits >= 24.99) {
       createAttack(round);
+    } else {
+      alert("You don't have enough credits or free attacks. Please add credits.");
+      window.location.href = '<%= payment_path %>';
     }
   }
 }
