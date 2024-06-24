@@ -5,26 +5,48 @@
   </div>
   <div class="iframe-container">
     <div id="payment-form"></div>
-    <script>
-      (function() {
-        const options = {"data":"<%= ENV["MAVERICK_TOKEN"] %>","feeType":"amount","contactInfo":{"name":"Darren Booker","email":"support@creditbake.com","phone":""},"billingInfo":{"country":"United States","street":"","street2":"","city":"","state":"","zip":""}};
+<script>
+	(function() {
+		const currentUserId = "<%= current_user.id %>";
+    const dataEnvironmentKey = "<%= ENV["MAVERICK_TOKEN"] %>";
 
-        const l = function() {
-          new PaymentGateway({
-            target: "payment-form",
-            options: options
-          });
-        };
+		const options = {
+			"data": dataEnvironmentKey,
+			"feeType":"amount",
+			"contactInfo": {
+				"name": "",
+				"email": "",
+				"phone": ""
+			},
+			"billingInfo": {
+				"country": "United States",
+				"street": "",
+				"street2": "",
+				"city": "",
+				"state": "",
+				"zip": ""
+			},
+			"externalId": currentUserId
+		};
 
-        if(typeof window.PaymentGateway === "undefined") {
-          window.webroot = "https://dashboard.maverickpayments.com";
-          const e = document.createElement("script"); e.async = true;
-          e.src = window.webroot + "/js/gateway/payment.js?v=" + Date.now();
-          document.getElementsByTagName("head")[0].appendChild(e);
-          e.onload = e.onreadystatechange = function() { l(); }
-        } else { l(); }
-      }());
-    </script>
+		const l = function() {
+			new PaymentGateway({
+				target: "payment-form",
+				options: options
+			});
+		};
+
+		if(typeof window.PaymentGateway === "undefined") {
+			window.webroot = "https://dashboard.maverickpayments.com";
+			const e = document.createElement("script"); 
+			e.async = true;
+			e.src = window.webroot + "/js/gateway/payment.js?v=" + Date.now();
+			document.getElementsByTagName("head")[0].appendChild(e);
+			e.onload = e.onreadystatechange = function() { l(); }
+		} else { l(); }
+	}());
+</script>
+
   </div>
 
   <div class="flex items-center justify-between mb-6">
