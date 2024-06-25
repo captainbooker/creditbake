@@ -51,7 +51,7 @@ Rails.application.routes.draw do
   get 'success', to: 'dashboards#success', as: 'success'
   get 'cancel', to: 'dashboards#cancel'
 
-  get '/payment', to: 'payments#index', as: 'payment'
+  get '/spending-activity', to: 'payments#index', as: 'payment'
   post '/payment', to: 'payments#create'
   get 'credit_reports', to: 'dashboards#index'
   get 'credit_reports/scores', to: 'dashboards#scores'
