@@ -57,6 +57,7 @@ gem "blazer"
 gem 'sidekiq'
 gem "judoscale-rails"
 gem "judoscale-sidekiq"
+gem "httparty"
 
 gem 'dotenv', groups: [:development, :test]
 group :development, :test do

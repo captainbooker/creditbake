@@ -305,28 +305,28 @@ class SmartCreditService
     end
 
     public_records.each do |public_attrs|
-      next if public_attrs.dig("Type") == "--"
+      next if public_attrs.dig("Type") == "--" || public_attrs.dig("Type") == ""
 
       public_record = PublicRecord.find_or_create_by!(
         public_record_type: public_attrs.dig("Type"),
         user_id: @current_user.id
-      )
+      ) do |public|
+        public.reference_number = public_attrs.dig("Reference#")
+      end
 
       ["Transunion", "Experian", "Equifax"].each do |bureau|
         details = public_attrs[bureau]
-        next unless details
 
         BureauDetail.find_or_create_by!(
           public_record: public_record,
           bureau: bureau.downcase.to_sym,
-          status: details["Status"],
-          date_filed_reported: details["Date Filed/Reported"],
-          reference_number: details["Reference#"],
-          closing_date: details["Closing Date"],
-          asset_amount: details["Asset Amount"],
-          court: details["Court"],
-          liability: details["Liability"],
-          exempt_amount: details["Exempt Amount"],
+          status: public_attrs.dig("Status"),
+          date_filed_reported: public_attrs.dig("Date Filed/Reported"),
+          closing_date: public_attrs.dig("Closing Date"),
+          asset_amount: public_attrs.dig("Asset Amount"),
+          court: public_attrs.dig("Court"),
+          liability: public_attrs.dig("Liability"),
+          exempt_amount: public_attrs.dig("Exempt Amount"),
           account_id: nil
         )
       end

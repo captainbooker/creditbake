@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2024_06_24_000134) do
+ActiveRecord::Schema.define(version: 2024_06_25_193622) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -170,7 +170,6 @@ ActiveRecord::Schema.define(version: 2024_06_24_000134) do
     t.bigint "public_record_id"
     t.string "status"
     t.string "date_filed_reported"
-    t.string "reference_number"
     t.string "closing_date"
     t.string "asset_amount"
     t.string "court"
@@ -322,6 +321,7 @@ ActiveRecord::Schema.define(version: 2024_06_24_000134) do
     t.bigint "user_id", null: false
     t.boolean "challenge", default: false
     t.string "reason"
+    t.string "reference_number"
     t.index ["user_id"], name: "index_public_records_on_user_id"
   end
 

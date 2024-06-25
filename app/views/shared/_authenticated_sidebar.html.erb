@@ -55,7 +55,7 @@
         </svg>
         <span class="font-medium <%= 'text-black' if current_page?(payment_path) %>">Spending Activity</span>
       <% end %>
-      <%= link_to "https://dashboard.maverickpayments.com/gateway/public/form?data=eyJkYmFJZCI6IjE5MDI2NSIsInRlcm1pbmFsSWQiOiI0MTUzMDQiLCJ0aHJlZWRzIjoiRGlzYWJsZWQiLCJleHRlcm5hbElkIjoiIiwicmV0dXJuVXJsIjoiaHR0cHM6XC9cL3d3dy5jcmVkaXRiYWtlLmNvbVwvd2ViaG9va3NcL21hdmVyaWNrP3N0YXR1cz08c3RhdHVzPiZleHRlcm5hbElkPTxleHRlcm5hbElkPiZpZD08aWQ%2BJmFtb3VudD08YW1vdW50PiIsInJldHVyblVybE5hdmlnYXRpb24iOiJ0b3AiLCJsb2dvIjoiWWVzIiwidmlzaWJsZU5vdGUiOiJZZXMiLCJyZXF1ZXN0Q29udGFjdEluZm8iOiJZZXMiLCJyZXF1ZXN0QmlsbGluZ0luZm8iOiJZZXMiLCJzZW5kUmVjZWlwdCI6IlllcyIsIm9yaWdpbiI6Ikhvc3RlZEZvcm0iLCJoYXNoIjoiNzAxYTAxOWViM2M0YjJmYzYxOWQ2ZTM3YjJhMjY5N2UiLCJjb250YWN0SW5mbyI6eyJjb250YWN0TmFtZSI6IiIsImNvbnRhY3RFbWFpbCI6IiIsImNvbnRhY3RQaG9uZSI6IiJ9LCJiaWxsaW5nSW5mbyI6eyJiaWxsaW5nQ291bnRyeSI6IiIsImJpbGxpbmdTdHJlZXQiOiIiLCJiaWxsaW5nU3RyZWV0MiI6IiIsImJpbGxpbmdDaXR5IjoiIiwiYmlsbGluZ1N0YXRlIjoiIiwiYmlsbGluZ1ppcCI6IiJ9fQ%3D%3D&feeType=amount&externalId=#{current_user.id}", class: "flex items-center space-x-3 py-2 px-4 text-white rounded-lg  hover:bg-white hover:text-black transition duration-300" do %>
+      <%= link_to maverick_payment_form_url, class: "flex items-center space-x-3 py-2 px-4 text-white rounded-lg  hover:bg-white hover:text-black transition duration-300" do %>
         <%= image_tag "maverick-payment.png", alt:"Add Credits Icon", width: '24px', height: '24px' %>
         <span class="font-medium">Add Credits</span>
       <% end %>
@@ -130,7 +130,7 @@
         </svg>
         <span class="font-medium <%= 'text-black' if current_page?(payment_path) %>">Spending Activity</span>
       <% end %>
-      <%= link_to "https://dashboard.maverickpayments.com/gateway/public/form?data=eyJkYmFJZCI6IjE5MDI2NSIsInRlcm1pbmFsSWQiOiI0MTUzMDQiLCJ0aHJlZWRzIjoiRGlzYWJsZWQiLCJleHRlcm5hbElkIjoiIiwicmV0dXJuVXJsIjoiaHR0cHM6XC9cL3d3dy5jcmVkaXRiYWtlLmNvbVwvd2ViaG9va3NcL21hdmVyaWNrP3N0YXR1cz08c3RhdHVzPiZleHRlcm5hbElkPTxleHRlcm5hbElkPiZpZD08aWQ%2BJmFtb3VudD08YW1vdW50PiIsInJldHVyblVybE5hdmlnYXRpb24iOiJ0b3AiLCJsb2dvIjoiWWVzIiwidmlzaWJsZU5vdGUiOiJZZXMiLCJyZXF1ZXN0Q29udGFjdEluZm8iOiJZZXMiLCJyZXF1ZXN0QmlsbGluZ0luZm8iOiJZZXMiLCJzZW5kUmVjZWlwdCI6IlllcyIsIm9yaWdpbiI6Ikhvc3RlZEZvcm0iLCJoYXNoIjoiNzAxYTAxOWViM2M0YjJmYzYxOWQ2ZTM3YjJhMjY5N2UiLCJjb250YWN0SW5mbyI6eyJjb250YWN0TmFtZSI6IiIsImNvbnRhY3RFbWFpbCI6IiIsImNvbnRhY3RQaG9uZSI6IiJ9LCJiaWxsaW5nSW5mbyI6eyJiaWxsaW5nQ291bnRyeSI6IiIsImJpbGxpbmdTdHJlZXQiOiIiLCJiaWxsaW5nU3RyZWV0MiI6IiIsImJpbGxpbmdDaXR5IjoiIiwiYmlsbGluZ1N0YXRlIjoiIiwiYmlsbGluZ1ppcCI6IiJ9fQ%3D%3D&feeType=amount&externalId=#{current_user.id}", class: "flex items-center space-x-3 py-2 px-4 text-white rounded-lg  hover:bg-white hover:text-black transition duration-300" do %>
+      <%= link_to maverick_payment_form_url, class: "flex items-center space-x-3 py-2 px-4 text-white rounded-lg  hover:bg-white hover:text-black transition duration-300" do %>
         <%= image_tag "maverick-payment.png", alt:"Add Credits Icon", width: '24px', height: '24px' %>
         <span class="font-medium">Add Credits</span>
       <% end %>

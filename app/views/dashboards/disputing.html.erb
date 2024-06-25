@@ -13,7 +13,7 @@
             <h3 class="font-semibold text-black text-xl">Inquiries</h3>
             <p>Select all the inquiries you would like to attack 👊</p>
           </div>
-          <div class="grid grid-cols-1 sm:grid-cols-4 lg:grid-cols-4 gap-4" data-tabs-target="content">
+          <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4" data-tabs-target="content">
             <% @inquiries.each do |inquiry| %>
               <div class="border rounded relative bg-white rounded-lg <%= 'custom-blue white-text' if inquiry.challenge %> transform transition-transform duration-300 ease-in-out hover:scale-105 hover:shadow-lg peer-checked:border-custom-blue">
                 <label class="flex items-center w-full cursor-pointer">
@@ -41,7 +41,7 @@
             <h3 class="font-semibold text-black text-xl">Accounts</h3>
             <p>Select all the accounts you would like to attack 👊</p>
           </div>
-          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4" data-tabs-target="content">
+          <div class="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" data-tabs-target="content">
             <% @accounts.each do |account| %>
               <label for="account_<%= account.id %>" class="account-card flex flex-col relative transform transition-transform duration-300 ease-in-out hover:scale-105 hover:shadow-lg border rounded cursor-pointer bg-white">
                 <input type="hidden" name="account_ids[<%= account.id %>]" value="false">
@@ -50,50 +50,70 @@
                   <div class="flex justify-between px-4 pt-2">
                     <p class="font-semibold text-gray-800 peer-checked:text-white"><%= account.name %></p>
                   </div>
-                  <div class="flex justify-between px-4 pt-2">
-                    <p class="font-normal text-gray-800 peer-checked:text-white">Account Number:</p>
-                    <p class="font-semibold text-black peer-checked:text-white"><%= account.account_number %></p>
+
+                  <div class="px-4 pt-2">
+                    <p class="text-gray-800 peer-checked:text-white">
+                      Account Number
+                      <span class="float-right font-semibold text-black peer-checked:text-white"><%= account.account_number %></span>
+                    </p>
                   </div>
-                  <div class="flex justify-between px-4">
-                    <p class="font-normal text-gray-800 peer-checked:text-white">Account Type</p>
-                    <p class="font-semibold text-black peer-checked:text-white"><%= account.account_type %></p>
+                  <div class="px-4 pt-2">
+                    <p class="text-gray-800 peer-checked:text-white">
+                      Account Type
+                      <span class="float-right font-semibold text-black peer-checked:text-white"><%= account.account_type %></span>
+                    </p>
                   </div>
                   <p class="mt-4 font-semibold text-black peer-checked:text-white p-4">Account Type Details</p>
-                  <div class="flex justify-between px-4">
-                    <p class="font-normal text-gray-800 peer-checked:text-white">Account Status</p>
-                    <p class="font-semibold text-black peer-checked:text-white"><%= account.account_status %></p>
+                  <div class="px-4 pt-2">
+                    <p class="text-gray-800 peer-checked:text-white">
+                      Account Status
+                      <span class="float-right font-semibold text-black peer-checked:text-white"><%= account.account_status %></span>
+                    </p>
                   </div>
-                  <div class="flex justify-between px-4">
-                    <p class="font-normal text-gray-800 peer-checked:text-white">Balance Owed</p>
-                    <p class="font-semibold text-black peer-checked:text-white"><%= account.bureau_details.first&.balance_owed %></p>
+                  <div class="px-4 pt-2">
+                    <p class="text-gray-800 peer-checked:text-white">
+                      Balance Owed
+                      <span class="float-right font-semibold text-black peer-checked:text-white"><%= account.bureau_details.first&.balance_owed %></span>
+                    </p>
                   </div>
-                  <div class="flex justify-between px-4">
-                    <p class="font-normal text-gray-800 peer-checked:text-white">High Credit</p>
-                    <p class="font-semibold text-black peer-checked:text-white"><%= account.bureau_details.first&.high_credit %></p>
+                  <div class="px-4 pt-2">
+                    <p class="text-gray-800 peer-checked:text-white">
+                      High Credit
+                      <span class="float-right font-semibold text-black peer-checked:text-white"><%= account.bureau_details.first&.high_credit %></span>
+                    </p>
                   </div>
-                  <div class="flex justify-between px-4">
-                    <p class="font-normal text-gray-800 peer-checked:text-white">Credit Limit</p>
-                    <p class="font-semibold text-black peer-checked:text-white"><%= account.bureau_details.first&.credit_limit %></p>
+                  <div class="px-4 pt-2">
+                    <p class="text-gray-800 peer-checked:text-white">
+                      Credit Limit
+                      <span class="float-right font-semibold text-black peer-checked:text-white"><%= account.bureau_details.first&.credit_limit %></span>
+                    </p>
                   </div>
-                  <div class="flex justify-between px-4">
-                    <p class="font-normal text-gray-800 peer-checked:text-white">Past Due Amount</p>
-                    <p class="font-semibold text-black peer-checked:text-white"><%= account.bureau_details.first&.past_due_amount %></p>
+                  <div class="px-4 pt-2">
+                    <p class="text-gray-800 peer-checked:text-white">
+                      Past Due Amount
+                      <span class="float-right font-semibold text-black peer-checked:text-white"><%= account.bureau_details.first&.past_due_amount %></span>
+                    </p>
                   </div>
                   <div class="custom-blue text-white rounded-b-md peer-checked:bg-blue-600">
-                    <div class="flex justify-between px-4 pt-2">
-                      <p>Payment Status</p>
-                      <p class="<%= account.bureau_details.first&.payment_status&.downcase == 'current' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700' %> px-2 py-1 rounded-full">
-                        <%= account.bureau_details.first&.payment_status %>
+                    <div class="px-4 pt-2">
+                      <p class="text-white">
+                        Date Opened
+                        <span class="float-right font-semibold text-white"><%= account.bureau_details.first&.date_opened %></span>
                       </p>
                     </div>
-                    <div class="flex justify-between px-4">
-                      <p>Date Opened</p>
-                      <p><%= account.bureau_details.first&.date_opened %></p>
+                    <div class="px-4 pt-2">
+                      <p class="text-white">
+                        Last Payment Date
+                        <span class="float-right font-semibold text-white"><%= account.bureau_details.first&.date_of_last_payment %></span>
+                      </p>
                     </div>
-                    <div class="flex justify-between px-4 pb-2">
-                      <p>Last Payment Date</p>
-                      <p><%= account.bureau_details.first&.date_of_last_payment %></p>
+                    <div class="px-4 pt-2">
+                      <p class="text-white">
+                        Payment Status
+                        <span class="float-right <%= account.bureau_details.first&.payment_status&.downcase == 'current' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700' %> px-2 py-1 rounded-full"><%= account.bureau_details.first&.payment_status %></span>
+                      </p>
                     </div>
+                    
                     <div class="px-4 pb-6">
                       <p>Dispute Reason</p>
                       <select id="reason_<%= account.id %>" name="account_reasons[<%= account.id %>]" class="w-full text-black rounded">
@@ -116,6 +136,7 @@
           </div>
         </div>
       </div>
+
       <!-- Accounts Section End -->
 
       <!-- Public Information Section Start -->
@@ -125,7 +146,7 @@
             <h3 class="font-semibold text-black text-xl">Public Information</h3>
             <p>Select all the public information records you would like to attack 👊</p>
           </div>
-          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4" data-tabs-target="content">
+          <div class="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" data-tabs-target="content">
             <% @public_records.each do |public_record| %>
               <label for="public_record_<%= public_record.id %>" class="account-card flex flex-col relative transform transition-transform duration-300 ease-in-out hover:scale-105 hover:shadow-lg border rounded cursor-pointer bg-white">
                 <input type="hidden" name="public_record_ids[<%= public_record.id %>]" value="false">
@@ -134,42 +155,54 @@
                   <div class="flex justify-between px-4 pt-2">
                     <p class="font-semibold text-gray-800 peer-checked:text-white"><%= public_record.public_record_type %></p>
                   </div>
-                  <div class="flex justify-between px-4 pt-2">
-                    <p class="font-normal text-gray-800 peer-checked:text-white">Reference Number:</p>
-                    <p class="font-semibold text-black peer-checked:text-white"><%= public_record.bureau_details.first&.reference_number %></p>
+                  <div class="px-4 pt-2">
+                    <p class="text-gray-800 peer-checked:text-white">
+                      Reference Number
+                      <span class="float-right font-semibold text-black peer-checked:text-white"><%= public_record.reference_number %></span>
+                    </p>
                   </div>
-                  <div class="flex justify-between px-4">
-                    <p class="font-normal text-gray-800 peer-checked:text-white">Type</p>
-                    <p class="font-semibold text-black peer-checked:text-white"><%= public_record.public_record_type %></p>
+                  <p class="mt-4 font-semibold text-black peer-checked:text-white p-4">Public Record Details</p>
+                  <div class="px-4 pt-2">
+                    <p class="text-gray-800 peer-checked:text-white">
+                      Status
+                      <span class="float-right font-semibold text-black peer-checked:text-white"><%= public_record.bureau_details.first&.status %></span>
+                    </p>
                   </div>
-                  <div class="mt-4 font-semibold text-black peer-checked:text-white p-4">Public Record Details</div>
-                  <div class="flex justify-between px-4">
-                    <p class="font-normal text-gray-800 peer-checked:text-white">Status</p>
-                    <p class="font-semibold text-black peer-checked:text-white"><%= public_record.bureau_details.first&.status %></p>
+                  <div class="px-4 pt-2">
+                    <p class="text-gray-800 peer-checked:text-white">
+                      Date Filed/Reported
+                      <span class="float-right font-semibold text-black peer-checked:text-white"><%= public_record.bureau_details.first&.date_filed_reported %></span>
+                    </p>
                   </div>
-                  <div class="flex justify-between px-4">
-                    <p class="font-normal text-gray-800 peer-checked:text-white">Date Filed/Reported</p>
-                    <p class="font-semibold text-black peer-checked:text-white"><%= public_record.bureau_details.first&.date_filed_reported %></p>
+                  <div class="px-4 pt-2">
+                    <p class="text-gray-800 peer-checked:text-white">
+                      Closing Date
+                      <span class="float-right font-semibold text-black peer-checked:text-white"><%= public_record.bureau_details.first&.closing_date %></span>
+                    </p>
                   </div>
-                  <div class="flex justify-between px-4">
-                    <p class="font-normal text-gray-800 peer-checked:text-white">Closing Date</p>
-                    <p class="font-semibold text-black peer-checked:text-white"><%= public_record.bureau_details.first&.closing_date %></p>
+                  <div class="px-4 pt-2">
+                    <p class="text-gray-800 peer-checked:text-white">
+                      Asset Amount
+                      <span class="float-right font-semibold text-black peer-checked:text-white"><%= public_record.bureau_details.first&.asset_amount %></span>
+                    </p>
                   </div>
-                  <div class="flex justify-between px-4">
-                    <p class="font-normal text-gray-800 peer-checked:text-white">Asset Amount</p>
-                    <p class="font-semibold text-black peer-checked:text-white"><%= public_record.bureau_details.first&.asset_amount %></p>
+                  <div class="px-4 pt-2">
+                    <p class="text-gray-800 peer-checked:text-white">
+                      Court
+                      <span class="float-right font-semibold text-black peer-checked:text-white"><%= public_record.bureau_details.first&.court %></span>
+                    </p>
                   </div>
-                  <div class="flex justify-between px-4">
-                    <p class="font-normal text-gray-800 peer-checked:text-white">Court</p>
-                    <p class="font-semibold text-black peer-checked:text-white"><%= public_record.bureau_details.first&.court %></p>
+                  <div class="px-4 pt-2">
+                    <p class="text-gray-800 peer-checked:text-white">
+                      Liability
+                      <span class="float-right font-semibold text-black peer-checked:text-white"><%= public_record.bureau_details.first&.liability %></span>
+                    </p>
                   </div>
-                  <div class="flex justify-between px-4">
-                    <p class="font-normal text-gray-800 peer-checked:text-white">Liability</p>
-                    <p class="font-semibold text-black peer-checked:text-white"><%= public_record.bureau_details.first&.liability %></p>
-                  </div>
-                  <div class="flex justify-between px-4">
-                    <p class="font-normal text-gray-800 peer-checked:text-white">Exempt Amount</p>
-                    <p class="font-semibold text-black peer-checked:text-white"><%= public_record.bureau_details.first&.exempt_amount %></p>
+                  <div class="px-4 pt-2">
+                    <p class="text-gray-800 peer-checked:text-white">
+                      Exempt Amount
+                      <span class="float-right font-semibold text-black peer-checked:text-white"><%= public_record.bureau_details.first&.exempt_amount %></span>
+                    </p>
                   </div>
                   <div class="custom-blue text-white rounded-b-md peer-checked:bg-blue-600">
                     <div class="px-4 pb-6">
@@ -189,6 +222,7 @@
           </div>
         </div>
       </div>
+
       <!-- Public Information Section End -->
 
       <!-- Next Button -->
