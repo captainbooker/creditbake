@@ -10,6 +10,7 @@ class IncomingPaymentsController < ApplicationController
       user = User.find_by(id: user_id)
       if user
         user.increment!(:credits, amount)
+        Spending.create!(user: user, amount: amount, description: "Credits Added")
         flash[:notice] = "Credits added successfully."
         redirect_to authenticated_root_path
       else

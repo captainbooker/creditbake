@@ -4,21 +4,29 @@
     <%= link_to 'Create Attack', letters_path, class: "bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-700" %>
   </div>
   <div class="iframe-container">
-    <div id="payment-form"></div>
+  <div id="payment-form"></div>
     <script>
       (function() {
-        const options = {"data":"<%= ENV["MAVERICK_TOKEN"] %>", "externalId": "<%= current_user.id %>", "feeType":"amount","contactInfo":{"name":"Darren Booker","email":"support@creditbake.com","phone":""},"billingInfo":{"country":"United States","street":"","street2":"","city":"","state":"","zip":""}};
+        const userId = "<%= current_user.id %>";
+        const options = {
+          "data": "<%= ENV['MAVERICK_TOKEN'] %>",
+          "feeType": "amount",
+          "externalId": userId,
+          "contactInfo": {"name": "", "email": "", "phone": ""},
+          "billingInfo": {"country": "United States", "street": "", "street2": "", "city": "", "state": "", "zip": ""}
+        };
 
         const l = function() {
-          new PaymentGateway({
+          const paymentGateway = new PaymentGateway({
             target: "payment-form",
             options: options
           });
         };
 
-        if(typeof window.PaymentGateway === "undefined") {
-          window.webroot = "https://dashboard.maverickpayments.com";
-          const e = document.createElement("script"); e.async = true;
+        if (typeof window.PaymentGateway === "undefined") {
+          window.webroot = "https://dashboard.maverickpayments.com/";
+          const e = document.createElement("script");
+          e.async = true;
           e.src = window.webroot + "/js/gateway/payment.js?v=" + Date.now();
           document.getElementsByTagName("head")[0].appendChild(e);
           e.onload = e.onreadystatechange = function() { l(); }
@@ -26,6 +34,7 @@
       }());
     </script>
   </div>
+
 
   <div class="flex items-center justify-between mb-6">
     <h1 class="text-2xl font-bold">Spending Activity</h1>
