@@ -1,8 +1,9 @@
 <div class="flex min-h-full">
-  <div class="flex flex-1 flex-col justify-center px-4 py-12 sm:px-6 lg:flex-none lg:px-20 xl:px-24">
+  <div class="flex flex-1 flex-col justify-center px-4 py-12 sm:px-6 lg:flex-none lg:px-20 xl:px-24 w-full sm:w-1/2">
     <div class="mx-auto w-full max-w-sm lg:w-96">
       <div>
         <%= image_tag "creditbake-logo.png", class: "h-10 w-auto" %>
+        <%= render 'shared/flash_message' %>
         <h2 class="mt-8 text-2xl font-bold leading-9 tracking-tight text-gray-900">Complete your profile</h2>
         <p class="mt-2 text-sm leading-6 text-gray-500">Congrats on taking that next step to a brighter financial life. Please fill in the following info to complete your profile. God Bless!</p>
       </div>
@@ -55,7 +56,7 @@
           </div>
           <div class="mt-6">
             <label for="signature-pad" class="block text-sm font-medium leading-6 text-gray-900">Signature</label>
-            <canvas id="signature-pad" class="signature-pad border" width=400 height=200></canvas>
+            <canvas id="signature-pad" class="signature-pad border"></canvas>
             <button type="button" id="clear" class="mt-2 bg-gray-800 text-white px-4 py-2 rounded">Clear</button>
           </div>
           <div class="mt-6">

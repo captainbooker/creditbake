@@ -5,7 +5,7 @@ class ApplicationController < ActionController::Base
   rescue_from CanCan::AccessDenied do |exception|
     redirect_to authenticated_root_path, alert: exception.message
   end
-  rescue_from StandardError, with: :handle_exception
+  # rescue_from StandardError, with: :handle_exception
 
   before_action :ensure_profile_complete, if: :user_signed_in?
   after_action :record_page_view
