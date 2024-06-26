@@ -1,5 +1,6 @@
 class FetchCreditReportJob < ApplicationJob
   queue_as :default
+  sidekiq_options retry: 2
 
   def perform(username, password, security_question, service, user_id, browser, user_agent)
     user = User.find(user_id)

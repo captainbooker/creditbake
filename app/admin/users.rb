@@ -5,7 +5,7 @@ ActiveAdmin.register User do
                 credit_reports_attributes: [:id, :username, :password, :security_question, :service, :experian_score, :transunion_score, :equifax_score, :experian_score_change, :transunion_score_change, :equifax_score_change, :_destroy],
                 public_records_attributes: [:id, :public_record_type, :reference_number, :reason, :_destroy],
                 inquiries_attributes: [:id, :inquiry_name, :type_of_business, :inquiry_date, :credit_bureau, :address, :_destroy],
-                letters_attributes: [:id, :name, :bureau, :experian_document, :transunion_document, :equifax_document, :mailed, :tracking_number, :experian_tracking_number, :transunion_tracking_number, :equifax_tracking_number, :_destroy],
+                letters_attributes: [:id, :name, :bureau, :experian_document, :transunion_document, :bankruptcy_document, :equifax_document, :mailed, :tracking_number, :experian_tracking_number, :transunion_tracking_number, :equifax_tracking_number, :_destroy],
                 mailings_attributes: [:id, :letter_id, :pages, :color, :cost, :_destroy],
                 spendings_attributes: [:id, :amount, :description, :token, :transactional_id, :_destroy]
 
