@@ -1745,11 +1745,6 @@ body {
   outline: none;
 }
 
-.peer:checked ~ .content {
-  background-color: #059DE2;
-  color: white;
-}
-
 .border-custom-blue {
   border-color: #059DE2; /* Tailwind's 'blue-500' color */
 }
@@ -1965,3 +1960,58 @@ body {
   justify-content: flex-start;
   height: 100%;
 }
+
+.smartcredit-button {
+  display: inline-block;
+  padding: 0.75rem 1.5rem;
+  background-color: #22c55e;
+  color: #ffffff;
+  font-weight: 500;
+  border-radius: 0.5rem;
+  transition: background-color 0.3s;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.smartcredit-button:hover {
+  background-color: #38a169;
+}
+
+@media (max-width: 768px) {
+  .smartcredit-button {
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
+    white-space: normal; 
+  }
+}
+
+.inquiry-card {
+  height: 100%;
+}
+
+@media (max-width: 768px) {
+  .inquiry-card {
+    height: auto; /* Allow auto height for small screens if needed */
+  }
+}
+
+.inquiry-item.selected {
+  background-color: #059DE2;
+  color: white;
+}
+
+.inquiry-item.selected {
+  background-color: #059DE2;
+  color: white;
+}
+
+.inquiry-item.selected p,
+.inquiry-item.selected span,
+.inquiry-item.selected .content {
+  color: white;
+}
+
+.inquiry-item.selected img {
+  filter: invert(1) brightness(0);
+}
+

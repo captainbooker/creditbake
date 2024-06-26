@@ -8,8 +8,8 @@ Rails.application.routes.draw do
     mount Blazer::Engine, at: "blazer"
     mount ActiveAnalytics::Engine, at: "analytics" # http://localhost:3000/analytics
     mount Sidekiq::Web => "/sidekiq"
-    mount LetterOpenerWeb::Engine, at: "/letter_opener" if Rails.env.development?
   end
+  mount LetterOpenerWeb::Engine, at: "/letter_opener" if Rails.env.development?
   devise_for :admin_users, ActiveAdmin::Devise.config
   ActiveAdmin.routes(self)
 
@@ -57,7 +57,7 @@ Rails.application.routes.draw do
   get 'credit_reports/scores', to: 'dashboards#scores'
   get 'webhooks/maverick', to: 'incoming_payments#maverick'
   get 'privacy_policy', to: 'pages#privacy_policy', as: 'privacy_policy'
-  get 'terms_of_use', to: 'pages#terms_of_use', as: 'terms_of_use'
+  get 'terms_and_conditions', to: 'pages#terms_and_conditions', as: 'terms_and_conditions'
   get 'refund_policy', to: 'pages#refund_policy', as: 'refund_policy'
   get '/sitemap.xml', to: 'pages#sitemap', defaults: { format: 'xml' }
 

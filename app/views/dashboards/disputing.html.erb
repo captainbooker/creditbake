@@ -13,17 +13,17 @@
             <h3 class="font-semibold text-black text-xl">Inquiries</h3>
             <p>Select all the inquiries you would like to attack 👊</p>
           </div>
-          <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4" data-tabs-target="content">
+          <div class="inquiry_container grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4" data-tabs-target="content">
             <% @inquiries.each do |inquiry| %>
-              <div class="border rounded relative bg-white rounded-lg <%= 'custom-blue white-text' if inquiry.challenge %> transform transition-transform duration-300 ease-in-out hover:scale-105 hover:shadow-lg peer-checked:border-custom-blue">
-                <label class="flex items-center w-full cursor-pointer">
-                  <input type="hidden" name="inquiry_ids[<%= inquiry.id %>]" value="false">
-                  <input type="checkbox" name="inquiry_ids[<%= inquiry.id %>]" value="true" class="form-checkbox h-4 w-4 hidden peer" <%= 'checked' if inquiry.challenge %>>
-                  <div class="flex-grow content p-4 text-gray-800 peer-checked:font-semibold peer-checked:text-white">
+              <div class="relative border rounded transform transition-transform duration-300 ease-in-out hover:scale-105 hover:shadow-lg inquiry-item">
+                <input type="hidden" name="inquiry_ids[<%= inquiry.id %>]" value="false">
+                <input type="checkbox" name="inquiry_ids[<%= inquiry.id %>]" value="true" class="form-checkbox h-4 w-4 hidden peer" id="inquiry_<%= inquiry.id %>" <%= 'checked' if inquiry.challenge %>>
+                <label for="inquiry_<%= inquiry.id %>">
+                  <div class="flex-grow content p-4 text-gray-800">
                     <p class="font-small ml-2 font-normal peer-checked:font-semibold peer-checked:text-white"><%= inquiry.inquiry_name %></p>
                     <div class="flex items-center mt-1 ml-2 peer-checked:text-white">
                       <%= image_tag "calendar.svg", class: "peer-checked:invert peer-checked:filter-white" %>
-                      <span class="ml-2 text-sm peer-checked:text-white"><%= inquiry.inquiry_date&.strftime("%b %d, %Y") %></span>
+                      <span class="ml-2 text-sm"><%= inquiry.inquiry_date&.strftime("%b %d, %Y") %></span>
                     </div>
                   </div>
                 </label>
@@ -32,6 +32,7 @@
           </div>
         </div>
       </div>
+
       <!-- Inquiries Section End -->
 
       <!-- Accounts Section Start -->
@@ -270,5 +271,29 @@ document.addEventListener("turbolinks:load", function() {
 
   // Call the function to add event listeners
   addEventListeners();
+
+  const inquiryContainer = document.querySelector('.inquiry_container');
+
+  if (inquiryContainer) {
+    inquiryContainer.addEventListener('change', function(event) {
+      const checkbox = event.target;
+      if (checkbox.classList.contains('peer')) {
+        const inquiryItem = checkbox.closest('.inquiry-item');
+        if (checkbox.checked) {
+          inquiryItem.classList.add('selected');
+        } else {
+          inquiryItem.classList.remove('selected');
+        }
+      }
+    });
+
+    // Initialize the state for any pre-checked checkboxes
+    const checkboxes = inquiryContainer.querySelectorAll('.peer');
+    checkboxes.forEach(checkbox => {
+      if (checkbox.checked) {
+        checkbox.closest('.inquiry-item').classList.add('selected');
+      }
+    });
+  }
 });
 </script>

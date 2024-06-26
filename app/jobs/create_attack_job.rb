@@ -28,8 +28,28 @@ class CreateAttackJob < ApplicationJob
       }
     end
 
+    public_record_details = public_records.map do |record|
+      {
+        name: record.public_record_type,
+        number: record.reference_number,
+        reason: record.reason,
+        bureau_details: record.bureau_details.map do |detail|
+          {
+            bureau: detail.bureau,
+            status: detail.status,
+            date_filed_reported: detail.date_filed_reported,
+            closing_date: detail.closing_date,
+            asset_amount: detail.asset_amount,
+            court: detail.court,
+            liability: detail.liability,
+            exempt_amount: detail.exempt_amount
+          }
+        end
+      }
+    end
+
     openai = OpenaiPromptableService.new(user)
-    responses = openai.send_prompts_for_round(round, inquiry_details, account_details, public_records)
+    responses = openai.send_prompts_for_round(round, inquiry_details, account_details, public_record_details)
     phase_info = attack_phase_info(round)
     
     letter = Letter.create!(
@@ -50,10 +70,10 @@ class CreateAttackJob < ApplicationJob
   def handle_attack_cost(letter, user)
     if user.free_attack > 0
       user.decrement!(:free_attack)
-      Spending.create!(user: user, amount: 0, description: "Free Letter Generated: #{letter.id}")
+      Spending.create!(user: user, amount: 0, description: "Free Letter Generated / #{Date.today.strftime("%B %d, %Y")}")
     else
       user.decrement!(:credits, Letter::COST)
-      Spending.create!(user: user, amount: Letter::COST, description: "Letter Generated: #{letter.id}")
+      Spending.create!(user: user, amount: Letter::COST, description: "Letter Generated / #{Date.today.strftime("%B %d, %Y")}")
     end
   end
 

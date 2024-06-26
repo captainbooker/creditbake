@@ -48,6 +48,8 @@ class OpenaiPromptableService
     when 8 then inquiries_all_in(inquiries, accounts, public_record, bureau)
     when 9 then account_validation(inquiries, accounts, public_record, bureau)
     when 10 then final_demand_prompt(inquiries, accounts, public_record, bureau)
+    when 11 then bankrupcty_step_1(public_record, bureau)
+    when 12 then bankrupcty_step_2(public_record, bureau)
     else
       "Invalid round selected."
     end
@@ -112,6 +114,8 @@ class OpenaiPromptableService
       Accounts:(SHOULD BE LISTED IN LETTER: Account Name, Account Number, Dispute Reason, Balance Owed, Payment Status, Date Opened)
       #{format_accounts_by_bureau(accounts, bureau, 7)}
 
+      #{format_public_records_by_bureau(public_record, bureau)}
+
       Additional Requirements:
       The letter must include relevant legal references, such as the Fair Credit Reporting Act (FCRA) and any other pertinent federal or state laws.
       It must cite specific Metro 2 codes and explain how the reported information violates these standards.
@@ -157,6 +161,8 @@ class OpenaiPromptableService
       Accounts:(SHOULD BE LISTED IN LETTER: Account Name, Account Number, Dispute Reason, Balance Owed, Payment Status, Date Opened)
       #{format_accounts_by_bureau(accounts, bureau, 100)}
 
+      #{format_public_records_by_bureau(public_record, bureau)}
+
       Additional Requirements:
       The letter must include relevant legal references, such as the Fair Credit Reporting Act (FCRA) and any other pertinent federal or state laws.
       It must cite specific Metro 2 codes and explain how the reported information violates these standards.
@@ -200,6 +206,8 @@ class OpenaiPromptableService
 
       Accounts:(SHOULD BE LISTED IN LETTER: Account Name, Account Number, Dispute Reason, Balance Owed, Payment Status, Date Opened)
       #{format_accounts_by_bureau(accounts, bureau, 5)}
+
+      #{format_public_records_by_bureau(public_record, bureau)}
 
       Additional Requirements:
       The letter must include relevant legal references, such as the Fair Credit Reporting Act (FCRA) and any other pertinent federal or state laws.
@@ -246,6 +254,8 @@ class OpenaiPromptableService
       Accounts:(SHOULD BE LISTED IN LETTER: Account Name, Account Number, Dispute Reason, Balance Owed, Payment Status, Date Opened)
       #{format_accounts_by_bureau(accounts, bureau, 100)}
 
+      #{format_public_records_by_bureau(public_record, bureau)}
+
       Additional Requirements:
       The letter must include relevant legal references, such as the Fair Credit Reporting Act (FCRA) and any other pertinent federal or state laws.
       It must cite specific Metro 2 codes and explain how the reported information violates these standards.
@@ -289,6 +299,8 @@ class OpenaiPromptableService
 
       Accounts: (SHOULD BE LISTED IN LETTER: Account Name, Account Number, Dispute Reason, Balance Owed, Payment Status, Date Opened)
       #{format_accounts_by_bureau(accounts, bureau, 4)}
+
+      #{format_public_records_by_bureau(public_record, bureau)}
 
       Additional Requirements:
       The letter must include relevant legal references, such as the Fair Credit Reporting Act (FCRA) and any other pertinent federal or state laws.
@@ -334,6 +346,8 @@ class OpenaiPromptableService
       Accounts:(SHOULD BE LISTED IN LETTER: Account Name, Account Number, Dispute Reason, Balance Owed, Payment Status, Date Opened)
       #{format_accounts_by_bureau(accounts, bureau, 10)}
 
+      #{format_public_records_by_bureau(public_record, bureau)}
+
       Additional Requirements:
       The letter must include relevant legal references, such as the Fair Credit Reporting Act (FCRA) and any other pertinent federal or state laws.
       It must cite specific Metro 2 codes and explain how the reported information violates these standards.
@@ -377,6 +391,8 @@ class OpenaiPromptableService
 
       Accounts:(SHOULD BE LISTED IN LETTER: Account Name, Account Number, Dispute Reason, Balance Owed, Payment Status, Date Opened)
       #{format_accounts_by_bureau(accounts, bureau, 100)}
+
+      #{format_public_records_by_bureau(public_record, bureau)}
 
       Additional Requirements:
       The letter must include relevant legal references, such as the Fair Credit Reporting Act (FCRA) and any other pertinent federal or state laws.
@@ -422,6 +438,8 @@ class OpenaiPromptableService
       Accounts:(SHOULD BE LISTED IN LETTER: Account Name, Account Number, Dispute Reason, Balance Owed, Payment Status, Date Opened)
       #{format_accounts_by_bureau(accounts, bureau, 8)}
 
+      #{format_public_records_by_bureau(public_record, bureau)}
+
       Additional Requirements:
       The letter must include relevant legal references, such as the Fair Credit Reporting Act (FCRA) and any other pertinent federal or state laws.
       It must cite specific Metro 2 codes and explain how the reported information violates these standards.
@@ -466,6 +484,8 @@ class OpenaiPromptableService
       Accounts:(SHOULD BE LISTED IN LETTER: Account Name, Account Number, Dispute Reason, Balance Owed, Payment Status, Date Opened)
       #{format_accounts_by_bureau(accounts, bureau, 100)}
 
+      #{format_public_records_by_bureau(public_record, bureau)}
+
       Additional Requirements:
       The letter must include relevant legal references, such as the Fair Credit Reporting Act (FCRA) and any other pertinent federal or state laws.
       It must cite specific Metro 2 codes and explain how the reported information violates these standards.
@@ -487,6 +507,55 @@ class OpenaiPromptableService
       Detailed and thorough
       Legally informed and compliant
       (DO NOT NEED SIGNATURE)
+    PROMPT
+  end
+
+  def bankrupcty_step_1(public_record, bureau)
+    <<-PROMPT
+      You are tasked with generating a letter to the #{@user.state} bankruptcy court to ask the following information, it is crucial you create the headding with the sender information and the recipient mailing address (find #{@user.state} bankrucpty court address).
+
+      Create Heading(REQUIRED)
+      Name: #{@user.first_name} #{@user.last_name}
+      street_address: #{@user.street_address}
+      city: #{@user.city}
+      state: #{@user.state}
+      postal_code: #{@user.postal_code}
+      country: "USA"
+      SSN Last 4: ###SSN_LAST4### (Include under sender address)
+      current_date: #{Date.today.strftime("%B %d, %Y")}
+
+      #{format_public_records_by_bureau(public_record, bureau)}
+
+      It has come to my attention that this bankruptcy is being reported to LexisNexis and various credit bureaus. As the debtor, I would like to confirm whether your court reports bankruptcy information to LexisNexis and the credit bureaus directly.
+
+      Please provide clarification on the following questions:
+      
+      1. Does the court report bankruptcy filings directly to LexisNexis?
+      2. Does the court report bankruptcy filings directly to the credit bureaus?
+      3. If the court does not report this information, could you please inform me how LexisNexis and the credit bureaus might be obtaining the bankruptcy details?
+    PROMPT
+  end
+
+  def bankrupcty_step_2(public_record, bureau)
+    <<-PROMPT
+    You are tasked with generating a letter to Lexis Nexus dispute center to remove the following information on my report. It is crucial you create the headding with the sender information and the recipient mailing address (Lexis Nexis Dispute address).
+
+    Create Heading(REQUIRED)
+    Name: #{@user.first_name} #{@user.last_name}
+    street_address: #{@user.street_address}
+    city: #{@user.city}
+    state: #{@user.state}
+    postal_code: #{@user.postal_code}
+    country: "USA"
+    SSN Last 4: ###SSN_LAST4### (Include under sender address)
+    current_date: #{Date.today.strftime("%B %d, %Y")}
+
+    #{format_public_records_by_bureau(public_record, bureau)}
+
+    I have received a letter from the US Bankruptcy Court, confirming that they do not report bankruptcy information to LexisNexis or any other consumer reporting agency. As such, you cannot verify that the bankruptcy information you have on file is accurate or belongs to me.
+
+    In accordance with the Fair Credit Reporting Act (FCRA), I am formally requesting that LexisNexis remove this inaccurate bankruptcy information from my report immediately. Please provide me with written confirmation of the removal.
+
     PROMPT
   end
 
@@ -512,6 +581,25 @@ class OpenaiPromptableService
         Balance Owed: #{details[:balance_owed] || '-'}
         Payment Status: #{details[:payment_status] || '-'}
         Date Opened: #{details[:date_opened] || '-'}
+      DETAILS
+    end.join("\n\n")
+  end
+
+  def format_public_records_by_bureau(records, bureau)
+    public_records = records.select do |record|
+      record[:bureau_details].any? { |detail| detail[:bureau].downcase == bureau.downcase }
+    end
+
+    public_records.each do |account|
+      details = account[:bureau_details].find { |detail| detail[:bureau].downcase == bureau.downcase }
+      <<-DETAILS
+        Public Information
+        status: #{account[:status]}
+        Dated Filed Report: #{account[:date_filed_reported]}
+        Closing Date: #{account[:closing_date]}
+        Asset Amount: #{details[:asset_amount] || '-'}
+        Court: #{details[:court] || '-'}
+        liability: #{details[:liability] || '-'}
       DETAILS
     end.join("\n\n")
   end

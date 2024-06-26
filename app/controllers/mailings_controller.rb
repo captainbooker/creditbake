@@ -1,4 +1,5 @@
 class MailingsController < ApplicationController
+  include ApplicationHelper
   before_action :authenticate_user!
 
   def create
@@ -29,7 +30,7 @@ class MailingsController < ApplicationController
       mailings.each do |mailing|
         current_user.decrement!(:credits, mailing[:cost])
         Mailing.create!(user: current_user, letter: letter, cost: mailing[:cost])
-        Spending.create!(user: current_user, amount: mailing[:cost], description: "Mailing for #{mailing[:name]} of letter #{letter.id}")
+        Spending.create!(user: current_user, amount: mailing[:cost], description: "Mailing for #{mailing[:name]} / #{Date.today.strftime("%B %d, %Y")}")
       end
 
       SpendingMailer.mailing_cost_notification(current_user, mailings).deliver_now
@@ -37,7 +38,7 @@ class MailingsController < ApplicationController
 
       redirect_to letters_path, notice: "Letters mailed successfully"
     else
-      redirect_to letters_path, alert: "You don't have enough credits. Please add credits."
+      redirect_to maverick_payment_form_url, alert: "You don't have enough credits. Please add credits."
     end
   end
 

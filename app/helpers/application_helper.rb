@@ -11,6 +11,8 @@ module ApplicationHelper
     8 => { icon: '📜', title: 'Inquiries Only', description: 'Inquiries only Attack' },
     9 => { icon: '📜', title: 'Accounts Only', description: 'Accounts only Attack' },
     10 => { icon: '🚨', title: 'Final Demand', description: 'Issue a final demand for corrections.' },
+    11 => { icon: '👊', title: 'Bankruptcy Step 1', description: 'Initial stage to attacking your bankrupcty' },
+    12 => { icon: '🪖', title: 'Bankruptcy Step 2', description: 'Won the battle but not the war' },
   }.freeze
 
   def attack_phase_info(round)

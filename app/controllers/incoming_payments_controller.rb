@@ -13,7 +13,7 @@ class IncomingPaymentsController < ApplicationController
       
       if user
         user.increment!(:credits, amount)
-        Spending.create!(user: user, amount: amount, description: "Credits Added")
+        Spending.create!(user: user, amount: amount, description: "Credits Added", transactional_id: transaction_id)
         flash[:notice] = "Credits added successfully."
       else
         flash[:alert] = "User not found."

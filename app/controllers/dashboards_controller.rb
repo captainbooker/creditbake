@@ -1,5 +1,6 @@
 # app/controllers/dashboards_controller.rb
 class DashboardsController < ApplicationController
+  include ApplicationHelper
   before_action :authenticate_user!
   before_action :ensure_required_documents, only: [:create_attack]
 
@@ -94,7 +95,7 @@ class DashboardsController < ApplicationController
         return
       end
     else
-      redirect_to payment_path, alert: "You don't have enough credits to generate an attack letter. Please add credits."
+      redirect_to maverick_payment_form_url, alert: "You don't have enough credits to generate an attack letter. Please add credits."
     end
   end
 
