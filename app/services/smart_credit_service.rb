@@ -40,7 +40,7 @@ class SmartCreditService
     when :chrome
       options = Selenium::WebDriver::Chrome::Options.new
       if @mobile
-        mobile_user_agent = ENV['MOBILE_USER_AGENT'] || 'Mozilla/5.0 (iPhone; CPU iPhone OS 17_5_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.5 Mobile/15E148 Safari/604.1'
+        mobile_user_agent = 'Mozilla/5.0 (iPhone; CPU iPhone OS 17_5_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.5 Mobile/15E148 Safari/604.1'
         options.add_argument("--user-agent=#{mobile_user_agent}")
       end
       options.add_argument('--headless')
@@ -54,7 +54,7 @@ class SmartCreditService
     when :firefox
       options = Selenium::WebDriver::Firefox::Options.new
       if @mobile
-        mobile_user_agent = ENV['MOBILE_USER_AGENT'] || 'Mozilla/5.0 (iPhone; CPU iPhone OS 17_5_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.5 Mobile/15E148 Safari/604.1'
+        mobile_user_agent = 'Mozilla/5.0 (iPhone; CPU iPhone OS 17_5_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.5 Mobile/15E148 Safari/604.1'
         options.add_argument("--user-agent=#{mobile_user_agent}")
       end
       options.add_argument('--headless')
@@ -65,7 +65,7 @@ class SmartCreditService
     when :safari
       options = Selenium::WebDriver::Chrome::Options.new
       if @mobile
-        mobile_user_agent = ENV['MOBILE_USER_AGENT'] || 'Mozilla/5.0 (iPhone; CPU iPhone OS 17_5_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.5 Mobile/15E148 Safari/604.1'
+        mobile_user_agent = 'Mozilla/5.0 (iPhone; CPU iPhone OS 17_5_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.5 Mobile/15E148 Safari/604.1'
         options.add_argument("--user-agent=#{mobile_user_agent}")
       end
       options.add_argument('--headless')
