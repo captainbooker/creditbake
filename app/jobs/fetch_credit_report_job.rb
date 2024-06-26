@@ -9,7 +9,7 @@ class FetchCreditReportJob < ApplicationJob
 
     case service
     when 'identityiq'
-      idq = IdentityiqService.new(username, password, security_question, browser: user_browser, mobile: mobile)
+      idq = IdentityiqService.new(username, password, security_question, browser: :chrome, mobile: mobile)
       json_content = idq.fetch_credit_report
 
       if json_content.is_a?(String) && json_content == "Wrong username or password"
