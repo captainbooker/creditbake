@@ -64,21 +64,10 @@ class CreateAttackJob < ApplicationJob
     letter = Letter.create!(letter_attributes)
 
     generate_pdfs(letter, user)
-    handle_attack_cost(letter, user)
     UserMailer.notification_email(user, "Letters have been sucessfully generated, login to view them.").deliver_later
   end
 
   private
-
-  def handle_attack_cost(letter, user)
-    if user.free_attack > 0
-      user.decrement!(:free_attack)
-      Spending.create!(user: user, amount: 0, description: "Free Letter Generated / #{Date.today.strftime("%B %d, %Y")}")
-    else
-      user.decrement!(:credits, Letter::COST)
-      Spending.create!(user: user, amount: Letter::COST, description: "Letter Generated / #{Date.today.strftime("%B %d, %Y")}")
-    end
-  end
 
   def generate_pdfs(letter, user)
     generate_pdf(letter, 'experian_document', :experian_pdf, user) if letter.experian_document.present?

@@ -9,6 +9,7 @@ class Letter < ApplicationRecord
   has_many :mailings
 
   COST = 18.99
+  BANKRUPTCY_LETTERS = 5.99
 
   def total_pages
     return 0 unless creditor_dispute.attached?

@@ -283,15 +283,24 @@ function initializeCreateAttackDropdown() {
   }
 
   function handleRoundButtonClick() {
-    const round = this.getAttribute('data-round');
+    const round = parseInt(this.getAttribute('data-round'), 10);
     const freeAttacks = parseInt('<%= current_user.free_attack %>', 10);
     const credits = parseFloat('<%= current_user.credits %>');
+    const maverickPaymentFormUrl = '<%= maverick_payment_form_url %>';
 
-    if (freeAttacks > 0 || credits >= 18.99) {
+    let requiredCredits;
+    
+    if (round === 11 || round === 12) {
+      requiredCredits = 5.99;
+    } else {
+      requiredCredits = 18.99;
+    }
+
+    if (freeAttacks > 0 || credits >= requiredCredits) {
       createAttack(round);
     } else {
       alert("You don't have enough credits or free attacks. Please add credits.");
-      window.location.href = '<%= maverick_payment_form_url %>';
+      window.location.href = maverickPaymentFormUrl;
     }
   }
 }

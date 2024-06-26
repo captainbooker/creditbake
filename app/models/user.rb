@@ -65,13 +65,13 @@ class User < ApplicationRecord
     self[:free_attack] || 0
   end
 
-  def use_attack
-    if free_attack > 0
-      decrement!(:free_attack)
-    else
-      decrement!(:credits, 18.99)
-    end
-  end
+  # def use_attack
+  #   if free_attack > 0
+  #     decrement!(:free_attack)
+  #   else
+  #     decrement!(:credits, 18.99)
+  #   end
+  # end
 
   def self.ransackable_attributes(auth_object = nil)
     %w[email phone_number first_name last_name street_address city state postal_code country credits free_attack slug created_at updated_at]

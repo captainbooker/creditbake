@@ -86,10 +86,11 @@ class DashboardsController < ApplicationController
 
   def create_attack
     round = params[:round].to_i
-    attack_cost = Letter::COST
-
+    attack_cost = (round == 11 || round == 12) ? Letter::BANKRUPTCY_LETTERS : Letter::COST
+  
     if current_user.free_attack > 0 || current_user.credits >= attack_cost
       if current_user.accounts.where(challenge: true).any? || current_user.inquiries.where(challenge: true).any? || current_user.public_records.where(challenge: true).any?
+        handle_attack_cost(attack_cost, round)
         create_attack_logic(round)
         redirect_to letters_path, notice: 'We are creating your attack letters. They should be done in a few minutes and you will receive an email.'
       else
@@ -105,5 +106,15 @@ class DashboardsController < ApplicationController
 
   def create_attack_logic(round)
     CreateAttackJob.perform_later(current_user, round)
+  end
+
+  def handle_attack_cost(attack_cost, round)
+    if current_user.free_attack > 0
+      current_user.decrement!(:free_attack)
+      Spending.create!(user: current_user, amount: 0, description: "Free Letter Generated / #{Date.today.strftime("%B %d, %Y")}")
+    else
+      current_user.decrement!(:credits, attack_cost)
+      Spending.create!(user: current_user, amount: attack_cost, description: "Letter Generated / #{Date.today.strftime("%B %d, %Y")}")
+    end
   end
 end
