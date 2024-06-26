@@ -1,5 +1,5 @@
 ActiveAdmin.register User do
-  permit_params :email, :password, :password_confirmation, :phone_number, :first_name, :last_name, :street_address, :city, :state, :postal_code, :country, :credits, :slug, :signature, :agreement,
+  permit_params :email, :password, :password_confirmation, :phone_number, :first_name, :last_name, :street_address, :city, :state, :postal_code, :country, :credits, :free_attack, :slug, :signature, :agreement,
                 accounts_attributes: [:id, :account_number, :account_type, :account_type_detail, :account_status, :creditor_name, :name, :reason, :_destroy],
                 clients_attributes: [:id, :name, :_destroy],
                 credit_reports_attributes: [:id, :username, :password, :security_question, :service, :experian_score, :transunion_score, :equifax_score, :experian_score_change, :transunion_score_change, :equifax_score_change, :_destroy],
@@ -53,6 +53,7 @@ ActiveAdmin.register User do
       f.input :postal_code
       f.input :country
       f.input :credits
+      f.input :free_attack
       f.input :slug
       f.input :signature
       f.input :agreement
