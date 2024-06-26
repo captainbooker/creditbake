@@ -33,49 +33,28 @@ class IdentityiqService
     case @browser
     when :chrome
       options = Selenium::WebDriver::Chrome::Options.new
-      if @mobile
-        mobile_user_agent = ENV['MOBILE_USER_AGENT'] || 'Mozilla/5.0 (iPhone; CPU iPhone OS 17_5_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.5 Mobile/15E148 Safari/604.1'
-        options.add_argument("--user-agent=#{mobile_user_agent}")
-      end
       options.add_argument('--headless')
-      options.add_argument('--no-sandbox')
-      options.add_argument('--disable-gpu')
+      options.add_argument("--no-sandbox")
+      options.add_argument("--disable-gpu")
       if ENV['ENABLE_REMOTE_DEBUGGING']
         options.add_argument('--remote-debugging-port=9222')
       end
       Selenium::WebDriver.for :chrome, options: options
-  
     when :firefox
       options = Selenium::WebDriver::Firefox::Options.new
-      if @mobile
-        mobile_user_agent = 'Mozilla/5.0 (iPhone; CPU iPhone OS 17_5_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.5 Mobile/15E148 Safari/604.1'
-        options.add_argument("--user-agent=#{mobile_user_agent}")
-      end
       options.add_argument('--headless')
-      options.add_argument('--no-sandbox')
-      options.add_argument('--disable-gpu')
+      options.add_argument("--no-sandbox")
+      options.add_argument("--disable-gpu")
       Selenium::WebDriver.for :firefox, options: options
-  
     when :safari
       options = Selenium::WebDriver::Chrome::Options.new
-      if @mobile
-        mobile_user_agent = 'Mozilla/5.0 (iPhone; CPU iPhone OS 17_5_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.5 Mobile/15E148 Safari/604.1'
-        options.add_argument("--user-agent=#{mobile_user_agent}")
-      end
-      options.add_argument('--headless')
-      options.add_argument('--no-sandbox')
-      options.add_argument('--disable-gpu')
-      if ENV['ENABLE_REMOTE_DEBUGGING']
-        options.add_argument('--remote-debugging-port=9222')
-      end
       Selenium::WebDriver.for :chrome, options: options
     when :edge
-      options = Selenium::WebDriver::Edge::Options.new
+      options = Selenium::WebDriver::Options.edge
       options.add_argument('--headless')
-      options.add_argument('--no-sandbox')
-      options.add_argument('--disable-gpu')
-      Selenium::WebDriver.for :edge, options: options
-  
+      options.add_argument("--no-sandbox")
+      options.add_argument("--disable-gpu")
+      @driver = Selenium::WebDriver.for :edge, options: options
     else
       raise ArgumentError, "Unsupported browser: #{@browser}"
     end
