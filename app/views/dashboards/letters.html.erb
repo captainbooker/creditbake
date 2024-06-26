@@ -122,7 +122,7 @@ function initializeCreateAttackDropdown() {
   const roundButtons = document.querySelectorAll('[data-round]');
   const loadingOverlay = document.getElementById('loading-overlay');
 
-  if (attackButton && attackDropdown && roundButtons.length > 0) {
+  if (attackButton && attackDropdown) {
     attackButton.addEventListener('click', toggleAttackDropdown);
     document.addEventListener('click', handleClickOutside);
     roundButtons.forEach(button => {
@@ -131,11 +131,13 @@ function initializeCreateAttackDropdown() {
   }
 
   function toggleAttackDropdown() {
-    attackDropdown.classList.toggle('hidden');
+    attackDropdown.classList.remove('hidden');
+    attackDropdown.classList.remove('show');
   }
 
   function handleClickOutside(event) {
     if (!attackButton.contains(event.target) && !attackDropdown.contains(event.target)) {
+      attackDropdown.classList.remove('show');
       attackDropdown.classList.add('hidden');
     }
   }
