@@ -39,7 +39,10 @@ class SmartCreditService
     case @browser
     when :chrome
       options = Selenium::WebDriver::Chrome::Options.new
-      @mobile && options.add_argument('--user-agent=Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537')
+      if @mobile
+        mobile_user_agent = ENV['MOBILE_USER_AGENT'] || 'Mozilla/5.0 (iPhone; CPU iPhone OS 17_5_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.5 Mobile/15E148 Safari/604.1'
+        options.add_argument("--user-agent=#{mobile_user_agent}")
+      end
       options.add_argument('--headless')
       options.add_argument('--no-sandbox')
       options.add_argument('--disable-gpu')
@@ -50,7 +53,10 @@ class SmartCreditService
   
     when :firefox
       options = Selenium::WebDriver::Firefox::Options.new
-      @mobile && options.add_argument('--user-agent=Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537')
+      if @mobile
+        mobile_user_agent = ENV['MOBILE_USER_AGENT'] || 'Mozilla/5.0 (iPhone; CPU iPhone OS 17_5_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.5 Mobile/15E148 Safari/604.1'
+        options.add_argument("--user-agent=#{mobile_user_agent}")
+      end
       options.add_argument('--headless')
       options.add_argument('--no-sandbox')
       options.add_argument('--disable-gpu')
@@ -58,7 +64,10 @@ class SmartCreditService
   
     when :safari
       options = Selenium::WebDriver::Chrome::Options.new
-      @mobile && options.add_argument('--user-agent=Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537')
+      if @mobile
+        mobile_user_agent = ENV['MOBILE_USER_AGENT'] || 'Mozilla/5.0 (iPhone; CPU iPhone OS 17_5_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.5 Mobile/15E148 Safari/604.1'
+        options.add_argument("--user-agent=#{mobile_user_agent}")
+      end
       options.add_argument('--headless')
       options.add_argument('--no-sandbox')
       options.add_argument('--disable-gpu')

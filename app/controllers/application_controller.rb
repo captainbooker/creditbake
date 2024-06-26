@@ -5,7 +5,11 @@ class ApplicationController < ActionController::Base
   rescue_from CanCan::AccessDenied do |exception|
     redirect_to authenticated_root_path, alert: exception.message
   end
-  # rescue_from StandardError, with: :handle_exception
+  rescue_from StandardError, with: :handle_exception
+
+  rescue_from ActionController::InvalidAuthenticityToken do |exception|
+    handle_invalid_authenticity_token(exception)
+  end
 
   before_action :ensure_profile_complete, if: :user_signed_in?
   after_action :record_page_view
@@ -27,8 +31,14 @@ class ApplicationController < ActionController::Base
     flash[:alert] = "Something went wrong. Please try again."
     redirect_to authenticated_root_path # or any other path you consider safe
   end
+  
 
   private
+
+  def handle_invalid_authenticity_token(exception)
+    flash[:alert] = "Session has expired. Please try again."
+    redirect_to new_user_session_path
+  end
 
   def ensure_profile_complete
     unless current_user.phone_number.present? && current_user.first_name.present? && current_user.last_name.present? &&
