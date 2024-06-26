@@ -35,11 +35,9 @@ gem 'aws-sdk-s3', require: false
 gem 'attr_encrypted'
 gem 'blind_index'
 gem 'pdf-reader'
-gem 'docsplit'
 gem "ruby-openai"
 gem 'prawn'
 gem 'mini_magick'
-gem 'mechanize'
 gem 'selenium-webdriver', '~> 4.4'
 gem 'activeadmin'
 gem 'rubyzip', '~> 2.3'
@@ -58,6 +56,7 @@ gem 'sidekiq'
 gem "judoscale-rails"
 gem "judoscale-sidekiq"
 gem "httparty"
+gem 'scout_apm'
 
 gem 'dotenv', groups: [:development, :test]
 group :development, :test do
