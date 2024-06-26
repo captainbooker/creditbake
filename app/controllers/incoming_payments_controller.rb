@@ -8,7 +8,7 @@ class IncomingPaymentsController < ApplicationController
     result = service.fetch_payment_details
 
     puts "######## MICHAEL JACKSON #{result}"
-    if result[:status] == 'Success'
+    if result[:status] == 'Approved'
       user = current_user
       amount = result[:amount]
       
