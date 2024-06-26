@@ -287,7 +287,7 @@ function initializeCreateAttackDropdown() {
     const freeAttacks = parseInt('<%= current_user.free_attack %>', 10);
     const credits = parseFloat('<%= current_user.credits %>');
 
-    if (freeAttacks > 0 || credits >= 24.99) {
+    if (freeAttacks > 0 || credits >= 18.99) {
       createAttack(round);
     } else {
       alert("You don't have enough credits or free attacks. Please add credits.");

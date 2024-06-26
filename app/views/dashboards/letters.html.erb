@@ -144,7 +144,7 @@ function initializeCreateAttackDropdown() {
 
   function handleRoundButtonClick() {
     const round = this.getAttribute('data-round');
-    if (parseFloat('<%= current_user.credits %>') < 24.99) {
+    if (parseFloat('<%= current_user.credits %>') < 18.99) {
       alert("You don't have enough credits. Please add credits.");
       window.location.href = '<%= maverick_payment_form_url %>';
     } else {

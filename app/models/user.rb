@@ -69,7 +69,7 @@ class User < ApplicationRecord
     if free_attack > 0
       decrement!(:free_attack)
     else
-      decrement!(:credits, 24.99)
+      decrement!(:credits, 18.99)
     end
   end
 
