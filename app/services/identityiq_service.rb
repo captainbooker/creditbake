@@ -6,12 +6,13 @@ class IdentityiqService
   BASE_URL = 'https://member.identityiq.com'
   attr_reader :username, :password, :security_question, :service
 
-  def initialize(username, password, security_question,  browser: :chrome, mobile: false)
+  def initialize(user_agent_request, username, password, security_question, browser: :chrome, mobile: false)
     @username = username
     @password = password
     @security_question = security_question
     @browser = browser
     @mobile = mobile
+    @user_agent_request = user_agent_request
     @logger = Logger.new(STDOUT)
 
     @driver = initialize_driver
@@ -34,9 +35,9 @@ class IdentityiqService
     case @browser
     when :chrome
       options = Selenium::WebDriver::Chrome::Options.new
-      puts "####### BIG BOOK #{ENV['MOBILE_USER_AGENT']}"
+      puts "####### BIG BOOK #{@user_agent_request}"
       if @mobile
-        mobile_user_agent = ENV['MOBILE_USER_AGENT'] || 'Mozilla/5.0 (iPhone; CPU iPhone OS 17_5_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.5 Mobile/15E148 Safari/604.1'
+        mobile_user_agent = @user_agent_request || 'Mozilla/5.0 (iPhone; CPU iPhone OS 17_5_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.5 Mobile/15E148 Safari/604.1'
         options.add_argument("--user-agent=#{mobile_user_agent}")
       end
       options.add_argument('--headless')

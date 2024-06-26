@@ -17,9 +17,14 @@ class ApplicationController < ActionController::Base
 
   helper_method :user_browser
   helper_method :mobile?
+  helper_method :user_agent_request
 
   def user_browser
     detect_browser(request.user_agent)
+  end
+
+  def user_agent_request
+    request.user_agent
   end
 
   def mobile?

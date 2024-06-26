@@ -2,14 +2,15 @@ class FetchCreditReportJob < ApplicationJob
   queue_as :default
   sidekiq_options retry: 2
 
-  def perform(username, password, security_question, service, user_id, browser, user_agent)
+  def perform(username, password, security_question, service, user_id, browser, user_agent, user_agent_request)
     user = User.find(user_id)
     user_browser = browser
+    user_agent_request = user_agent_request
     mobile = user_agent.include?("Mobile") || user_agent.include?("iPhone")
 
     case service
     when 'identityiq'
-      idq = IdentityiqService.new(username, password, security_question, browser: :chrome, mobile: mobile)
+      idq = IdentityiqService.new(user_agent_request, username, password, security_question, browser: :chrome, mobile: mobile)
       json_content = idq.fetch_credit_report
 
       if json_content.is_a?(String) && json_content == "Wrong username or password"
