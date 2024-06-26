@@ -20,7 +20,7 @@ class FetchCreditReportJob < ApplicationJob
 
       import_credit_report_json(user, json_content, username, password, security_question, service)
     when 'smartcredit'
-      driver = SmartCreditService.new(username, password, user, browser: user_browser, mobile: mobile)
+      driver = SmartCreditService.new(user_agent_request, username, password, user, browser: user_browser, mobile: mobile)
       json_content = driver.fetch_credit_report
 
       if json_content.is_a?(String) && json_content == "Wrong username or password"

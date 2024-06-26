@@ -7,51 +7,53 @@ class SmartCreditService
   attr_reader :username, :password, :service, :current_user
   attr_accessor :experian_score, :transunion_score, :equifax_score
 
-  def initialize(username, password, current_user, browser: :chrome, mobile: false)
+  def initialize(user_agent_request, username, password, current_user, browser: :chrome, mobile: false)
     @username = username
     @password = password
     @current_user = current_user
     @browser = browser
-    @mobile = @mobile
-    @logger = Logger.new(STDOUT)
+    @mobile = mobile
+    @user_agent_request = user_agent_request
 
     @driver = initialize_driver
   rescue Selenium::WebDriver::Error::WebDriverError => e
-    @logger.error "Failed to initialize #{@browser.capitalize} driver: #{e.message}"
-    raise
+    raise ArgumentError, "Failed to initialize WebDriver: #{e.message}"
   end
 
   def fetch_credit_report
     login_result = login
-    return login_result if login_result.is_a?(String)  # Return the error message if login failed
+    return login_result if login_result.is_a?(String)
 
     json_content = fetch_credit_report_json
+    return "Error fetching the credit report" unless json_content
+
     extract_scores(json_content)
-    parse_credit_report_json(json_content)  # Call to parse the credit report
+    parse_credit_report_json(json_content)
     json_content
   ensure
-    @driver.quit
+    @driver.quit if @driver
   end
 
   private
 
   def initialize_driver
-    case @browser
-    when :chrome
-      options = Selenium::WebDriver::Chrome::Options.new
-      @mobile && options.add_argument('--user-agent=Mozilla/5.0 (iPhone; CPU iPhone OS 17_5_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.5 Mobile/15E148 Safari/604.1')
-      options.add_argument('--headless')
-      options.add_argument("--no-sandbox")
-      options.add_argument("--disable-gpu")
-      options.add_argument("--remote-debugging-port=9222")
-      Selenium::WebDriver.for :chrome, options: options
-    else
-      raise ArgumentError, "Unsupported browser: #{@browser}"
+    options = Selenium::WebDriver::Chrome::Options.new
+    if @mobile
+      mobile_user_agent = @user_agent_request || 'Mozilla/5.0 (iPhone; CPU iPhone OS 17_5_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.5 Mobile/15E148 Safari/604.1'
+      options.add_argument("--user-agent=#{mobile_user_agent}")
     end
+    options.add_argument('--headless=new')
+    options.add_argument('--no-sandbox')
+    options.add_argument('--disable-gpu')
+    options.add_argument('--disable-dev-shm-usage')
+    options.add_argument('--window-size=1280x800')
+    options.add_argument('--disable-extensions')
+    options.add_argument('--remote-debugging-port=9222')
+
+    Selenium::WebDriver.for :chrome, options: options
   end
 
   def login
-    @logger.info "Navigating to login page"
     @driver.navigate.to "#{BASE_URL}/login/"
     email_field = @driver.find_element(id: 'j_username')
     password_field = @driver.find_element(id: 'j_password')
@@ -59,16 +61,14 @@ class SmartCreditService
     email_field.send_keys(@username)
     password_field.send_keys(@password)
     password_field.send_keys(:return)
-    @logger.info "Submitted login form"
 
     wait = Selenium::WebDriver::Wait.new(timeout: 10)
-    wait.until { @driver.find_element(css: 'body.member-home') }  # Adjust the selector as needed to confirm successful login
+    wait.until { @driver.find_element(css: 'body.member-home') }
   rescue Selenium::WebDriver::Error::NoSuchElementError, Selenium::WebDriver::Error::TimeoutError
-    return "Wrong username or password"
+    "Wrong username or password"
   end
 
   def fetch_credit_report_json
-    @logger.info "Fetching credit report JSON"
     @driver.navigate.to "#{BASE_URL}/member/credit-report/3b/"
     wait = Selenium::WebDriver::Wait.new(timeout: 10)
 
@@ -88,12 +88,9 @@ class SmartCreditService
       }
     }
 
-    @logger.info "Credit report JSON fetched successfully"
-    json_content = JSON.pretty_generate(report)
-    json_content
+    JSON.pretty_generate(report)
   rescue Selenium::WebDriver::Error::NoSuchElementError, Selenium::WebDriver::Error::TimeoutError
-    Rollbar.error("Error fetching the credit report, please try again")
-    return "Error fetching the credit report, please try again"
+    nil
   end
 
   def parse_account_div(div)
@@ -139,13 +136,9 @@ class SmartCreditService
     scores_section = @driver.find_element(css: 'section.credit-score-3')
     scores = {}
 
-    transunion_score = scores_section.find_element(css: 'dt.bg-transunion + dd h5').text.strip
-    experian_score = scores_section.find_element(css: 'dt.bg-experian + dd h5').text.strip
-    equifax_score = scores_section.find_element(css: 'dt.bg-equifax + dd h5').text.strip
-
-    scores["Transunion"] = transunion_score
-    scores["Experian"] = experian_score
-    scores["Equifax"] = equifax_score
+    scores["Transunion"] = scores_section.find_element(css: 'dt.bg-transunion + dd h5').text.strip
+    scores["Experian"] = scores_section.find_element(css: 'dt.bg-experian + dd h5').text.strip
+    scores["Equifax"] = scores_section.find_element(css: 'dt.bg-equifax + dd h5').text.strip
 
     scores
   end
@@ -203,11 +196,6 @@ class SmartCreditService
     data
   end
 
-  def format_json_for_display(json)
-    json_str = JSON.pretty_generate(json)
-    json_str.gsub("\\n", "\n").gsub("\\", "")
-  end
-
   def extract_scores(json_content)
     parsed_json = JSON.parse(json_content)
 
@@ -247,18 +235,31 @@ class SmartCreditService
     public_records = content.dig("CreditReport", "PublicRecords")
 
     ActiveRecord::Base.transaction do
-      ActiveRecord::Base.connection.execute("DELETE FROM inquiries WHERE user_id = #{@current_user.id}")
-      BureauDetail.where(account_id: @current_user.accounts.pluck(:id)).delete_all
-      ActiveRecord::Base.connection.execute("DELETE FROM accounts WHERE user_id = #{@current_user.id}")
-      BureauDetail.where(public_record_id: @current_user.public_records.pluck(:id)).delete_all
-      ActiveRecord::Base.connection.execute("DELETE FROM public_records WHERE user_id = #{@current_user.id}")
-    end
+      clear_existing_records
 
+      create_inquiries(inquiries)
+      create_accounts(accounts)
+      create_public_records(public_records)
+    end
+  end
+
+  def clear_existing_records
+    user_id = @current_user.id
+    ActiveRecord::Base.connection.execute("DELETE FROM inquiries WHERE user_id = #{user_id}")
+    BureauDetail.where(account_id: @current_user.accounts.ids).delete_all
+    ActiveRecord::Base.connection.execute("DELETE FROM accounts WHERE user_id = #{user_id}")
+    BureauDetail.where(public_record_id: @current_user.public_records.ids).delete_all
+    ActiveRecord::Base.connection.execute("DELETE FROM public_records WHERE user_id = #{user_id}")
+  end
+
+  def create_inquiries(inquiries)
     inquiries.each do |inquiry_attrs|
       inquiry_attrs[:user_id] = @current_user.id
       Inquiry.create!(inquiry_attrs)
     end
+  end
 
+  def create_accounts(accounts)
     accounts.each do |account_attrs|
       next if account_attrs.dig("Transunion", "Account #").nil? || account_attrs.dig("Transunion", "Account #") == "--"
 
@@ -271,25 +272,31 @@ class SmartCreditService
         acc.name = account_attrs["Creditor"]
       end
 
-      ["Transunion", "Experian", "Equifax"].each do |bureau|
-        details = account_attrs[bureau]
-        next unless details
-
-        BureauDetail.create!(
-          account: account,
-          bureau: bureau.downcase.to_sym,
-          balance_owed: details["Balance Owed:"],
-          high_credit: details["High Balance:"],
-          credit_limit: details["Credit Limit:"],
-          past_due_amount: details["Past Due Amount:"],
-          payment_status: details["Payment Status:"],
-          date_opened: details["Date Opened:"],
-          date_of_last_payment: details["Last Payment:"],
-          public_record_id: nil
-        )
-      end
+      create_bureau_details(account, account_attrs)
     end
+  end
 
+  def create_bureau_details(account, account_attrs)
+    ["Transunion", "Experian", "Equifax"].each do |bureau|
+      details = account_attrs[bureau]
+      next unless details
+
+      BureauDetail.create!(
+        account: account,
+        bureau: bureau.downcase.to_sym,
+        balance_owed: details["Balance Owed:"],
+        high_credit: details["High Balance:"],
+        credit_limit: details["Credit Limit:"],
+        past_due_amount: details["Past Due Amount:"],
+        payment_status: details["Payment Status:"],
+        date_opened: details["Date Opened:"],
+        date_of_last_payment: details["Last Payment:"],
+        public_record_id: nil
+      )
+    end
+  end
+
+  def create_public_records(public_records)
     public_records.each do |public_attrs|
       next if public_attrs.dig("Type") == "--" || public_attrs.dig("Type") == ""
 
@@ -302,6 +309,7 @@ class SmartCreditService
 
       ["Transunion", "Experian", "Equifax"].each do |bureau|
         details = public_attrs[bureau]
+        next unless details
 
         BureauDetail.find_or_create_by!(
           public_record: public_record,

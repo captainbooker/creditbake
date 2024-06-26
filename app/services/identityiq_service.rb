@@ -1,6 +1,5 @@
 require 'selenium-webdriver'
 require 'json'
-require 'logger'
 
 class IdentityiqService
   BASE_URL = 'https://member.identityiq.com'
@@ -13,12 +12,10 @@ class IdentityiqService
     @browser = browser
     @mobile = mobile
     @user_agent_request = user_agent_request
-    @logger = Logger.new(STDOUT)
 
     @driver = initialize_driver
   rescue Selenium::WebDriver::Error::WebDriverError => e
     Rollbar.error(e, "Failed to fetch credit report JSON")
-    @logger.error "Failed to initialize #{@browser.capitalize} driver: #{e.message}"
     raise
   end
 
@@ -26,7 +23,7 @@ class IdentityiqService
     login
     fetch_credit_report_json
   ensure
-    @driver.quit
+    @driver&.quit
   end
 
   private
@@ -35,12 +32,11 @@ class IdentityiqService
     case @browser
     when :chrome
       options = Selenium::WebDriver::Chrome::Options.new
-      puts "####### BIG BOOK #{@user_agent_request}"
       if @mobile
         mobile_user_agent = @user_agent_request || 'Mozilla/5.0 (iPhone; CPU iPhone OS 17_5_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.5 Mobile/15E148 Safari/604.1'
         options.add_argument("--user-agent=#{mobile_user_agent}")
       end
-      options.add_argument('--headless')
+      options.add_argument('--headless=new')  # Using the new headless mode for better performance
       options.add_argument('--no-sandbox')
       options.add_argument('--disable-gpu')
       options.add_argument('--disable-dev-shm-usage')
@@ -54,7 +50,6 @@ class IdentityiqService
   end
 
   def login
-    @logger.info "Navigating to login page"
     @driver.navigate.to "#{BASE_URL}/"
     username_field = @driver.find_element(name: 'username')
     password_field = @driver.find_element(name: 'password')
@@ -64,14 +59,12 @@ class IdentityiqService
 
     login_button = @driver.find_element(css: 'button[type="submit"]')
     login_button.click
-    @logger.info "Submitted login form"
   rescue Selenium::WebDriver::Error::NoSuchElementError, Selenium::WebDriver::Error::TimeoutError => e
     Rollbar.error(e, "Failed to fetch credit report JSON")
     return "Wrong username or password"
   end
 
   def fetch_credit_report_json
-    @logger.info "Fetching credit report JSON"
     @driver.navigate.to "#{BASE_URL}/CreditReport.aspx?view=json"
     wait = Selenium::WebDriver::Wait.new(timeout: 10)
 
@@ -81,7 +74,6 @@ class IdentityiqService
     }
 
     json_content = json_content.sub(/^JSON_CALLBACK\(/, '').sub(/\);?$/, '')
-    @logger.info "Credit report JSON fetched successfully"
     json_content
 
   rescue Selenium::WebDriver::Error::NoSuchElementError, Selenium::WebDriver::Error::TimeoutError => e
