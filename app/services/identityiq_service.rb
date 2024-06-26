@@ -16,6 +16,7 @@ class IdentityiqService
 
     @driver = initialize_driver
   rescue Selenium::WebDriver::Error::WebDriverError => e
+    Rollbar.error(e, "Failed to fetch credit report JSON")
     @logger.error "Failed to initialize #{@browser.capitalize} driver: #{e.message}"
     raise
   end
@@ -57,7 +58,8 @@ class IdentityiqService
     login_button = @driver.find_element(css: 'button[type="submit"]')
     login_button.click
     @logger.info "Submitted login form"
-  rescue Selenium::WebDriver::Error::NoSuchElementError, Selenium::WebDriver::Error::TimeoutError
+  rescue Selenium::WebDriver::Error::NoSuchElementError, Selenium::WebDriver::Error::TimeoutError => e
+    Rollbar.error(e, "Failed to fetch credit report JSON")
     return "Wrong username or password"
   end
 
@@ -75,7 +77,8 @@ class IdentityiqService
     @logger.info "Credit report JSON fetched successfully"
     json_content
 
-  rescue Selenium::WebDriver::Error::NoSuchElementError, Selenium::WebDriver::Error::TimeoutError
+  rescue Selenium::WebDriver::Error::NoSuchElementError, Selenium::WebDriver::Error::TimeoutError => e
+    Rollbar.error(e, "Failed to fetch credit report JSON")
     return "Wrong username or password"
   end
 end
