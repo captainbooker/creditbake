@@ -58,7 +58,6 @@ gem 'sidekiq'
 gem "judoscale-rails"
 gem "judoscale-sidekiq"
 gem "httparty"
-# gem 'sitemap_generator'
 
 gem 'dotenv', groups: [:development, :test]
 group :development, :test do
