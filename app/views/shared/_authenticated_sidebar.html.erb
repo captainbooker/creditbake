@@ -74,7 +74,7 @@
         </div>
         <div class="flex justify-between mt-2 text-sm">
           <div class="text-gray-600">Free Attack Credits</div>
-          <div><%= current_user.free_attack %></div>
+          <div class="font-semibold"><%= current_user.free_attack %></div>
         </div>
       </div>
       <div class="flex items-center space-x-4 p-2 relative group">
@@ -149,7 +149,7 @@
         </div>
         <div class="flex justify-between mt-2 text-sm">
           <div class="text-gray-600">Free Attack Credits</div>
-          <div><%= current_user.free_attack %></div>
+          <div class="font-semibold"><%= current_user.free_attack %></div>
         </div>
       </div>
       <div class="flex items-center space-x-4 p-2 relative group">
@@ -167,6 +167,7 @@
 <!-- Include the JavaScript to handle the toggle functionality -->
 <script>
 document.addEventListener("turbolinks:load", function() {
+  Turbolinks.clearCache()
   initializeSidebarToggle();
 });
 
@@ -197,5 +198,4 @@ document.addEventListener("turbolinks:before-cache", function() {
     sidebarToggle.removeEventListener('click', toggleSidebar);
   }
 });
-
 </script>

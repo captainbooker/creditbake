@@ -105,14 +105,15 @@
       <button class="absolute top-2 right-2 text-gray-500 hover:text-gray-700" onclick="closeMailModal()">&times;</button>
     </div>
   </div>
-</div>
 
-<div id="loading-overlay" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-  <div class="text-white text-center">
-    <div class="loader mb-4"></div>
-    <p>Please do not close the browser while we work to generate your letters.</p>
+  <div id="loading-overlay" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 hidden">
+    <div class="text-white text-center">
+      <div class="loader mb-4"></div>
+      <p>Please wait while we calculate mailing prices...</p>
+    </div>
   </div>
 </div>
+
 
 <script>
 function initializeCreateAttackDropdown() {
@@ -145,7 +146,7 @@ function initializeCreateAttackDropdown() {
       alert("You don't have enough credits. Please add credits.");
       window.location.href = '<%= maverick_payment_form_url %>';
     } else {
-      loadingOverlay.classList.add('show'); // Show the loading overlay
+      loadingOverlay.classList.add('show');
       createAttack(round);
     }
   }
@@ -175,6 +176,8 @@ function initializeCreateAttackDropdown() {
 }
 
 function initializeMailModal() {
+  const loadingOverlay = document.getElementById('loading-overlay');
+
   window.downloadAllFiles = function(letterId) {
     const form = document.createElement('form');
     form.method = 'post';
@@ -188,6 +191,8 @@ function initializeMailModal() {
   };
 
   window.showMailModal = function(letterId) {
+    loadingOverlay.classList.add('show');
+
     fetch(`/letters/${letterId}/calculate_cost?color=false`)
       .then(response => response.json())
       .then(data => {
@@ -199,12 +204,15 @@ function initializeMailModal() {
 
         document.getElementById('mailBWButton').setAttribute('onclick', `mailLetter('${letterId}', false)`);
         document.getElementById('mailColorButton').setAttribute('onclick', `mailLetter('${letterId}', true)`);
-
+        loadingOverlay.classList.remove('show');
+        loadingOverlay.classList.add('hidden');
         const modal = document.getElementById('mailModal');
         modal.classList.remove('hidden');
         setTimeout(() => {
           modal.classList.remove('opacity-0', 'scale-95');
         }, 10);
+
+        loadingOverlay.classList.add('hidden'); // Hide the loading overlay
       });
   };
 
