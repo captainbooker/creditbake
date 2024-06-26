@@ -15,7 +15,8 @@ class DashboardsController < ApplicationController
                                               creditor_dispute_attachment: :blob,
                                               experian_pdf_attachment: :blob,
                                               transunion_pdf_attachment: :blob,
-                                              equifax_pdf_attachment: :blob
+                                              equifax_pdf_attachment: :blob,
+                                              bankruptcy_pdf_attachment: :blob
                                             )
                                             .order(created_at: :desc)
                                             .page(params[:page])
@@ -75,7 +76,8 @@ class DashboardsController < ApplicationController
                              creditor_dispute_attachment: :blob,
                              experian_pdf_attachment: :blob,
                              transunion_pdf_attachment: :blob,
-                             equifax_pdf_attachment: :blob
+                             equifax_pdf_attachment: :blob,
+                             bankruptcy_pdf_attachment: :blob
                            )
                            .order(created_at: :desc)
                            .page(params[:page])
@@ -87,7 +89,7 @@ class DashboardsController < ApplicationController
     attack_cost = Letter::COST
 
     if current_user.free_attack > 0 || current_user.credits >= attack_cost
-      if current_user.accounts.where(challenge: true).any? || current_user.inquiries.where(challenge: true).any?
+      if current_user.accounts.where(challenge: true).any? || current_user.inquiries.where(challenge: true).any? || current_user.public_records.where(challenge: true).any?
         create_attack_logic(round)
         redirect_to letters_path, notice: 'We are creating your attack letters. They should be done in a few minutes and you will receive an email.'
       else

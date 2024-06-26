@@ -10,8 +10,9 @@ class MailingsController < ApplicationController
       experian_pdf: letter.experian_pdf,
       transunion_pdf: letter.transunion_pdf,
       equifax_pdf: letter.equifax_pdf,
-      creditor_dispute: letter.creditor_dispute
-    }
+      creditor_dispute: letter.creditor_dispute,
+      bankruptcy_pdf: letter.bankruptcy_pdf
+    }.select { |name, attachment| attachment.attached? }
 
     total_cost = 0
     mailings = []
@@ -29,11 +30,12 @@ class MailingsController < ApplicationController
     if current_user.credits >= total_cost
       mailings.each do |mailing|
         current_user.decrement!(:credits, mailing[:cost])
-        Mailing.create!(user: current_user, letter: letter, cost: mailing[:cost])
+        @mailing_record = Mailing.create!(user: current_user, letter: letter, cost: mailing[:cost])
         Spending.create!(user: current_user, amount: mailing[:cost], description: "Mailing for #{mailing[:name]} / #{Date.today.strftime("%B %d, %Y")}")
       end
 
       SpendingMailer.mailing_cost_notification(current_user, mailings).deliver_now
+      SpendingMailer.notify_admin_user(current_user, @mailing_record, mailings).deliver_now
       letter.update(mailed: true)
 
       redirect_to letters_path, notice: "Letters mailed successfully"
@@ -50,8 +52,9 @@ class MailingsController < ApplicationController
       experian_pdf: letter.experian_pdf,
       transunion_pdf: letter.transunion_pdf,
       equifax_pdf: letter.equifax_pdf,
-      creditor_dispute: letter.creditor_dispute
-    }
+      creditor_dispute: letter.creditor_dispute,
+      bankruptcy_pdf: letter.bankruptcy_pdf
+    }.select { |name, attachment| attachment.attached? }
 
     total_cost_bw = 0
     total_cost_color = 0

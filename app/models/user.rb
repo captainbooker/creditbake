@@ -19,6 +19,15 @@ class User < ApplicationRecord
   has_one_attached :additional_document2
   has_one_attached :signature
 
+  accepts_nested_attributes_for :accounts, allow_destroy: true
+  accepts_nested_attributes_for :clients, allow_destroy: true
+  accepts_nested_attributes_for :credit_reports, allow_destroy: true
+  accepts_nested_attributes_for :public_records, allow_destroy: true
+  accepts_nested_attributes_for :inquiries, allow_destroy: true
+  accepts_nested_attributes_for :letters, allow_destroy: true
+  accepts_nested_attributes_for :mailings, allow_destroy: true
+  accepts_nested_attributes_for :spendings, allow_destroy: true
+
   attr_encrypted :ssn_last4, key: [ENV['ENCRYPTION_KEY']].pack('H*')
   blind_index :ssn_last4, key: [ENV['ENCRYPTION_KEY']].pack('H*')
 

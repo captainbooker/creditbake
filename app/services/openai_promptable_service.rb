@@ -6,11 +6,17 @@ class OpenaiPromptableService
   end
 
   def send_prompts_for_round(round, inquiries, accounts, public_record)
-    {
-      experian: send_prompt(round, inquiries, accounts, public_record, 'experian'),
-      transunion: send_prompt(round, inquiries, accounts, public_record, 'transunion'),
-      equifax: send_prompt(round, inquiries, accounts, public_record, 'equifax')
-    }
+    if [11, 12].include?(round)
+      {
+        bankruptcy: send_prompt(round, inquiries, accounts, public_record, 'bankruptcy')
+      }
+    else
+      {
+        experian: send_prompt(round, inquiries, accounts, public_record, 'experian'),
+        transunion: send_prompt(round, inquiries, accounts, public_record, 'transunion'),
+        equifax: send_prompt(round, inquiries, accounts, public_record, 'equifax')
+      }
+    end
   end
 
   private
@@ -533,6 +539,8 @@ class OpenaiPromptableService
       1. Does the court report bankruptcy filings directly to LexisNexis?
       2. Does the court report bankruptcy filings directly to the credit bureaus?
       3. If the court does not report this information, could you please inform me how LexisNexis and the credit bureaus might be obtaining the bankruptcy details?
+
+      (DO NOT NEED SIGNATURE)
     PROMPT
   end
 
@@ -555,7 +563,8 @@ class OpenaiPromptableService
     I have received a letter from the US Bankruptcy Court, confirming that they do not report bankruptcy information to LexisNexis or any other consumer reporting agency. As such, you cannot verify that the bankruptcy information you have on file is accurate or belongs to me.
 
     In accordance with the Fair Credit Reporting Act (FCRA), I am formally requesting that LexisNexis remove this inaccurate bankruptcy information from my report immediately. Please provide me with written confirmation of the removal.
-
+    
+    (DO NOT NEED SIGNATURE)
     PROMPT
   end
 

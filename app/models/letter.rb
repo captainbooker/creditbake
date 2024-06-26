@@ -2,6 +2,7 @@ class Letter < ApplicationRecord
   has_one_attached :experian_pdf
   has_one_attached :transunion_pdf
   has_one_attached :equifax_pdf
+  has_one_attached :bankruptcy_pdf
   has_one_attached :creditor_dispute
 
   belongs_to :user
@@ -19,11 +20,21 @@ class Letter < ApplicationRecord
   end
 
   def self.ransackable_attributes(auth_object = nil)
-    %w[name bureau experian_document transunion_document equifax_document user_id mailed tracking_number experian_tracking_number transunion_tracking_number equifax_tracking_number created_at updated_at]
+    %w[name bureau experian_document transunion_document equifax_document bankruptcy_document user_id mailed tracking_number experian_tracking_number transunion_tracking_number equifax_tracking_number created_at updated_at]
   end
 
   def self.ransackable_associations(auth_object = nil)
     []
+  end
+
+  def attached_documents_count
+    [
+      experian_pdf,
+      transunion_pdf,
+      equifax_pdf,
+      bankruptcy_pdf,
+      creditor_dispute
+    ].count(&:attached?)
   end
 
   private

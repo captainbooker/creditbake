@@ -52,13 +52,16 @@ class CreateAttackJob < ApplicationJob
     responses = openai.send_prompts_for_round(round, inquiry_details, account_details, public_record_details)
     phase_info = attack_phase_info(round)
     
-    letter = Letter.create!(
+    letter_attributes = {
       name: phase_info[:title],
-      experian_document: responses[:experian],
-      transunion_document: responses[:transunion],
-      equifax_document: responses[:equifax],
       user: user
-    )
+    }
+    letter_attributes[:experian_document] = responses[:experian] if responses[:experian]
+    letter_attributes[:transunion_document] = responses[:transunion] if responses[:transunion]
+    letter_attributes[:equifax_document] = responses[:equifax] if responses[:equifax]
+    letter_attributes[:bankruptcy_document] = responses[:bankruptcy] if responses[:bankruptcy]
+
+    letter = Letter.create!(letter_attributes)
 
     generate_pdfs(letter, user)
     handle_attack_cost(letter, user)
@@ -78,10 +81,12 @@ class CreateAttackJob < ApplicationJob
   end
 
   def generate_pdfs(letter, user)
-    generate_pdf(letter, 'experian_document', :experian_pdf, user)
-    generate_pdf(letter, 'transunion_document', :transunion_pdf, user)
-    generate_pdf(letter, 'equifax_document', :equifax_pdf, user)
+    generate_pdf(letter, 'experian_document', :experian_pdf, user) if letter.experian_document.present?
+    generate_pdf(letter, 'transunion_document', :transunion_pdf, user) if letter.transunion_document.present?
+    generate_pdf(letter, 'equifax_document', :equifax_pdf, user) if letter.equifax_document.present?
+    generate_pdf(letter, 'bankruptcy_document', :bankruptcy_pdf, user) if letter.bankruptcy_document.present?
   end
+  
 
   def save_attachment_to_temp(attachment)
     tmp_dir = Rails.root.join('tmp')

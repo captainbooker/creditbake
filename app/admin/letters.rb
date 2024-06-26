@@ -36,6 +36,7 @@ ActiveAdmin.register Letter do
       f.input :experian_document
       f.input :transunion_document
       f.input :equifax_document
+      f.input :bankruptcy_document
       f.input :user
       f.input :mailed
       f.input :tracking_number

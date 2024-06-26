@@ -3,7 +3,7 @@ module DownloadFiles
 
   def download_all_files
     letter = Letter.find(params[:letter_id])
-    files = [letter.experian_pdf, letter.transunion_pdf, letter.equifax_pdf].compact
+    files = [letter.experian_pdf, letter.transunion_pdf, letter.equifax_pdf, letter.bankruptcy_pdf].compact.select(&:attached?)
 
     if files.any?
       zip_data = Zip::OutputStream.write_buffer do |zip|

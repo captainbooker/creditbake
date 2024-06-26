@@ -107,6 +107,7 @@ class SmartCreditService
     json_content = JSON.pretty_generate(report)
     json_content
   rescue Selenium::WebDriver::Error::NoSuchElementError, Selenium::WebDriver::Error::TimeoutError
+    Rollbar.error("Error fetching the credit report, please try again")
     return "Error fetching the credit report, please try again"
   end
 
