@@ -11,6 +11,7 @@ class IdentityiqService
     @password = password
     @security_question = security_question
     @browser = browser
+    @mobile = mobile
     @logger = Logger.new(STDOUT)
 
     @driver = initialize_driver
@@ -32,6 +33,7 @@ class IdentityiqService
     case @browser
     when :chrome
       options = Selenium::WebDriver::Chrome::Options.new
+      @mobile && options.add_argument('--user-agent=Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537')
       options.add_argument('--headless')
       options.add_argument('--no-sandbox')
       options.add_argument('--disable-gpu')
@@ -42,14 +44,22 @@ class IdentityiqService
   
     when :firefox
       options = Selenium::WebDriver::Firefox::Options.new
+      @mobile && options.add_argument('--user-agent=Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537')
       options.add_argument('--headless')
       options.add_argument('--no-sandbox')
       options.add_argument('--disable-gpu')
       Selenium::WebDriver.for :firefox, options: options
   
     when :safari
-      Selenium::WebDriver.for :safari
-  
+      options = Selenium::WebDriver::Chrome::Options.new
+      @mobile && options.add_argument('--user-agent=Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537')
+      options.add_argument('--headless')
+      options.add_argument('--no-sandbox')
+      options.add_argument('--disable-gpu')
+      if ENV['ENABLE_REMOTE_DEBUGGING']
+        options.add_argument('--remote-debugging-port=9222')
+      end
+      Selenium::WebDriver.for :chrome, options: options
     when :edge
       options = Selenium::WebDriver::Edge::Options.new
       options.add_argument('--headless')
