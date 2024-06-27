@@ -53,8 +53,6 @@ gem 'browser'
 gem 'active_analytics'
 gem "blazer"
 gem 'sidekiq'
-gem "judoscale-rails"
-gem "judoscale-sidekiq"
 gem "httparty"
 gem 'scout_apm'
 
