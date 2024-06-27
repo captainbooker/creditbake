@@ -79,9 +79,8 @@ class CreateAttackJob < ApplicationJob
 
   def save_attachment_to_temp(attachment)
     tmp_dir = Rails.root.join('tmp')
-    Dir.mkdir(tmp_dir) unless Dir.exist?(tmp_dir) # Ensure tmp directory exists
+    Dir.mkdir(tmp_dir) unless Dir.exist?(tmp_dir)
   
-    # Ensure the filename is unique
     unique_filename = "#{SecureRandom.hex}_#{attachment.filename}"
     attachment_path = tmp_dir.join(unique_filename)
   
@@ -90,7 +89,7 @@ class CreateAttackJob < ApplicationJob
         file.write(attachment.download)
       end
     rescue => e
-      Rails.logger.error "Failed to save attachment to temp file: #{e.message}"
+      Rollbar.error("Failed to save attachment to temp file: #{e.message}")
       raise
     end
   
@@ -118,11 +117,24 @@ class CreateAttackJob < ApplicationJob
   end
 
   def add_attachments_to_pdf(pdf, user)
-    add_image_to_pdf(user.signature, pdf, "Signature:", 100, 100) if user.signature.attached?
+    add_signature_to_pdf(pdf, user) if user.signature.attached?
     add_id_document_to_pdf(pdf, user) if user.id_document.attached?
     add_utility_bill_to_pdf(pdf, user) if user.utility_bill.attached?
     add_additional_document_1(pdf, user) if user.additional_document1.attached?
     add_additional_document_2(pdf, user) if user.additional_document2.attached?
+  end
+
+  def add_signature_to_pdf(pdf, user)
+    signature_path_path = save_attachment_to_temp(user.signature)
+    case file_mime_type(signature_path_path)
+    when 'application/pdf'
+      image_path = convert_pdf_to_image(signature_path_path)
+      add_image_to_pdf(image_path, pdf, "Utility Bill:", 300, 300)
+    when 'image/jpeg', 'image/png'
+      add_image_to_pdf(signature_path_path, pdf, "Utility Bill:", 300, 300)
+    else
+      Rollbar.error("Unsupported file type: #{file_mime_type(signature_path_path)}")
+    end
   end
 
   def add_utility_bill_to_pdf(pdf, user)
@@ -130,11 +142,11 @@ class CreateAttackJob < ApplicationJob
     case file_mime_type(utility_bill_path)
     when 'application/pdf'
       image_path = convert_pdf_to_image(utility_bill_path)
-      add_image_to_pdf(image_path, pdf, "Utility Bill:", 500, 400)
+      add_image_to_pdf(image_path, pdf, "Utility Bill:", 500, 500)
     when 'image/jpeg', 'image/png'
-      add_image_to_pdf(utility_bill_path, pdf, "Utility Bill:", 400, 300)
+      add_image_to_pdf(utility_bill_path, pdf, "Utility Bill:", 500, 500)
     else
-      Rails.logger.error "Unsupported file type: #{file_mime_type(utility_bill_path)}"
+      Rollbar.error("Unsupported file type: #{file_mime_type(utility_bill_path)}")
     end
   end
 
@@ -143,11 +155,11 @@ class CreateAttackJob < ApplicationJob
     case file_mime_type(additional_document1_path)
     when 'application/pdf'
       image_path = convert_pdf_to_image(additional_document1_path)
-      add_image_to_pdf(image_path, pdf, "Additional Documents 1:", 500, 400)
+      add_image_to_pdf(image_path, pdf, "Additional Documents 1:", 500, 500)
     when 'image/jpeg', 'image/png'
-      add_image_to_pdf(additional_document1_path, pdf, "Additional Documents 1:", 400, 300)
+      add_image_to_pdf(additional_document1_path, pdf, "Additional Documents 1:", 500, 500)
     else
-      Rails.logger.error "Unsupported file type: #{file_mime_type(additional_document1_path)}"
+      Rollbar.error("Unsupported file type: #{file_mime_type(additional_document1_path)}")
     end
   end
 
@@ -156,11 +168,11 @@ class CreateAttackJob < ApplicationJob
     case file_mime_type(additional_document2_path)
     when 'application/pdf'
       image_path = convert_pdf_to_image(additional_document2_path)
-      add_image_to_pdf(image_path, pdf, "Additional Documents 2:", 500, 400)
+      add_image_to_pdf(image_path, pdf, "Additional Documents 2:", 500, 500)
     when 'image/jpeg', 'image/png'
-      add_image_to_pdf(additional_document2_path, pdf, "Additional Documents 2:", 400, 300)
+      add_image_to_pdf(additional_document2_path, pdf, "Additional Documents 2:", 500, 500)
     else
-      Rails.logger.error "Unsupported file type: #{file_mime_type(additional_document2_path)}"
+      Rollbar.error("Unsupported file type: #{file_mime_type(additional_document2_path)}")
     end
   end
 
@@ -169,11 +181,11 @@ class CreateAttackJob < ApplicationJob
     case file_mime_type(id_document_path)
     when 'application/pdf'
       image_path = convert_pdf_to_image(id_document_path)
-      add_image_to_pdf(image_path, pdf, "ID Document:", 500, 400)
+      add_image_to_pdf(image_path, pdf, "ID Document:", 500, 500)
     when 'image/jpeg', 'image/png'
-      add_image_to_pdf(id_document_path, pdf, "ID Document:", 400, 300)
+      add_image_to_pdf(id_document_path, pdf, "ID Document:", 500, 500)
     else
-      Rails.logger.error "Unsupported file type: #{file_mime_type(id_document_path)}"
+      Rollbar.error("Unsupported file type: #{file_mime_type(id_document_path)}")
     end
   end
 

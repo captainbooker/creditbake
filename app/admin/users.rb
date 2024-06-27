@@ -5,7 +5,7 @@ ActiveAdmin.register User do
                 credit_reports_attributes: [:id, :username, :password, :security_question, :service, :experian_score, :transunion_score, :equifax_score, :experian_score_change, :transunion_score_change, :equifax_score_change, :_destroy],
                 public_records_attributes: [:id, :public_record_type, :reference_number, :reason, :_destroy],
                 inquiries_attributes: [:id, :inquiry_name, :type_of_business, :inquiry_date, :credit_bureau, :address, :_destroy],
-                letters_attributes: [:id, :name, :bureau, :experian_document, :transunion_document, :bankruptcy_document, :equifax_document, :mailed, :tracking_number, :experian_tracking_number, :transunion_tracking_number, :equifax_tracking_number, :_destroy],
+                letters_attributes: [:id, :name, :bureau, :mailed, :tracking_number, :experian_tracking_number, :transunion_tracking_number, :equifax_tracking_number, :_destroy],
                 mailings_attributes: [:id, :letter_id, :pages, :color, :cost, :_destroy],
                 spendings_attributes: [:id, :amount, :description, :token, :transactional_id, :_destroy]
 
@@ -42,8 +42,6 @@ ActiveAdmin.register User do
   form do |f|
     f.inputs 'User Details' do
       f.input :email
-      f.input :password, input_html: { autocomplete: "new-password" }, hint: "Leave blank if you don't want to change it"
-      f.input :password_confirmation, hint: "Leave blank if you don't want to change it"
       f.input :phone_number
       f.input :first_name
       f.input :last_name
@@ -51,11 +49,9 @@ ActiveAdmin.register User do
       f.input :city
       f.input :state
       f.input :postal_code
-      f.input :country
       f.input :credits
       f.input :free_attack
       f.input :slug
-      f.input :signature
       f.input :agreement
     end
 
@@ -67,10 +63,6 @@ ActiveAdmin.register User do
       a.input :creditor_name
       a.input :name
       a.input :reason
-    end
-
-    f.has_many :clients, allow_destroy: true, new_record: true do |c|
-      c.input :name
     end
 
     f.has_many :credit_reports, allow_destroy: true, new_record: true do |cr|
@@ -103,10 +95,6 @@ ActiveAdmin.register User do
     f.has_many :letters, allow_destroy: true, new_record: true do |l|
       l.input :name
       l.input :bureau
-      l.input :experian_document
-      l.input :transunion_document
-      l.input :equifax_document
-      l.input :bankruptcy_document
       l.input :mailed
       l.input :tracking_number
       l.input :experian_tracking_number

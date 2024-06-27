@@ -19,14 +19,14 @@ class User < ApplicationRecord
   has_one_attached :additional_document2
   has_one_attached :signature
 
-  accepts_nested_attributes_for :accounts, allow_destroy: true
-  accepts_nested_attributes_for :clients, allow_destroy: true
-  accepts_nested_attributes_for :credit_reports, allow_destroy: true
-  accepts_nested_attributes_for :public_records, allow_destroy: true
-  accepts_nested_attributes_for :inquiries, allow_destroy: true
-  accepts_nested_attributes_for :letters, allow_destroy: true
-  accepts_nested_attributes_for :mailings, allow_destroy: true
-  accepts_nested_attributes_for :spendings, allow_destroy: true
+  accepts_nested_attributes_for :accounts, allow_destroy: true, update_only: true
+  accepts_nested_attributes_for :clients, allow_destroy: true, update_only: true
+  accepts_nested_attributes_for :credit_reports, allow_destroy: true, update_only: true
+  accepts_nested_attributes_for :public_records, allow_destroy: true, update_only: true
+  accepts_nested_attributes_for :inquiries, allow_destroy: true, update_only: true
+  accepts_nested_attributes_for :letters, allow_destroy: true, update_only: true
+  accepts_nested_attributes_for :mailings, allow_destroy: true, update_only: true
+  accepts_nested_attributes_for :spendings, allow_destroy: true, update_only: true
 
   attr_encrypted :ssn_last4, key: [ENV['ENCRYPTION_KEY']].pack('H*')
   blind_index :ssn_last4, key: [ENV['ENCRYPTION_KEY']].pack('H*')
@@ -37,6 +37,10 @@ class User < ApplicationRecord
   validates :agreement, acceptance: true, on: :create
   validate :credits_cannot_be_negative
   validate :free_attack_cannot_be_negative
+
+  before_validation :generate_unique_slug, on: :create
+
+  validates :slug, uniqueness: true
 
   def send_welcome_email
     UserMailer.welcome_email(self).deliver_later
@@ -82,6 +86,15 @@ class User < ApplicationRecord
   end
 
   private
+
+  def generate_unique_slug
+    return if slug.present?
+
+    loop do
+      self.slug = SecureRandom.hex(10)
+      break unless User.exists?(slug: slug)
+    end
+  end
 
   def password_complexity
     if password.present? && !password.match?(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/)

@@ -14,6 +14,7 @@ class ApplicationController < ActionController::Base
   before_action :ensure_profile_complete, if: :user_signed_in?
   after_action :record_page_view
   before_action :authorize_access
+  before_action :configure_permitted_parameters, if: :devise_controller?
 
   helper_method :user_browser
   helper_method :mobile?
@@ -107,5 +108,10 @@ class ApplicationController < ActionController::Base
     else
       "application"
     end
+  end
+
+  def configure_permitted_parameters
+    devise_parameter_sanitizer.permit(:sign_up, keys: [:agreement])
+    devise_parameter_sanitizer.permit(:account_update, keys: [:agreement])
   end
 end

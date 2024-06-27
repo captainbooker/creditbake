@@ -143,10 +143,11 @@ function initializeCreateAttackDropdown() {
   }
 
   function handleRoundButtonClick() {
-    const round = this.getAttribute('data-round');
+    const round = parseInt(this.getAttribute('data-round'), 10);
+    const freeAttacks = parseInt('<%= current_user.free_attack %>', 10);
     const credits = parseFloat('<%= current_user.credits %>');
     const maverickPaymentFormUrl = '<%= maverick_payment_form_url %>';
-    
+
     let requiredCredits;
     
     if (round === 11 || round === 12) {
@@ -155,15 +156,13 @@ function initializeCreateAttackDropdown() {
       requiredCredits = 18.99;
     }
 
-    if (credits < requiredCredits) {
-      alert("You don't have enough credits. Please add credits.");
-      window.location.href = maverickPaymentFormUrl;
-    } else {
-      loadingOverlay.classList.add('show');
+    if (freeAttacks > 0 || credits >= requiredCredits) {
       createAttack(round);
+    } else {
+      alert("You don't have enough credits or free attacks. Please add credits.");
+      window.location.href = maverickPaymentFormUrl;
     }
   }
-
 
   function createAttack(round) {
     const form = document.createElement('form');

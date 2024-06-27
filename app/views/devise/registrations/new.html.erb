@@ -37,7 +37,7 @@
                 <span class="ml-2">I agree to the <%= link_to "Privacy Policy", privacy_policy_path, class: "text-primary hover:underline" %> and <%= link_to "Terms of Service", terms_and_conditions_path, class: "text-primary hover:underline0" %>.</span>
               </label>
             </div>
-            <%= f.hidden_field :agreement, value: false %>
+            <%= f.hidden_field :agreement, value: true %>
             <div class="mb-9">
               <%= f.submit "Sign Up", class: "w-full px-5 py-3 text-base text-white transition duration-300 ease-in-out border rounded-md cursor-pointer border-primary bg-primary hover:bg-blue-dark cursor-not-allowed" %>
             </div>
