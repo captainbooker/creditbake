@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2024_06_26_051453) do
+ActiveRecord::Schema.define(version: 2024_06_28_205455) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -28,6 +28,16 @@ ActiveRecord::Schema.define(version: 2024_06_26_051453) do
     t.string "name"
     t.string "reason"
     t.index ["user_id"], name: "index_accounts_on_user_id"
+  end
+
+  create_table "action_text_rich_texts", force: :cascade do |t|
+    t.string "name", null: false
+    t.text "body"
+    t.string "record_type", null: false
+    t.bigint "record_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["record_type", "record_id", "name"], name: "index_action_text_rich_texts_uniqueness", unique: true
   end
 
   create_table "active_admin_comments", force: :cascade do |t|
@@ -179,6 +189,23 @@ ActiveRecord::Schema.define(version: 2024_06_26_051453) do
     t.index ["public_record_id"], name: "index_bureau_details_on_public_record_id"
   end
 
+  create_table "categories", force: :cascade do |t|
+    t.string "name"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
+  create_table "ckeditor_assets", force: :cascade do |t|
+    t.string "data_file_name", null: false
+    t.string "data_content_type"
+    t.integer "data_file_size"
+    t.string "data_fingerprint"
+    t.string "type", limit: 30
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["type"], name: "index_ckeditor_assets_on_type"
+  end
+
   create_table "client_profiles", force: :cascade do |t|
     t.string "first_name"
     t.string "middle_name"
@@ -315,6 +342,25 @@ ActiveRecord::Schema.define(version: 2024_06_26_051453) do
     t.index ["user_id"], name: "index_mailings_on_user_id"
   end
 
+  create_table "post_categories", force: :cascade do |t|
+    t.bigint "post_id", null: false
+    t.bigint "category_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["category_id"], name: "index_post_categories_on_category_id"
+    t.index ["post_id"], name: "index_post_categories_on_post_id"
+  end
+
+  create_table "posts", force: :cascade do |t|
+    t.string "title"
+    t.text "body"
+    t.bigint "user_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.string "slug"
+    t.index ["user_id"], name: "index_posts_on_user_id"
+  end
+
   create_table "public_records", force: :cascade do |t|
     t.string "public_record_type"
     t.datetime "created_at", precision: 6, null: false
@@ -399,6 +445,9 @@ ActiveRecord::Schema.define(version: 2024_06_26_051453) do
   add_foreign_key "inquiries", "users"
   add_foreign_key "mailings", "letters"
   add_foreign_key "mailings", "users"
+  add_foreign_key "post_categories", "categories"
+  add_foreign_key "post_categories", "posts"
+  add_foreign_key "posts", "users"
   add_foreign_key "public_records", "users"
   add_foreign_key "spendings", "users"
 end

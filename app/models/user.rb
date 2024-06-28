@@ -12,6 +12,7 @@ class User < ApplicationRecord
   has_many :spendings
   has_many :mailings
   has_many :public_records
+  has_many :posts, dependent: :destroy
 
   has_one_attached :id_document
   has_one_attached :utility_bill
@@ -41,6 +42,7 @@ class User < ApplicationRecord
   before_validation :generate_unique_slug, on: :create
 
   validates :slug, uniqueness: true
+  
 
   def send_welcome_email
     UserMailer.welcome_email(self).deliver_later

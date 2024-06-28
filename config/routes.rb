@@ -1,6 +1,7 @@
 require 'sidekiq/web'
 # config/routes.rb
 Rails.application.routes.draw do
+  mount Ckeditor::Engine => '/ckeditor'
   get 'contacts/new'
   get 'contacts/create'
   get 'stripe_payments/create'
@@ -64,6 +65,7 @@ Rails.application.routes.draw do
   get '/sitemap.xml', to: 'pages#sitemap', defaults: { format: 'xml' }
 
   resources :contacts, only: [:new, :create]
+  resources :blogs, only: [:index, :show]
 
   resources :letters do
     post 'mail', to: 'mailings#create', as: :mail
