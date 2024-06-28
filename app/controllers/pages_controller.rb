@@ -14,4 +14,11 @@ class PagesController < ApplicationController
 
   def sitemap
   end
+
+  def pricing
+  end
+
+  def suppprt
+    @contact_form = ContactForm.new
+  end
 end

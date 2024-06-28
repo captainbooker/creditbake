@@ -51,7 +51,6 @@ ActiveAdmin.register User do
       f.input :postal_code
       f.input :credits
       f.input :free_attack
-      f.input :slug
       f.input :agreement
     end
 

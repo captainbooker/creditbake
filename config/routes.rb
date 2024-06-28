@@ -57,6 +57,8 @@ Rails.application.routes.draw do
   get 'credit_reports/scores', to: 'dashboards#scores'
   get 'webhooks/maverick', to: 'incoming_payments#maverick'
   get 'privacy_policy', to: 'pages#privacy_policy', as: 'privacy_policy'
+  get 'pricing', to: 'pages#pricing', as: 'pricing'
+  get 'support', to: 'pages#support', as: 'support'
   get 'terms_and_conditions', to: 'pages#terms_and_conditions', as: 'terms_and_conditions'
   get 'refund_policy', to: 'pages#refund_policy', as: 'refund_policy'
   get '/sitemap.xml', to: 'pages#sitemap', defaults: { format: 'xml' }

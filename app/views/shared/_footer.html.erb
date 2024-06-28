@@ -24,10 +24,12 @@
       <div>
         <h3 class="text-lg font-bold mb-4">About Us</h3>
         <ul class="space-y-2">
-          <li><a href="#about" class="hover:text-gray-200">About</a></li>
-          <li><a href="#pricing" class="hover:text-gray-200">Pricing</a></li>
-          <li><a href="#testimonials" class="hover:text-gray-200">Testimonials</a></li>
-          <li><a href="#faq" class="hover:text-gray-200">FAQ</a></li>
+          <li><%= link_to "Home", unauthenticated_root_path, class: "hover:text-gray-200" %></li>
+          <li><%= link_to "Pricing", pricing_path, class: "hover:text-gray-200" %></li>
+          <li><%= link_to "Support", support_path, class: "hover:text-gray-200" %></li>
+           <% if current_page?(unauthenticated_root_path) %>
+            <li><a href="#testimonials" class="hover:text-gray-200">Testimonials</a></li>
+          <% end %>
         </ul>
       </div>
 
