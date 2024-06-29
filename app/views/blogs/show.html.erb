@@ -10,7 +10,7 @@
     <h1 class="text-5xl font-bold mb-6"><%= @post.title %></h1>
     <% if @post.header_image.attached? %>
       <div class="mb-6">
-        <img src="<%= url_for(@post.header_image) %>" alt="<%= @post.title %>" class="object-cover rounded-lg">
+        <img src="<%= url_for(@post.header_image) %>" alt="CreditBake - <%= @post.title %>" class="object-cover rounded-lg">
       </div>
     <% end %>
     <div class="prose max-w-none">
