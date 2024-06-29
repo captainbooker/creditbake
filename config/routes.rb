@@ -1,7 +1,6 @@
 require 'sidekiq/web'
 # config/routes.rb
 Rails.application.routes.draw do
-  mount Ckeditor::Engine => '/ckeditor'
   get 'contacts/new'
   get 'contacts/create'
   get 'stripe_payments/create'
@@ -51,6 +50,7 @@ Rails.application.routes.draw do
   
   get 'success', to: 'dashboards#success', as: 'success'
   get 'cancel', to: 'dashboards#cancel'
+  post 'uploads', to: 'uploads#create'
 
   get '/spending-activity', to: 'payments#index', as: 'payment'
   post '/payment', to: 'payments#create'

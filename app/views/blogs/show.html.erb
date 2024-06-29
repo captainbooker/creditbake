@@ -1,0 +1,48 @@
+<div class="container pb-20 pt-32">
+  <div class="max-w-5xl mx-auto bg-white p-8">
+    <div class="flex items-center space-x-4 mb-4">
+      <img src="<%= url_for(@post.header_image) %>" alt="<%= @post.user.first_name %>" class="w-10 h-10 rounded-full">
+      <div>
+        <h2 class="text-sm font-semibold text-gray-900"><%= @post.user.first_name %></h2>
+        <p class="text-sm text-gray-600">Posted: <%= @post.created_at.strftime("%B %d, %Y") %> • 5 mins read</p>
+      </div>
+    </div>
+    <h1 class="text-5xl font-bold mb-6"><%= @post.title %></h1>
+    <% if @post.header_image.attached? %>
+      <div class="mb-6">
+        <img src="<%= url_for(@post.header_image) %>" alt="<%= @post.title %>" class="object-cover rounded-lg", width="1800", height="940">
+      </div>
+    <% end %>
+    <div class="prose max-w-none">
+      <%= @post.body.to_s.html_safe %>
+    </div>
+  </div>
+</div>
+
+<!-- Fixed Sidebar with Icons -->
+<div class="fixed-sidebar">
+  <div class="flex flex-col items-center space-y-4">
+    <div class="shareon">
+      <a class="facebook"></a>
+    </div>
+    <div class="shareon">
+      <a class="twitter"></a>
+    </div>
+    <div class="shareon">
+      <a class="whatsapp"></a>
+    </div>
+    <div class="shareon">
+      <a class="copy-url"></a>
+    </div>
+  </div>
+</div>
+
+<style>
+  .fixed-sidebar {
+    position: fixed;
+    top: 50%;
+    transform: translateY(-50%);
+    right: 22px;
+    z-index: 50;
+  }
+</style>

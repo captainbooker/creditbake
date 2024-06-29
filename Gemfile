@@ -55,6 +55,7 @@ gem "blazer"
 gem 'sidekiq'
 gem "httparty"
 gem 'scout_apm'
+gem 'activeadmin_froala_editor'
 
 gem 'dotenv', groups: [:development, :test]
 group :development, :test do

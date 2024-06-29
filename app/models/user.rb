@@ -2,8 +2,6 @@ class User < ApplicationRecord
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable
 
-  after_create :send_welcome_email
-
   has_many :clients
   has_many :inquiries
   has_many :accounts
@@ -19,6 +17,7 @@ class User < ApplicationRecord
   has_one_attached :additional_document1
   has_one_attached :additional_document2
   has_one_attached :signature
+  has_one_attached :avatar
 
   accepts_nested_attributes_for :accounts, allow_destroy: true, update_only: true
   accepts_nested_attributes_for :clients, allow_destroy: true, update_only: true
@@ -42,6 +41,8 @@ class User < ApplicationRecord
   before_validation :generate_unique_slug, on: :create
 
   validates :slug, uniqueness: true
+  after_create :send_welcome_email
+  before_create :grant_free_credit
   
 
   def send_welcome_email
@@ -113,6 +114,12 @@ class User < ApplicationRecord
   def free_attack_cannot_be_negative
     if free_attack < 0
       errors.add(:free_attack, "cannot be negative")
+    end
+  end
+
+  def grant_free_credit
+    if ENV['ENABLE_FREE_CREDIT'] == 'true'
+      self.credits += 1
     end
   end
 end

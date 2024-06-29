@@ -52,6 +52,8 @@ GEM
       kaminari (>= 1.2.1)
       railties (>= 6.1)
       ransack (>= 4.0)
+    activeadmin_froala_editor (1.1.0)
+      activeadmin (>= 2.9.0)
     activejob (6.1.7.7)
       activesupport (= 6.1.7.7)
       globalid (>= 0.3.6)
@@ -384,6 +386,7 @@ PLATFORMS
 DEPENDENCIES
   active_analytics
   activeadmin
+  activeadmin_froala_editor
   attr_encrypted
   aws-sdk-s3
   blazer

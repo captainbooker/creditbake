@@ -1,5 +1,22 @@
 ActiveAdmin.register Post do
-  permit_params :title, :user_id, :header_image, :body, category_ids: []
+  permit_params :title, :user_id, :header_image, :body, category_ids: [], images: []
+
+  member_action :upload, method: [:post] do
+    success = resource.images.attach(params[:file_upload])
+    result = success ? { link: url_for(resource.images.last) } : {}
+    render json: result
+  end
+
+  form do |f|
+    f.inputs 'Post Details' do
+      f.input :user, as: :select, collection: User.all.collect { |user| [user.email, user.id] }
+      f.input :title
+      f.input :header_image, as: :file
+      f.input :body, as: :froala_editor, input_html: { data: { options: { imageUploadParam: 'file_upload', imageUploadURL: upload_admin_post_path(resource.id), toolbarButtons: %w[bold italic underline | insertImage insertVideo insertFile] } } }
+      f.input :categories, as: :check_boxes, collection: Category.all
+    end
+    f.actions
+  end
 
   controller do
     def find_resource
@@ -39,17 +56,6 @@ ActiveAdmin.register Post do
   filter :user
   filter :categories, as: :select, collection: -> { Category.all }
   filter :created_at
-
-  form do |f|
-    f.inputs 'Post Details' do
-      f.input :user, as: :select, collection: User.all.collect { |user| [user.email, user.id] }
-      f.input :title
-      f.input :header_image, as: :file
-      f.input :body, as: :ckeditor
-      f.input :categories, as: :check_boxes, collection: Category.all
-    end
-    f.actions
-  end
 
   show do
     attributes_table do

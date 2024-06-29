@@ -7,6 +7,7 @@ class Post < ApplicationRecord
   has_many :categories, through: :post_categories
 
   has_one_attached :header_image
+  has_many_attached :images
 
   validates :title, presence: true
   validates :body, presence: true
@@ -18,7 +19,7 @@ class Post < ApplicationRecord
 
   # Ransack allowlisted attributes
   def self.ransackable_attributes(auth_object = nil)
-    ["created_at", "id", "slug", "title", "updated_at", "user_id"]
+    ["body", "created_at", "id", "slug", "title", "updated_at", "user_id", "header_image"]
   end
 
   # Ransack allowlisted associations

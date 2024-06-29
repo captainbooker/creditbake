@@ -7,7 +7,7 @@ class BlogsController < ApplicationController
       @category = Category.find(params[:category_id])
       @posts = @category.posts
     else
-      @posts = Post.all
+      @posts = Post.all.page(params[:page]).per(12) 
     end
   end
 
