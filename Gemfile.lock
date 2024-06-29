@@ -121,6 +121,9 @@ GEM
     cancancan (3.5.0)
     chartkick (5.0.7)
     childprocess (5.0.0)
+    combine_pdf (1.0.26)
+      matrix
+      ruby-rc4 (>= 0.1.5)
     concurrent-ruby (1.2.3)
     connection_pool (2.4.1)
     countries (5.7.2)
@@ -395,6 +398,7 @@ DEPENDENCIES
   browser
   byebug
   cancancan
+  combine_pdf
   country_select (~> 8.0)
   devise
   dotenv

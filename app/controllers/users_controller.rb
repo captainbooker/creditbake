@@ -7,6 +7,9 @@ class UsersController < ApplicationController
   end
 
   def update
+    if user_params[:ssn_last4].blank?
+      user_params.delete(:ssn_last4)
+    end
     if @user.update(user_params)
       redirect_to user_settings_path, notice: 'Profile updated successfully.'
     else

@@ -6,6 +6,7 @@ class CreateAttackJob < ApplicationJob
     inquiries = user.inquiries.where(challenge: true)
     accounts = user.accounts.where(challenge: true).includes(:bureau_details)
     public_records = user.public_records.where(challenge: true).includes(:bureau_details)
+
     inquiry_details = inquiries.map { |inquiry| { name: inquiry.inquiry_name, bureau: inquiry.credit_bureau } }
     account_details = accounts.map do |account|
       {
@@ -64,7 +65,7 @@ class CreateAttackJob < ApplicationJob
     letter = Letter.create!(letter_attributes)
 
     generate_pdfs(letter, user)
-    UserMailer.notification_email(user, "Letters have been sucessfully generated, login to view them.").deliver_later
+    UserMailer.notification_email(user, "Letters have been successfully generated, login to view them.").deliver_later
   end
 
   private
@@ -75,7 +76,6 @@ class CreateAttackJob < ApplicationJob
     generate_pdf(letter, 'equifax_document', :equifax_pdf, user) if letter.equifax_document.present?
     generate_pdf(letter, 'bankruptcy_document', :bankruptcy_pdf, user) if letter.bankruptcy_document.present?
   end
-  
 
   def save_attachment_to_temp(attachment)
     tmp_dir = Rails.root.join('tmp')
@@ -88,6 +88,7 @@ class CreateAttackJob < ApplicationJob
       File.open(attachment_path, 'wb') do |file|
         file.write(attachment.download)
       end
+      Rails.logger.info "Saved attachment to #{attachment_path}"
     rescue => e
       Rollbar.error("Failed to save attachment to temp file: #{e.message}")
       raise
@@ -96,121 +97,151 @@ class CreateAttackJob < ApplicationJob
     attachment_path
   end
 
-  def add_image_to_pdf(image_path, pdf, title, width, height)
-    pdf.start_new_page
-    pdf.text title
-    pdf.image image_path, width: width, height: height, position: :center
-  end
-
-  def convert_pdf_to_image(pdf_path)
-    image_path = pdf_path.sub('.pdf', '.png')
-    MiniMagick::Tool::Convert.new do |convert|
-      convert.density(300)
-      convert.quality(200)
-      convert << pdf_path << image_path
-    end
-    image_path
-  end
-
   def file_mime_type(path)
     `file --brief --mime-type #{path}`.strip
   end
 
-  def add_attachments_to_pdf(pdf, user)
-    add_signature_to_pdf(pdf, user) if user.signature.attached?
-    add_id_document_to_pdf(pdf, user) if user.id_document.attached?
-    add_utility_bill_to_pdf(pdf, user) if user.utility_bill.attached?
-    add_additional_document_1(pdf, user) if user.additional_document1.attached?
-    add_additional_document_2(pdf, user) if user.additional_document2.attached?
+  def convert_to_supported_image_type(image_path)
+    supported_types = %w[image/jpeg image/png]
+    return image_path if supported_types.include?(file_mime_type(image_path))
+
+    new_image_path = image_path.sub(File.extname(image_path), '.png')
+    MiniMagick::Tool::Convert.new do |convert|
+      convert << image_path << new_image_path
+    end
+
+    new_image_path
   end
 
-  def add_signature_to_pdf(pdf, user)
-    signature_path_path = save_attachment_to_temp(user.signature)
-    case file_mime_type(signature_path_path)
+  def add_attachments_to_pdf(main_pdf_path, user)
+    add_signature_to_pdf(main_pdf_path, user) if user.signature.attached?
+    add_id_document_to_pdf(main_pdf_path, user) if user.id_document.attached?
+    add_utility_bill_to_pdf(main_pdf_path, user) if user.utility_bill.attached?
+    add_additional_document_1(main_pdf_path, user) if user.additional_document1.attached?
+    add_additional_document_2(main_pdf_path, user) if user.additional_document2.attached?
+  end
+
+  def add_signature_to_pdf(main_pdf_path, user)
+    signature_path = save_attachment_to_temp(user.signature)
+    unless File.exist?(signature_path)
+      Rollbar.error "Attachment file not found: #{signature_path}"
+      raise ArgumentError, "Attachment file not found: #{signature_path}"
+    end
+
+    case file_mime_type(signature_path)
     when 'application/pdf'
-      image_path = convert_pdf_to_image(signature_path_path)
-      add_image_to_pdf(image_path, pdf, "Utility Bill:", 300, 300)
+      merge_pdfs(main_pdf_path, signature_path)
     when 'image/jpeg', 'image/png'
-      add_image_to_pdf(signature_path_path, pdf, "Utility Bill:", 300, 300)
+      signature_path = convert_to_supported_image_type(signature_path)
+      add_image_to_pdf(signature_path, main_pdf_path, "Signature:")
     else
-      Rollbar.error("Unsupported file type: #{file_mime_type(signature_path_path)}")
+      Rollbar.error("Unsupported file type: #{file_mime_type(signature_path)}")
     end
   end
 
-  def add_utility_bill_to_pdf(pdf, user)
+  def add_utility_bill_to_pdf(main_pdf_path, user)
     utility_bill_path = save_attachment_to_temp(user.utility_bill)
+    unless File.exist?(utility_bill_path)
+      Rollbar.error "Attachment file not found: #{utility_bill_path}"
+      raise ArgumentError, "Attachment file not found: #{utility_bill_path}"
+    end
+
     case file_mime_type(utility_bill_path)
     when 'application/pdf'
-      image_path = convert_pdf_to_image(utility_bill_path)
-      add_image_to_pdf(image_path, pdf, "Utility Bill:", 500, 500)
+      merge_pdfs(main_pdf_path, utility_bill_path)
     when 'image/jpeg', 'image/png'
-      add_image_to_pdf(utility_bill_path, pdf, "Utility Bill:", 500, 500)
+      utility_bill_path = convert_to_supported_image_type(utility_bill_path)
+      add_image_to_pdf(utility_bill_path, main_pdf_path, "Utility Bill:")
     else
       Rollbar.error("Unsupported file type: #{file_mime_type(utility_bill_path)}")
     end
   end
 
-  def add_additional_document_1(pdf, user)
+  def add_additional_document_1(main_pdf_path, user)
     additional_document1_path = save_attachment_to_temp(user.additional_document1)
+    unless File.exist?(additional_document1_path)
+      Rollbar.error "Attachment file not found: #{additional_document1_path}"
+      raise ArgumentError, "Attachment file not found: #{additional_document1_path}"
+    end
+
     case file_mime_type(additional_document1_path)
     when 'application/pdf'
-      image_path = convert_pdf_to_image(additional_document1_path)
-      add_image_to_pdf(image_path, pdf, "Additional Documents 1:", 500, 500)
+      merge_pdfs(main_pdf_path, additional_document1_path)
     when 'image/jpeg', 'image/png'
-      add_image_to_pdf(additional_document1_path, pdf, "Additional Documents 1:", 500, 500)
+      additional_document1_path = convert_to_supported_image_type(additional_document1_path)
+      add_image_to_pdf(additional_document1_path, main_pdf_path, "Additional Documents 1:")
     else
       Rollbar.error("Unsupported file type: #{file_mime_type(additional_document1_path)}")
     end
   end
 
-  def add_additional_document_2(pdf, user)
+  def add_additional_document_2(main_pdf_path, user)
     additional_document2_path = save_attachment_to_temp(user.additional_document2)
+    unless File.exist?(additional_document2_path)
+      Rollbar.error "Attachment file not found: #{additional_document2_path}"
+      raise ArgumentError, "Attachment file not found: #{additional_document2_path}"
+    end
+
     case file_mime_type(additional_document2_path)
     when 'application/pdf'
-      image_path = convert_pdf_to_image(additional_document2_path)
-      add_image_to_pdf(image_path, pdf, "Additional Documents 2:", 500, 500)
+      merge_pdfs(main_pdf_path, additional_document2_path)
     when 'image/jpeg', 'image/png'
-      add_image_to_pdf(additional_document2_path, pdf, "Additional Documents 2:", 500, 500)
+      additional_document2_path = convert_to_supported_image_type(additional_document2_path)
+      add_image_to_pdf(additional_document2_path, main_pdf_path, "Additional Documents 2:")
     else
       Rollbar.error("Unsupported file type: #{file_mime_type(additional_document2_path)}")
     end
   end
 
-  def add_id_document_to_pdf(pdf, user)
+  def add_id_document_to_pdf(main_pdf_path, user)
     id_document_path = save_attachment_to_temp(user.id_document)
+    unless File.exist?(id_document_path)
+      Rollbar.error "Attachment file not found: #{id_document_path}"
+      raise ArgumentError, "Attachment file not found: #{id_document_path}"
+    end
+
     case file_mime_type(id_document_path)
     when 'application/pdf'
-      image_path = convert_pdf_to_image(id_document_path)
-      add_image_to_pdf(image_path, pdf, "ID Document:", 500, 500)
+      merge_pdfs(main_pdf_path, id_document_path)
     when 'image/jpeg', 'image/png'
-      add_image_to_pdf(id_document_path, pdf, "ID Document:", 500, 500)
+      id_document_path = convert_to_supported_image_type(id_document_path)
+      add_image_to_pdf(id_document_path, main_pdf_path, "ID Document:")
     else
       Rollbar.error("Unsupported file type: #{file_mime_type(id_document_path)}")
     end
   end
 
+  def merge_pdfs(main_pdf_path, additional_pdf_path)
+    combined_pdf = CombinePDF.new
+    combined_pdf << CombinePDF.load(main_pdf_path)
+    combined_pdf << CombinePDF.load(additional_pdf_path)
+    combined_pdf.save main_pdf_path
+  end
+
+  def add_image_to_pdf(image_path, pdf_path, title)
+    pdf_with_image_path = pdf_path.sub('.pdf', '_with_image.pdf')
+    Prawn::Document.generate(pdf_with_image_path) do |pdf|
+      pdf.start_new_page
+      pdf.text title
+      pdf.image image_path, width: 500, height: 400, position: :center
+    end
+    merge_pdfs(pdf_path, pdf_with_image_path)
+  end
 
   def generate_pdf(letter, document_field, pdf_attachment, user)
     document_content = letter.send(document_field)
     bureau_name = document_field.split('_').first.capitalize
-    user = user
-  
-    # Ensure tmp directory exists
     tmp_dir = Rails.root.join('tmp')
     Dir.mkdir(tmp_dir) unless Dir.exist?(tmp_dir)
-  
-    # Generate a unique file path to avoid conflicts
     pdf_path = tmp_dir.join("#{bureau_name}_letter_#{letter.id}_#{SecureRandom.hex}.pdf")
-  
+
     Prawn::Document.generate(pdf_path) do |pdf|
       pdf.text document_content
-  
-      add_attachments_to_pdf(pdf, user)
     end
-  
+
+    add_attachments_to_pdf(pdf_path, user)
+
     letter.send(pdf_attachment).attach(io: File.open(pdf_path), filename: "#{bureau_name}_letter_#{letter.id}.pdf", content_type: 'application/pdf')
-  
-    # Optionally delete the file after attaching
     File.delete(pdf_path) if File.exist?(pdf_path)
   end
 end

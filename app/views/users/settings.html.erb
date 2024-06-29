@@ -66,7 +66,11 @@
                 <div>
                   <%= form.label :ssn_last4, "*Last 4 SSN", class: "block text-sm font-medium text-gray-700 mb-1" %>
                   <div class="relative">
-                    <%= form.password_field :ssn_last4, id: "ssn_last4", placeholder: "Last 4 SSN", class: "w-full mt-1 p-3 border rounded-lg bg-gray-100 text-gray-500 pr-10" %>
+                    <% if @user.ssn_last4.present? %>
+                      <%= form.password_field :ssn_last4, id: "ssn_last4", placeholder: "Last 4 SSN", class: "w-full mt-1 p-3 border rounded-lg bg-gray-100 text-gray-500 pr-10", value: "****" + @user.ssn_last4[-4..] %>
+                    <% else %>
+                      <%= form.password_field :ssn_last4, id: "ssn_last4", placeholder: "Last 4 SSN", class: "w-full mt-1 p-3 border rounded-lg bg-gray-100 text-gray-500 pr-10" %>
+                    <% end %>
                     <button type="button" id="toggle_ssn_visibility" class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-500">
                       <svg id="eye_icon" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#000000">
                         <path d="M480.18-353.85q60.97 0 103.47-42.68t42.5-103.65q0-60.97-42.68-103.47t-103.65-42.5q-60.97 0-103.47 42.68t-42.5 103.65q0 60.97 42.68 103.47t103.65 42.5ZM480-392q-45 0-76.5-31.5T372-500q0-45 31.5-76.5T480-608q45 0 76.5 31.5T588-500q0 45-31.5 76.5T480-392Zm.11 152q-129.96 0-236.88-70.73Q136.31-381.46 83.08-500q53.23-118.54 160.04-189.27T479.89-760q129.96 0 236.88 70.73Q823.69-618.54 876.92-500q-53.23 118.54-160.04 189.27T480.11-240ZM480-500Zm0 220q113 0 207.5-59.5T832-500q-50-101-144.5-160.5T480-720q-113 0-207.5 59.5T128-500q50 101 144.5 160.5T480-280Z"/>
@@ -81,6 +85,7 @@
                     <p>Your SSN is protected with advanced encryption techniques to ensure its safety.</p>
                   </div>
                 </div>
+
               </div>
               <div class="mt-6">
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
