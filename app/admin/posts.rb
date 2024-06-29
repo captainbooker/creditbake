@@ -12,7 +12,11 @@ ActiveAdmin.register Post do
       f.input :user, as: :select, collection: User.all.collect { |user| [user.email, user.id] }
       f.input :title
       f.input :header_image, as: :file
-      f.input :body, as: :froala_editor, input_html: { data: { options: { imageUploadParam: 'file_upload', imageUploadURL: upload_admin_post_path(resource.id), toolbarButtons: %w[bold italic underline | insertImage insertVideo insertFile] } } }
+      f.input :body, as: :froala_editor, input_html: { data: { options: { 
+        imageUploadParam: 'file_upload', 
+        imageUploadURL: resource.new_record? ? "#" : upload_admin_post_path(resource.id), 
+        toolbarButtons: %w[bold italic underline | insertImage insertVideo insertFile] 
+      } } }
       f.input :categories, as: :check_boxes, collection: Category.all
     end
     f.actions
