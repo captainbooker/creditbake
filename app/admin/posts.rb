@@ -36,7 +36,7 @@ ActiveAdmin.register Post do
     def update
       @post = Post.friendly.find(params[:id])
       if @post.update(permitted_params[:post])
-        redirect_to admin_post_path(@post), notice: "Post was successfully updated."
+        redirect_to post_path(@post), notice: "Post was successfully updated."
       else
         render :edit
       end

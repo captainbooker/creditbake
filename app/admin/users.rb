@@ -22,6 +22,7 @@ ActiveAdmin.register User do
     column :postal_code
     column :country
     column :credits
+    column :free_attack # Ensure this column is displayed in the index view
     column :slug
     column :created_at
     actions
@@ -36,6 +37,7 @@ ActiveAdmin.register User do
   filter :postal_code
   filter :country
   filter :credits
+  filter :free_attack # Add this filter to allow filtering by free_attack
   filter :slug
   filter :created_at
 
@@ -50,7 +52,7 @@ ActiveAdmin.register User do
       f.input :state
       f.input :postal_code
       f.input :credits
-      f.input :free_attack
+      f.input :free_attack # Ensure this field is included in the form
       f.input :agreement
     end
 
@@ -124,6 +126,8 @@ ActiveAdmin.register User do
         params[:user].delete(:password)
         params[:user].delete(:password_confirmation)
       end
+
+      Rails.logger.debug("User params: #{params[:user]}") # Debugging line
       super
     end
   end
