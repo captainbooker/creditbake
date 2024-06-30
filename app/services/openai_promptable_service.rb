@@ -580,7 +580,7 @@ class OpenaiPromptableService
       - State: #{@user.state}
       - Postal Code: #{@user.postal_code}
       - Country: "USA"
-      - SSN Last 4: ###SSN_LAST4### (Include under the sender address)
+      - SSN Last 4: ###SSN_LAST4###
       - Current Date: #{Date.today.strftime("%B %d, %Y")}
   
       Include the recipient's mailing address (LexisNexis Dispute address).

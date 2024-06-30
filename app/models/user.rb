@@ -42,7 +42,7 @@ class User < ApplicationRecord
 
   validates :slug, uniqueness: true
   after_create :send_welcome_email
-  before_create :grant_free_credit
+  after_initialize :grant_free_credit, if: :new_record?
   
 
   def send_welcome_email
@@ -119,7 +119,7 @@ class User < ApplicationRecord
 
   def grant_free_credit
     if ENV['ENABLE_FREE_CREDIT'] == 'true'
-      self.credits += 1
+      self.free_attack += 1
     end
   end
 end
