@@ -1,7 +1,25 @@
+<% content_for :meta_tags do %>
+  <%= set_meta_tags(
+    title: @post.title,
+    description: @post.body.truncate(160),
+    canonical: blog_url(@post),
+    og: {
+      title: @post.title,
+      description: @post.body.truncate(160),
+      image: @post.header_image.attached? ? url_for(@post.header_image) : image_url('blue-logo.jpg'),
+      url: blog_url(@post)
+    }
+  ) %>
+<% end %>
+
 <div class="container pb-20 pt-32">
   <div class="max-w-5xl mx-auto bg-white p-8">
     <div class="flex items-center space-x-4 mb-4">
-      <img src="<%= url_for(@post.header_image) %>" alt="<%= @post.user.first_name %>" class="w-10 h-10 rounded-full">
+      <% if @post.user.avatar.attached? %>
+        <img src="<%= url_for(@post.user.avatar) %>" alt="<%= @post.user.first_name %>" class="w-10 h-10 rounded-full">
+      <% else %>
+        <img src="<%= url_for(@post.header_image) %>" alt="<%= @post.user.first_name %>" class="w-10 h-10 rounded-full">
+      <% end %>
       <div>
         <h2 class="text-sm font-semibold text-gray-900"><%= @post.user.first_name %></h2>
         <p class="text-sm text-gray-600">Posted: <%= @post.created_at.strftime("%B %d, %Y") %> • 5 mins read</p>

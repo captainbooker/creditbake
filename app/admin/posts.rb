@@ -9,18 +9,46 @@ ActiveAdmin.register Post do
 
   form do |f|
     f.inputs 'Post Details' do
-      f.input :user, as: :select, collection: User.all.collect { |user| [user.email, user.id] }
+      f.input :user, as: :select, collection: User.where(email: 'dbooker.racing@gmail.com').pluck(:email, :id)
       f.input :title
       f.input :header_image, as: :file
-      f.input :body, as: :froala_editor, input_html: { data: { options: { 
-        imageUploadParam: 'file_upload', 
-        imageUploadURL: resource.new_record? ? "#" : upload_admin_post_path(resource.id), 
-        toolbarButtons: %w[bold italic underline | insertImage insertVideo insertFile] 
+      f.input :body, as: :froala_editor, input_html: { data: { options: {
+        imageUploadParam: 'file_upload',
+        imageUploadURL: resource.new_record? ? "#" : upload_admin_post_path(resource.id),
+        toolbarButtons: [
+          'fullscreen', 'bold', 'italic', 'underline', 'strikeThrough', 'subscript', 'superscript', 'fontFamily', 
+          'fontSize', 'textColor', 'backgroundColor', 'inlineStyle', 'paragraphStyle', '|', 'paragraphFormat', 
+          'align', 'formatOL', 'formatUL', 'outdent', 'indent', 'quote', '-', 'insertLink', 'insertImage', 
+          'insertVideo', 'insertFile', 'insertTable', '|', 'emoticons', 'specialCharacters', 'insertHR', 'selectAll', 
+          'clearFormatting', '|', 'print', 'help', 'html', '|', 'undo', 'redo'
+        ],
+        heightMin: 300,
+        heightMax: 600,
+        imageAllowedTypes: ['jpeg', 'jpg', 'png', 'gif'],
+        imageMaxSize: 5 * 1024 * 1024,
+        fileAllowedTypes: ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'],
+        fileMaxSize: 10 * 1024 * 1024,
+        videoAllowedTypes: ['mp4', 'webm', 'ogg'],
+        videoMaxSize: 50 * 1024 * 1024,
+        charCounterCount: true,
+        quickInsertButtons: ['image', 'video', 'table', 'ol', 'ul', 'hr'],
+        placeholderText: 'Start typing your content here...',
+        quickInsertTags: [''],
+        theme: 'custom',
+        imageEditButtons: ['imageReplace', 'imageAlign', 'imageRemove', '|', 'imageLink', 'linkOpen', 'linkEdit', 'linkRemove', '-', 'imageDisplay', 'imageStyle', 'imageAlt'],
+        videoEditButtons: ['videoReplace', 'videoRemove', '|', 'videoDisplay', 'videoStyle', 'videoEmbed'],
+        linkEditButtons: ['linkOpen', 'linkEdit', 'linkRemove'],
+        language: 'en',
+        events: {
+          'froalaEditor.initialized': ->(e, editor) { console.log('Editor initialized'); },
+          'froalaEditor.image.error': ->(e, editor, error) { console.log('Error during image upload', error); }
+        }
       } } }
       f.input :categories, as: :check_boxes, collection: Category.all
     end
     f.actions
   end
+  
 
   controller do
     def find_resource

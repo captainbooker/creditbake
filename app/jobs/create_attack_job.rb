@@ -102,7 +102,7 @@ class CreateAttackJob < ApplicationJob
   end
 
   def convert_to_supported_image_type(image_path)
-    supported_types = %w[image/jpeg image/png]
+    supported_types = %w[image/jpeg image/png image/jpg]
     return image_path if supported_types.include?(file_mime_type(image_path))
 
     new_image_path = image_path.sub(File.extname(image_path), '.png')
@@ -131,7 +131,7 @@ class CreateAttackJob < ApplicationJob
     case file_mime_type(signature_path)
     when 'application/pdf'
       merge_pdfs(main_pdf_path, signature_path)
-    when 'image/jpeg', 'image/png'
+    when 'image/jpeg', 'image/png', 'image/jpg'
       signature_path = convert_to_supported_image_type(signature_path)
       add_image_to_pdf(signature_path, main_pdf_path, "Signature:")
     else
@@ -149,7 +149,7 @@ class CreateAttackJob < ApplicationJob
     case file_mime_type(utility_bill_path)
     when 'application/pdf'
       merge_pdfs(main_pdf_path, utility_bill_path)
-    when 'image/jpeg', 'image/png'
+    when 'image/jpeg', 'image/png', 'image/jpg'
       utility_bill_path = convert_to_supported_image_type(utility_bill_path)
       add_image_to_pdf(utility_bill_path, main_pdf_path, "Utility Bill:")
     else
@@ -167,7 +167,7 @@ class CreateAttackJob < ApplicationJob
     case file_mime_type(additional_document1_path)
     when 'application/pdf'
       merge_pdfs(main_pdf_path, additional_document1_path)
-    when 'image/jpeg', 'image/png'
+    when 'image/jpeg', 'image/png', 'image/jpg'
       additional_document1_path = convert_to_supported_image_type(additional_document1_path)
       add_image_to_pdf(additional_document1_path, main_pdf_path, "Additional Documents 1:")
     else
@@ -185,7 +185,7 @@ class CreateAttackJob < ApplicationJob
     case file_mime_type(additional_document2_path)
     when 'application/pdf'
       merge_pdfs(main_pdf_path, additional_document2_path)
-    when 'image/jpeg', 'image/png'
+    when 'image/jpeg', 'image/png', 'image/jpg'
       additional_document2_path = convert_to_supported_image_type(additional_document2_path)
       add_image_to_pdf(additional_document2_path, main_pdf_path, "Additional Documents 2:")
     else
@@ -203,7 +203,7 @@ class CreateAttackJob < ApplicationJob
     case file_mime_type(id_document_path)
     when 'application/pdf'
       merge_pdfs(main_pdf_path, id_document_path)
-    when 'image/jpeg', 'image/png'
+    when 'image/jpeg', 'image/png', 'image/jpg'
       id_document_path = convert_to_supported_image_type(id_document_path)
       add_image_to_pdf(id_document_path, main_pdf_path, "ID Document:")
     else

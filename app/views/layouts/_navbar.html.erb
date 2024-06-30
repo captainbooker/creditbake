@@ -28,13 +28,23 @@
   </div>
   <div id="mobile-menu" class="hidden md:hidden">
     <nav class="px-4 pt-4 pb-4 space-y-1 bg-white shadow-md">
-      <%= link_to "Home", unauthenticated_root_path, class: "text-lg font-medium text-gray-700 hover-blue-text transition-colors duration-300" %>
-      <%= link_to "Pricing", pricing_path, class: "text-lg font-medium text-gray-700 hover-blue-text transition-colors duration-300" %>
-      <%= link_to "Support", support_path, class: "text-lg font-medium text-gray-700 hover-blue-text transition-colors duration-300" %>
+      <li style="list-style-type: none">
+        <%= link_to "Home", unauthenticated_root_path, class: "text-lg font-medium text-gray-700 hover-blue-text transition-colors duration-300" %>
+      </li>
+      <li style="list-style-type: none">
+        <%= link_to "Pricing", pricing_path, class: "text-lg font-medium text-gray-700 hover-blue-text transition-colors duration-300" %>
+      </li>
+      <li style="list-style-type: none">
+        <%= link_to "Support", support_path, class: "text-lg font-medium text-gray-700 hover-blue-text transition-colors duration-300" %>
+      </li>
       <% if current_page?(unauthenticated_root_path) %>
-        <a href="#testimonials" class="text-lg font-medium text-gray-700 hover-blue-text transition-colors duration-300">Testimonials</a>
+        <li style="list-style-type: none">
+          <a href="#testimonials" class="text-lg font-medium text-gray-700 hover-blue-text transition-colors duration-300">Testimonials</a>
+        </li>
       <% end %>
-      <%= link_to "Blog", blogs_path, class: "text-lg font-medium text-gray-700 hover-blue-text transition-colors duration-300" %>
+      <li style="list-style-type: none">
+        <%= link_to "Blog", blogs_path, class: "text-lg font-medium text-gray-700 hover-blue-text transition-colors duration-300" %>
+      </li>
       <a href="<%= new_user_session_path %>" class="block text-lg font-medium text-gray-700 hover-blue-text transition-colors duration-300">Sign In</a>
       <a href="<%= new_user_registration_path %>" class="block px-6 py-2 text-lg font-medium text-white custom-blue rounded hover:bg-blue-600 transition-colors duration-300">Sign Up</a>
     </nav>
@@ -45,50 +55,63 @@
 document.addEventListener("turbolinks:load", function() {
   const menuBtn = document.getElementById('menu-btn');
   const mobileMenu = document.getElementById('mobile-menu');
-
-  menuBtn.addEventListener('click', function () {
-    mobileMenu.classList.toggle('hidden');
-  });
-
   const sections = document.querySelectorAll('section');
   const navLinks = document.querySelectorAll('nav a');
+  let isMenuOpen = false; // Track the menu state
 
-  navLinks.forEach(link => {
-    link.addEventListener('click', function (e) {
-      const href = this.getAttribute('href');
-      if (href.startsWith('#')) {
-        e.preventDefault();
-        const targetId = href.substring(1);
-        const targetSection = document.getElementById(targetId);
-
-        if (targetSection) {
-          window.scrollTo({
-            top: targetSection.offsetTop,
-            behavior: 'smooth'
-          });
-        }
-
-        mobileMenu.classList.add('hidden'); // Close mobile menu on link click
+  if (menuBtn && mobileMenu) {
+    menuBtn.addEventListener('click', function() {
+      isMenuOpen = !isMenuOpen;
+      if (isMenuOpen) {
+        mobileMenu.classList.remove('hidden');
+      } else {
+        mobileMenu.classList.add('hidden');
       }
     });
-  });
+  } else {
+    console.log('Menu button or mobile menu not found');
+  }
 
-  window.addEventListener('scroll', function () {
-    let current = '';
-    sections.forEach(section => {
-      const sectionTop = section.offsetTop;
-      const sectionHeight = section.clientHeight;
-      if (pageYOffset >= sectionTop - sectionHeight / 3) {
-        current = section.getAttribute('id');
-      }
-    });
-
+  if (navLinks.length > 0 && sections.length > 0) {
     navLinks.forEach(link => {
-      link.classList.remove('custom-blue-text');
-      if (link.getAttribute('href').includes(current)) {
-        link.classList.add('custom-blue-text');
-      }
+      link.addEventListener('click', function(e) {
+        const href = this.getAttribute('href');
+        if (href.startsWith('#')) {
+          e.preventDefault();
+          const targetId = href.substring(1);
+          const targetSection = document.getElementById(targetId);
+
+          if (targetSection) {
+            window.scrollTo({
+              top: targetSection.offsetTop,
+              behavior: 'smooth'
+            });
+          }
+
+          // Close mobile menu on link click
+          isMenuOpen = false;
+          mobileMenu.classList.add('hidden');
+        }
+      });
     });
-  });
+
+    window.addEventListener('scroll', function() {
+      let current = '';
+      sections.forEach(section => {
+        const sectionTop = section.offsetTop;
+        const sectionHeight = section.clientHeight;
+        if (pageYOffset >= sectionTop - sectionHeight / 3) {
+          current = section.getAttribute('id');
+        }
+      });
+
+      navLinks.forEach(link => {
+        link.classList.remove('custom-blue-text');
+        if (link.getAttribute('href').includes(current)) {
+          link.classList.add('custom-blue-text');
+        }
+      });
+    });
+  }
 });
 </script>
