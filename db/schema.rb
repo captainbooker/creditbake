@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2024_06_28_210957) do
+ActiveRecord::Schema.define(version: 2024_06_30_075100) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -420,23 +420,23 @@ ActiveRecord::Schema.define(version: 2024_06_28_210957) do
     t.index ["user_id"], name: "index_users_roles_on_user_id"
   end
 
-  add_foreign_key "accounts", "users"
+  add_foreign_key "accounts", "users", on_delete: :cascade
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
-  add_foreign_key "bureau_details", "accounts"
+  add_foreign_key "bureau_details", "accounts", on_delete: :cascade
   add_foreign_key "bureau_details", "public_records"
   add_foreign_key "client_profiles", "clients"
   add_foreign_key "clients", "users"
   add_foreign_key "credit_reports", "clients"
-  add_foreign_key "credit_reports", "users"
+  add_foreign_key "credit_reports", "users", on_delete: :cascade
   add_foreign_key "disputes", "clients"
   add_foreign_key "disputes", "credit_reports"
-  add_foreign_key "inquiries", "users"
+  add_foreign_key "inquiries", "users", on_delete: :cascade
   add_foreign_key "mailings", "letters"
   add_foreign_key "mailings", "users"
   add_foreign_key "post_categories", "categories"
   add_foreign_key "post_categories", "posts"
   add_foreign_key "posts", "users"
-  add_foreign_key "public_records", "users"
-  add_foreign_key "spendings", "users"
+  add_foreign_key "public_records", "users", on_delete: :cascade
+  add_foreign_key "spendings", "users", on_delete: :cascade
 end
