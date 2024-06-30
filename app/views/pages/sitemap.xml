@@ -1,48 +1,82 @@
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
-<!--  created with Free Online Sitemap Generator www.xml-sitemaps.com  -->
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset
+      xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9
+            http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
+<!-- created with Free Online Sitemap Generator www.xml-sitemaps.com -->
+
+
 <url>
-<loc>https://www.creditbake.com/</loc>
-<lastmod>2024-06-28T00:49:55+00:00</lastmod>
-<priority>1.00</priority>
+  <loc>https://www.creditbake.com/</loc>
+  <lastmod>2024-06-30T21:33:45+00:00</lastmod>
+  <priority>1.00</priority>
 </url>
 <url>
-<loc>https://www.creditbake.com/pricing</loc>
-<lastmod>2024-06-28T00:49:55+00:00</lastmod>
-<priority>0.80</priority>
+  <loc>https://www.creditbake.com/pricing</loc>
+  <lastmod>2024-06-30T21:33:45+00:00</lastmod>
+  <priority>0.80</priority>
 </url>
 <url>
-<loc>https://www.creditbake.com/support</loc>
-<lastmod>2024-06-28T00:49:55+00:00</lastmod>
-<priority>0.80</priority>
+  <loc>https://www.creditbake.com/support</loc>
+  <lastmod>2024-06-30T21:33:45+00:00</lastmod>
+  <priority>0.80</priority>
 </url>
 <url>
-<loc>https://www.creditbake.com/users/sign_in</loc>
-<lastmod>2024-06-28T00:49:55+00:00</lastmod>
-<priority>0.80</priority>
+  <loc>https://www.creditbake.com/blogs</loc>
+  <lastmod>2024-06-30T21:33:45+00:00</lastmod>
+  <priority>0.80</priority>
 </url>
 <url>
-<loc>https://www.creditbake.com/users/sign_up</loc>
-<lastmod>2024-06-28T00:49:55+00:00</lastmod>
-<priority>0.80</priority>
+  <loc>https://www.creditbake.com/users/sign_in</loc>
+  <lastmod>2024-06-30T21:33:45+00:00</lastmod>
+  <priority>0.80</priority>
 </url>
 <url>
-<loc>https://www.creditbake.com/privacy_policy</loc>
-<lastmod>2024-06-28T00:49:55+00:00</lastmod>
-<priority>0.80</priority>
+  <loc>https://www.creditbake.com/users/sign_up</loc>
+  <lastmod>2024-06-30T21:33:45+00:00</lastmod>
+  <priority>0.80</priority>
 </url>
 <url>
-<loc>https://www.creditbake.com/terms_and_conditions</loc>
-<lastmod>2024-06-28T00:49:55+00:00</lastmod>
-<priority>0.80</priority>
+  <loc>https://www.creditbake.com/privacy_policy</loc>
+  <lastmod>2024-06-30T21:33:45+00:00</lastmod>
+  <priority>0.80</priority>
 </url>
 <url>
-<loc>https://www.creditbake.com/refund_policy</loc>
-<lastmod>2024-06-28T00:49:55+00:00</lastmod>
-<priority>0.80</priority>
+  <loc>https://www.creditbake.com/terms_and_conditions</loc>
+  <lastmod>2024-06-30T21:33:45+00:00</lastmod>
+  <priority>0.80</priority>
 </url>
 <url>
-<loc>https://www.creditbake.com/users/password/new</loc>
-<lastmod>2024-06-28T00:49:55+00:00</lastmod>
-<priority>0.64</priority>
+  <loc>https://www.creditbake.com/refund_policy</loc>
+  <lastmod>2024-06-30T21:33:45+00:00</lastmod>
+  <priority>0.80</priority>
 </url>
+<url>
+  <loc>https://www.creditbake.com/blogs?category_id=1</loc>
+  <lastmod>2024-06-30T21:33:45+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://www.creditbake.com/blogs/how-long-do-hard-inquiries-remain-on-your-credit-report</loc>
+  <lastmod>2024-06-30T21:33:45+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://www.creditbake.com/blogs/what-are-collections-and-how-long-do-they-stay-on-your-credit-report</loc>
+  <lastmod>2024-06-30T21:33:45+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://www.creditbake.com/blogs/why-should-i-never-pay-off-a-collection</loc>
+  <lastmod>2024-06-30T21:33:45+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://www.creditbake.com/users/password/new</loc>
+  <lastmod>2024-06-30T21:33:45+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+
+
 </urlset>
