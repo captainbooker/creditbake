@@ -39,7 +39,6 @@ class OpenaiPromptableService
       }
     )
     response_text = response['choices'].first['message']['content']
-    inject_sensitive_data(response_text, @user.ssn_last4)
   end
 
   def get_prompt(round, inquiries, accounts, public_record, bureau)
@@ -71,8 +70,20 @@ class OpenaiPromptableService
       State: #{@user.state}
       Postal Code: #{@user.postal_code}
       Country: "USA"
-      SSN Last 4: ###SSN_LAST4### (Include under sender address)
       Current Date: #{Date.today.strftime("%B %d, %Y")}
+
+      Example Structure:
+      [Your Name]
+      [Your Street Address]
+      [City, State, Postal Code]
+      USA
+      [Current Date]
+  
+      [Recipient's Name]
+      [Recipient's Title]
+      [Bankruptcy Court Name]
+      [Street Address]
+      [City, State, Postal Code]
 
       Information:
       Inquiries: (SHOULD BE LISTED)
@@ -115,12 +126,23 @@ class OpenaiPromptableService
       State: #{@user.state}
       Postal Code: #{@user.postal_code}
       Country: "USA"
-      SSN Last 4: ###SSN_LAST4### (Include under sender address)
       Current Date: #{Date.today.strftime("%B %d, %Y")}
+
+      Example Structure:
+      [Your Name]
+      [Your Street Address]
+      [City, State, Postal Code]
+      USA
+      [Current Date]
+  
+      [Recipient's Name]
+      [Recipient's Title]
+      [Bankruptcy Court Name]
+      [Street Address]
+      [City, State, Postal Code]
   
       Information: List accounts and public records details in the letter as provided:
       #{format_accounts_by_bureau(accounts, bureau, 7)}
-  
       #{format_public_records_by_bureau(public_record, bureau)}
   
       Additional Requirements:
@@ -160,8 +182,20 @@ class OpenaiPromptableService
       State: #{@user.state}
       Postal Code: #{@user.postal_code}
       Country: "USA"
-      SSN Last 4: ###SSN_LAST4### (Include under sender address)
       Current Date: #{Date.today.strftime("%B %d, %Y")}
+
+      Example Structure:
+      [Your Name]
+      [Your Street Address]
+      [City, State, Postal Code]
+      USA
+      [Current Date]
+  
+      [Recipient's Name]
+      [Recipient's Title]
+      [Bankruptcy Court Name]
+      [Street Address]
+      [City, State, Postal Code]
 
       Information: List inquiry, accounts, and public records details in the letter:
       #{format_inquiries(inquiries, bureau, 100)}
@@ -205,8 +239,20 @@ class OpenaiPromptableService
       State: #{@user.state}
       Postal Code: #{@user.postal_code}
       Country: "USA"
-      SSN Last 4: ###SSN_LAST4### (Include under sender address)
       Current Date: #{Date.today.strftime("%B %d, %Y")}
+
+      Example Structure:
+      [Your Name]
+      [Your Street Address]
+      [City, State, Postal Code]
+      USA
+      [Current Date]
+  
+      [Recipient's Name]
+      [Recipient's Title]
+      [Bankruptcy Court Name]
+      [Street Address]
+      [City, State, Postal Code]
   
       Information: List inquiry, accounts, and public records details in the letter:
       #{format_inquiries(inquiries, bureau, 5)}
@@ -251,8 +297,20 @@ class OpenaiPromptableService
       State: #{@user.state}
       Postal Code: #{@user.postal_code}
       Country: "USA"
-      SSN Last 4: ###SSN_LAST4### (Include under sender address)
       Current Date: #{Date.today.strftime("%B %d, %Y")}
+
+      Example Structure:
+      [Your Name]
+      [Your Street Address]
+      [City, State, Postal Code]
+      USA
+      [Current Date]
+  
+      [Recipient's Name]
+      [Recipient's Title]
+      [Bankruptcy Court Name]
+      [Street Address]
+      [City, State, Postal Code]
   
       Information: List inquiry, accounts, and public records details in the letter:
       #{format_inquiries(inquiries, bureau, 100)}
@@ -296,8 +354,20 @@ class OpenaiPromptableService
       State: #{@user.state}
       Postal Code: #{@user.postal_code}
       Country: "USA"
-      SSN Last 4: ###SSN_LAST4### (Include under sender address)
       Current Date: #{Date.today.strftime("%B %d, %Y")}
+
+      Example Structure:
+      [Your Name]
+      [Your Street Address]
+      [City, State, Postal Code]
+      USA
+      [Current Date]
+  
+      [Recipient's Name]
+      [Recipient's Title]
+      [Bankruptcy Court Name]
+      [Street Address]
+      [City, State, Postal Code]
   
       Information: List inquiry, accounts, and public records details in the letter:
       #{format_inquiries(inquiries, bureau, 10)}
@@ -340,8 +410,20 @@ class OpenaiPromptableService
       State: #{@user.state}
       Postal Code: #{@user.postal_code}
       Country: "USA"
-      SSN Last 4: ###SSN_LAST4### (Include under sender address)
       Current Date: #{Date.today.strftime("%B %d, %Y")}
+
+      Example Structure:
+      [Your Name]
+      [Your Street Address]
+      [City, State, Postal Code]
+      USA
+      [Current Date]
+  
+      [Recipient's Name]
+      [Recipient's Title]
+      [Bankruptcy Court Name]
+      [Street Address]
+      [City, State, Postal Code]
   
       Information: Include the details of inquiries, accounts, and public records as provided:
       #{format_inquiries(inquiries, bureau, 4)}
@@ -384,8 +466,20 @@ class OpenaiPromptableService
       State: #{@user.state}
       Postal Code: #{@user.postal_code}
       Country: "USA"
-      SSN Last 4: ###SSN_LAST4### (Include under sender address)
       Current Date: #{Date.today.strftime("%B %d, %Y")}
+
+      Example Structure:
+      [Your Name]
+      [Your Street Address]
+      [City, State, Postal Code]
+      USA
+      [Current Date]
+  
+      [Recipient's Name]
+      [Recipient's Title]
+      [Bankruptcy Court Name]
+      [Street Address]
+      [City, State, Postal Code]
   
       Information: Include the details of inquiries, accounts, and public records as provided:
       #{format_inquiries(inquiries, bureau, 100)}
@@ -428,8 +522,20 @@ class OpenaiPromptableService
       State: #{@user.state}
       Postal Code: #{@user.postal_code}
       Country: "USA"
-      SSN Last 4: ###SSN_LAST4### (Include under sender address)
       Current Date: #{Date.today.strftime("%B %d, %Y")}
+
+      Example Structure:
+      [Your Name]
+      [Your Street Address]
+      [City, State, Postal Code]
+      USA
+      [Current Date]
+  
+      [Recipient's Name]
+      [Recipient's Title]
+      [Bankruptcy Court Name]
+      [Street Address]
+      [City, State, Postal Code]
   
       Information: Include the details of inquiries, accounts, and public records as provided:
       #{format_inquiries(inquiries, bureau, 15)}
@@ -473,11 +579,22 @@ class OpenaiPromptableService
         - State: #{@user.state}
         - Postal Code: #{@user.postal_code}
         - Country: "USA"
-        - SSN Last 4: ###SSN_LAST4### (Include under the sender address)
         - Current Date: #{Date.today.strftime("%B %d, %Y")}
+
+        Example Structure:
+        [Your Name]
+        [Your Street Address]
+        [City, State, Postal Code]
+        USA
+        [Current Date]
+    
+        [Recipient's Name]
+        [Recipient's Title]
+        [Bankruptcy Court Name]
+        [Street Address]
+        [City, State, Postal Code]
   
-      - Information to include in the letter:
-        - List details of inquiries, accounts, and public records provided:
+      - Information: Include the details of inquiries, accounts, and public records as provided:
           #{format_inquiries(inquiries, bureau, 100)}
           #{format_accounts_by_bureau(accounts, bureau, 100)}
           #{format_public_records_by_bureau(public_record, bureau)}
@@ -518,7 +635,6 @@ class OpenaiPromptableService
       - State: #{@user.state}
       - Postal Code: #{@user.postal_code}
       - Country: "USA"
-      - SSN Last 4: ###SSN_LAST4### (Include under sender address)
       - Current Date: #{Date.today.strftime("%B %d, %Y")}
   
       Include the recipient's mailing address (find #{@user.state} bankruptcy court address).
@@ -536,7 +652,6 @@ class OpenaiPromptableService
       [Your Street Address]
       [City, State, Postal Code]
       USA
-      SSN Last 4: [Your SSN Last 4]
       [Current Date]
   
       [Recipient's Name]
@@ -580,7 +695,6 @@ class OpenaiPromptableService
       - State: #{@user.state}
       - Postal Code: #{@user.postal_code}
       - Country: "USA"
-      - SSN Last 4: ###SSN_LAST4###
       - Current Date: #{Date.today.strftime("%B %d, %Y")}
   
       Include the recipient's mailing address (LexisNexis Dispute address).
@@ -599,7 +713,6 @@ class OpenaiPromptableService
       [Your Street Address]
       [City, State, Postal Code]
       USA
-      SSN Last 4: [Your SSN Last 4]
       [Current Date]
   
       LexisNexis Dispute Center
@@ -670,10 +783,5 @@ class OpenaiPromptableService
         liability: #{details[:liability] || '-'}
       DETAILS
     end.join("\n\n")
-  end
-
-  def inject_sensitive_data(letter_text, ssn_last4)
-    placeholder = "###SSN_LAST4###"
-    letter_text.gsub(placeholder, ssn_last4)
   end
 end

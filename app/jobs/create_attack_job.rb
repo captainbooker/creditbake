@@ -237,6 +237,8 @@ class CreateAttackJob < ApplicationJob
 
     Prawn::Document.generate(pdf_path) do |pdf|
       pdf.text document_content
+      pdf.move_down 10
+      pdf.text "SSN Last 4 Digits: #{user.ssn_last4}", size: 14, style: :bold
     end
 
     add_attachments_to_pdf(pdf_path, user)
