@@ -133,7 +133,7 @@ class CreateAttackJob < ApplicationJob
       merge_pdfs(main_pdf_path, signature_path)
     when 'image/jpeg', 'image/png', 'image/jpg'
       signature_path = convert_to_supported_image_type(signature_path)
-      add_image_to_pdf(signature_path, main_pdf_path, "Signature:")
+      add_image_to_pdf(signature_path, main_pdf_path, "Signature:", width: 175, height: 175)
     else
       Rollbar.error("Unsupported file type: #{file_mime_type(signature_path)}")
     end
@@ -218,12 +218,12 @@ class CreateAttackJob < ApplicationJob
     combined_pdf.save main_pdf_path
   end
 
-  def add_image_to_pdf(image_path, pdf_path, title)
+  def add_image_to_pdf(image_path, pdf_path, title, width: 500, height: 400)
     pdf_with_image_path = pdf_path.sub('.pdf', '_with_image.pdf')
     Prawn::Document.generate(pdf_with_image_path) do |pdf|
       pdf.start_new_page
       pdf.text title
-      pdf.image image_path, width: 500, height: 400, position: :center
+      pdf.image image_path, width: width, height: height, position: :center
     end
     merge_pdfs(pdf_path, pdf_with_image_path)
   end
