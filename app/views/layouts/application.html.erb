@@ -1,21 +1,23 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-HLS2C34D7F"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
+    <% if Rails.env.production? %>
+      <!-- Google tag (gtag.js) -->
+      <script async src="https://www.googletagmanager.com/gtag/js?id=G-HLS2C34D7F"></script>
+      <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
 
-      gtag('config', 'G-HLS2C34D7F');
-    </script>
-    <!-- Google Tag Manager -->
-    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-    })(window,document,'script','dataLayer','GTM-PCGXZ4HQ');</script>
+        gtag('config', 'G-HLS2C34D7F');
+      </script>
+      <!-- Google Tag Manager -->
+      <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+      new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+      j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+      'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+      })(window,document,'script','dataLayer','GTM-PCGXZ4HQ');</script>
+    <% end %>
     <!-- End Google Tag Manager -->
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <%= csrf_meta_tags %>
@@ -35,7 +37,9 @@
     <link rel="icon" type="image/png" sizes="192x192" href="<%= asset_path 'android-chrome-192x192.png' %>">
     <link rel="icon" type="image/png" sizes="512x512" href="<%= asset_path 'android-chrome-512x512.png' %>">
     <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
-    <script defer src="https://cloud.umami.is/script.js" data-website-id="aa10b2e9-c485-4fc9-9637-c23ab21c2631"></script>
+    <% if Rails.env.production? %>
+      <script defer src="https://cloud.umami.is/script.js" data-website-id="aa10b2e9-c485-4fc9-9637-c23ab21c2631"></script>
+    <% end %>
     <link 
       href="https://cdn.jsdelivr.net/npm/shareon@2/dist/shareon.min.css"
       rel="stylesheet"
