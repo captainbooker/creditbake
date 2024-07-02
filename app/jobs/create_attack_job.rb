@@ -66,6 +66,7 @@ class CreateAttackJob < ApplicationJob
 
     generate_pdfs(letter, user)
     UserMailer.notification_email(user, "Letters have been successfully generated, login to view them.").deliver_later
+    SpendingMailer.with(user: user).send_review.deliver_later(wait: 48.hours)
   end
 
   private

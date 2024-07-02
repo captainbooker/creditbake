@@ -18,4 +18,10 @@ class SpendingMailer < ApplicationMailer
 
     mail to: @user.email, subject: "You've spent Credits"
   end
+
+  def send_review(user)
+    @user = user
+
+    mail to: @user.email, subject: "Your Feedback Means the World to Us"
+  end
 end

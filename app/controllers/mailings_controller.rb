@@ -82,7 +82,7 @@ class MailingsController < ApplicationController
     paper_cost = pages * 0.01
     envelope_cost = 0.10 * number_of_letters
     postage_cost = 0.63 * number_of_letters
-    certified_mail_fee = 4.50 * number_of_letters
+    certified_mail_fee = 4.40 * number_of_letters
     return_receipt_fee = 2.20 * number_of_letters
     labor_cost = 1.25 * number_of_letters
 
