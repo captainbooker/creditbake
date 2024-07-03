@@ -51,7 +51,7 @@ class ApplicationController < ActionController::Base
            current_user.street_address.present? && current_user.city.present? && current_user.state.present? &&
            current_user.postal_code.present?
       unless request.path == edit_profile_path || request.path == users_update_profile_path
-        redirect_to edit_profile_path, alert: "Please complete your profile before proceeding."
+        redirect_to edit_profile_path, notice: "Please complete your profile before proceeding."
       end
     end
   end

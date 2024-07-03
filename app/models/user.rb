@@ -1,6 +1,7 @@
 class User < ApplicationRecord
   devise :database_authenticatable, :registerable,
-         :recoverable, :rememberable, :validatable
+         :recoverable, :rememberable, :validatable, :omniauthable,
+         omniauth_providers: [:google_oauth2]
 
   has_many :clients
   has_many :inquiries
@@ -33,7 +34,7 @@ class User < ApplicationRecord
 
   validates :credits, numericality: { greater_than_or_equal_to: 0 }
   validates :free_attack, numericality: { greater_than_or_equal_to: 0 }, allow_nil: true
-  validate :password_complexity, on: :create
+  validate :password_complexity, on: :create, unless: :oauth_signup?
   validates :agreement, acceptance: true, on: :create
   validate :credits_cannot_be_negative
   validate :free_attack_cannot_be_negative
@@ -43,6 +44,8 @@ class User < ApplicationRecord
   validates :slug, uniqueness: true
   after_create :send_welcome_email
   after_initialize :grant_free_credit, if: :new_record?
+
+  attr_accessor :oauth_signup
   
 
   def send_welcome_email
@@ -88,6 +91,16 @@ class User < ApplicationRecord
     []
   end
 
+  def self.from_google(u)
+    user = find_or_create_by!(email: u[:email]) do |new_user|
+      new_user.provider = 'google'
+      new_user.uid = u[:uid]
+      new_user.password = Devise.friendly_token[0, 20]
+      new_user.oauth_signup = true
+    end
+    user
+  end
+
   private
 
   def generate_unique_slug
@@ -121,5 +134,9 @@ class User < ApplicationRecord
     if ENV['ENABLE_FREE_CREDIT'] == 'true'
       self.free_attack += 1
     end
+  end
+
+  def oauth_signup?
+    oauth_signup
   end
 end

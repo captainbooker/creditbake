@@ -87,7 +87,7 @@ class MailingsController < ApplicationController
     labor_cost = 1.25 * number_of_letters
 
     total_cost = (pages * cost_per_page) + paper_cost + envelope_cost + postage_cost + certified_mail_fee + return_receipt_fee + labor_cost
-    markup = 0.30 * total_cost
+    markup = 0.10 * total_cost
     total_cost + markup
   end
 

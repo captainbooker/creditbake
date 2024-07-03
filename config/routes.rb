@@ -14,7 +14,7 @@ Rails.application.routes.draw do
   ActiveAdmin.routes(self)
 
   # Devise routes for user authentication
-  devise_for :users, controllers: { registrations: 'users/registrations' }
+  devise_for :users, controllers: { registrations: 'users/registrations', omniauth_callbacks: 'users/omniauth_callbacks' }
 
   devise_scope :user do
     authenticated :user do

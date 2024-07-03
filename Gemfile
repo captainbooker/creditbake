@@ -57,6 +57,9 @@ gem "httparty"
 gem 'scout_apm'
 gem 'activeadmin_froala_editor'
 gem 'combine_pdf'
+gem 'omniauth'
+gem 'omniauth-google-oauth2'
+gem "omniauth-rails_csrf_protection"
 
 
 gem 'dotenv', groups: [:development, :test]
