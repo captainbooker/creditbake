@@ -92,14 +92,9 @@ class User < ApplicationRecord
   end
 
   def self.from_google(u)
-    user = find_or_create_by!(email: u[:email]) do |new_user|
-      new_user.provider = 'google'
-      new_user.uid = u[:uid]
-      new_user.password = Devise.friendly_token[0, 20]
-      new_user.oauth_signup = true
-    end
-    user
-  end
+    create_with(uid: u[:uid], provider: 'google',
+                password: Devise.friendly_token[0, 20], oauth_signup: true).find_or_create_by!(email: u[:email])
+  nd
 
   private
 
