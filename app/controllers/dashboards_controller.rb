@@ -5,6 +5,7 @@ class DashboardsController < ApplicationController
   before_action :ensure_required_documents, only: [:create_attack]
 
   def index
+    @user = current_user
     @credit_report = CreditReport.where(user_id: current_user.id).order(created_at: :desc).first
     @accounts = current_user.accounts
     @inquiries = current_user.inquiries

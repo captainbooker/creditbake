@@ -11,7 +11,7 @@ class UsersController < ApplicationController
       user_params.delete(:ssn_last4)
     end
     if @user.update(user_params)
-      redirect_to user_settings_path, notice: 'Profile updated successfully.'
+      redirect_to authenticated_root_path, notice: 'Profile updated successfully.'
     else
       render :settings
     end
@@ -19,12 +19,12 @@ class UsersController < ApplicationController
 
   def delete_id_document
     @user.id_document.purge
-    redirect_to user_settings_path, notice: 'ID Document was successfully deleted.'
+    redirect_to authenticated_root_path, notice: 'ID Document was successfully deleted.'
   end
 
   def delete_utility_bill
     @user.utility_bill.purge
-    redirect_to user_settings_path, notice: 'Utility Bill was successfully deleted.'
+    redirect_to authenticated_root_path, notice: 'Utility Bill was successfully deleted.'
   end
 
   private

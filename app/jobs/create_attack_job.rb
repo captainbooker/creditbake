@@ -235,11 +235,14 @@ class CreateAttackJob < ApplicationJob
     tmp_dir = Rails.root.join('tmp')
     Dir.mkdir(tmp_dir) unless Dir.exist?(tmp_dir)
     pdf_path = tmp_dir.join("#{bureau_name}_letter_#{letter.id}_#{SecureRandom.hex}.pdf")
+    font_path = Rails.root.join('app', 'assets', 'fonts', 'DejaVuSans.ttf')
 
     Prawn::Document.generate(pdf_path) do |pdf|
+      pdf.font_families.update("DejaVuSans" => { normal: font_path })
+      pdf.font "DejaVuSans"
       pdf.text document_content
       pdf.move_down 10
-      pdf.text "SSN Last 4 Digits: #{user.ssn_last4}", size: 14, style: :bold
+      pdf.text "SSN Last 4 Digits: #{user.ssn_last4}", size: 14
     end
 
     add_attachments_to_pdf(pdf_path, user)

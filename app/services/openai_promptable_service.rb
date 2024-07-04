@@ -60,6 +60,19 @@ class OpenaiPromptableService
     end
   end
 
+  def bureau_address(bureau)
+    case bureau.downcase
+    when 'experian'
+      "P.O. Box 2104, Allen, TX 75013-0949"
+    when 'transunion'
+      "P.O. Box 1000, Chester, PA 19022"
+    when 'equifax'
+      "P.O. Box 740241, Atlanta, GA 30374-0241"
+    else
+      "Unknown Bureau"
+    end
+  end
+
   def inquiries_all_in(inquiries, accounts, public_record, bureau)
     <<-PROMPT
       
@@ -78,12 +91,8 @@ class OpenaiPromptableService
       [City, State, Postal Code]
       USA
       [Current Date]
-  
-      [Recipient's Name]
-      [Recipient's Title]
-      [Bankruptcy Court Name]
-      [Street Address]
-      [City, State, Postal Code]
+
+      Recipient's Address: #{bureau_address(bureau)}
 
       Information:
       Inquiries: (SHOULD BE LISTED)
@@ -110,6 +119,7 @@ class OpenaiPromptableService
       - Detailed and thorough
       - Legally informed and compliant
 
+      Important: List metro 2 complaince codes.
       Note: Do not include special characters or multiple headings within the text.
 
     PROMPT
@@ -135,11 +145,7 @@ class OpenaiPromptableService
       USA
       [Current Date]
   
-      [Recipient's Name]
-      [Recipient's Title]
-      [Bankruptcy Court Name]
-      [Street Address]
-      [City, State, Postal Code]
+      Recipient's Address: #{bureau_address(bureau)}
   
       Information: List accounts and public records details in the letter as provided:
       #{format_accounts_by_bureau(accounts, bureau, 7)}
@@ -165,7 +171,8 @@ class OpenaiPromptableService
       - Professional and assertive
       - Detailed and thorough
       - Legally informed and compliant
-  
+
+      Important: List metro 2 complaince codes.
       Note: Do not include special characters like ``` or ### or multiple headings within the text.
     PROMPT
   end
@@ -191,12 +198,8 @@ class OpenaiPromptableService
       USA
       [Current Date]
   
-      [Recipient's Name]
-      [Recipient's Title]
-      [Bankruptcy Court Name]
-      [Street Address]
-      [City, State, Postal Code]
-
+      Recipient's Address: #{bureau_address(bureau)}
+      
       Information: List inquiry, accounts, and public records details in the letter:
       #{format_inquiries(inquiries, bureau, 100)}
       #{format_accounts_by_bureau(accounts, bureau, 100)}
@@ -223,6 +226,7 @@ class OpenaiPromptableService
       - Detailed and thorough
       - Legally informed and compliant
 
+      Important: List metro 2 complaince codes.
       Note: Do not include special characters like ``` or ### or multiple headings within the text.
     PROMPT
   end
@@ -248,11 +252,7 @@ class OpenaiPromptableService
       USA
       [Current Date]
   
-      [Recipient's Name]
-      [Recipient's Title]
-      [Bankruptcy Court Name]
-      [Street Address]
-      [City, State, Postal Code]
+      Recipient's Address: #{bureau_address(bureau)}
   
       Information: List inquiry, accounts, and public records details in the letter:
       #{format_inquiries(inquiries, bureau, 5)}
@@ -280,7 +280,8 @@ class OpenaiPromptableService
       - Professional and assertive
       - Detailed and thorough
       - Legally informed and compliant
-  
+
+      Important: List metro 2 complaince codes.
       Note: Do not include special characters like ``` or ###, and avoid multiple redundant headings within the text.
     PROMPT
   end
@@ -306,11 +307,7 @@ class OpenaiPromptableService
       USA
       [Current Date]
   
-      [Recipient's Name]
-      [Recipient's Title]
-      [Bankruptcy Court Name]
-      [Street Address]
-      [City, State, Postal Code]
+      Recipient's Address: #{bureau_address(bureau)}
   
       Information: List inquiry, accounts, and public records details in the letter:
       #{format_inquiries(inquiries, bureau, 100)}
@@ -337,7 +334,8 @@ class OpenaiPromptableService
       - Professional and assertive
       - Detailed and thorough
       - Legally informed and compliant
-  
+
+      Important: List metro 2 complaince codes.
       Note: Do not include special characters like ``` or ###, and avoid multiple redundant headings within the text.
     PROMPT
   end
@@ -363,11 +361,7 @@ class OpenaiPromptableService
       USA
       [Current Date]
   
-      [Recipient's Name]
-      [Recipient's Title]
-      [Bankruptcy Court Name]
-      [Street Address]
-      [City, State, Postal Code]
+      Recipient's Address: #{bureau_address(bureau)}
   
       Information: List inquiry, accounts, and public records details in the letter:
       #{format_inquiries(inquiries, bureau, 10)}
@@ -394,7 +388,8 @@ class OpenaiPromptableService
       - Professional and assertive
       - Detailed and thorough
       - Legally informed and compliant
-  
+
+      Important: List metro 2 complaince codes.
       Note: Do not include special characters like ``` or ###, and avoid multiple redundant headings within the text.
     PROMPT
   end  
@@ -419,11 +414,7 @@ class OpenaiPromptableService
       USA
       [Current Date]
   
-      [Recipient's Name]
-      [Recipient's Title]
-      [Bankruptcy Court Name]
-      [Street Address]
-      [City, State, Postal Code]
+      Recipient's Address: #{bureau_address(bureau)}
   
       Information: Include the details of inquiries, accounts, and public records as provided:
       #{format_inquiries(inquiries, bureau, 4)}
@@ -450,7 +441,8 @@ class OpenaiPromptableService
       - Professional and assertive
       - Detailed and thorough
       - Legally informed and compliant
-  
+
+      Important: List metro 2 complaince codes.
       Note: Do not include special characters like ``` or ###, and avoid multiple redundant headings within the text.
     PROMPT
   end  
@@ -475,11 +467,7 @@ class OpenaiPromptableService
       USA
       [Current Date]
   
-      [Recipient's Name]
-      [Recipient's Title]
-      [Bankruptcy Court Name]
-      [Street Address]
-      [City, State, Postal Code]
+      Recipient's Address: #{bureau_address(bureau)}
   
       Information: Include the details of inquiries, accounts, and public records as provided:
       #{format_inquiries(inquiries, bureau, 100)}
@@ -506,7 +494,8 @@ class OpenaiPromptableService
       - Professional and assertive
       - Detailed and thorough
       - Legally informed and compliant
-  
+
+      Important: List metro 2 complaince codes.
       Important: Do not include special characters like ``` or ###. Avoid multiple redundant headings within the text.
     PROMPT
   end  
@@ -531,11 +520,8 @@ class OpenaiPromptableService
       USA
       [Current Date]
   
-      [Recipient's Name]
-      [Recipient's Title]
-      [Bankruptcy Court Name]
-      [Street Address]
-      [City, State, Postal Code]
+      Recipient's Address: #{bureau_address(bureau)}
+      
   
       Information: Include the details of inquiries, accounts, and public records as provided:
       #{format_inquiries(inquiries, bureau, 15)}
@@ -562,7 +548,8 @@ class OpenaiPromptableService
       - Professional and assertive
       - Detailed and thorough
       - Legally informed and compliant
-  
+
+      Important: List metro 2 complaince codes.
       Important: Do not include special characters like ``` or ###. Avoid multiple redundant headings within the text. Ensure the letter is clear and well-structured, following the outline provided above.
     PROMPT
   end  
@@ -588,11 +575,7 @@ class OpenaiPromptableService
         USA
         [Current Date]
     
-        [Recipient's Name]
-        [Recipient's Title]
-        [Bankruptcy Court Name]
-        [Street Address]
-        [City, State, Postal Code]
+        Recipient's Address: #{bureau_address(bureau)}
   
       - Information: Include the details of inquiries, accounts, and public records as provided:
           #{format_inquiries(inquiries, bureau, 100)}
@@ -619,7 +602,8 @@ class OpenaiPromptableService
         - Professional and assertive
         - Detailed and thorough
         - Legally informed and compliant
-  
+
+      - Important: List metro 2 complaince codes.
       - Important: Avoid special characters like ``` or ###. Do not include redundant headings. Ensure the letter is clear, structured, and ready to send.
     PROMPT
   end  
@@ -678,7 +662,7 @@ class OpenaiPromptableService
       Tone and Style:
       - Professional and assertive
       - Clear and concise
-  
+
       Important: Do not include special characters like ``` or ###. Ensure the letter is clear, structured, and ready to send.
     PROMPT
   end

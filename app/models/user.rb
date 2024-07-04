@@ -75,6 +75,14 @@ class User < ApplicationRecord
     self[:free_attack] || 0
   end
 
+  def profile_complete?
+    !self.ssn_last4.blank? && !self.id_document.blank? && !self.utility_bill.blank? 
+  end
+
+  def credit_report_imported?
+    self.credit_reports.present?
+  end
+
   # def use_attack
   #   if free_attack > 0
   #     decrement!(:free_attack)

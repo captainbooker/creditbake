@@ -21,7 +21,7 @@ class Users::RegistrationsController < Devise::RegistrationsController
     if missing_required_fields? || current_user.signature.blank?
       redirect_to edit_profile_path, alert: 'Profile could not be updated. Please ensure all fields are filled out and a signature is provided.'
     elsif current_user.save
-      redirect_to user_settings_path, notice: 'Profile updated successfully. Please scroll down to upload last 4 of SSN and required documents to generate letters.'
+      redirect_to authenticated_root_path, notice: 'Thanks for completing registration. A few more steps and we are ready to roll!'
     else
       render :edit_profile
     end

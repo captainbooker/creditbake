@@ -37,6 +37,7 @@
 
     <div class="relative flex flex-1 flex-col overflow-y-auto overflow-x-hidden">
       <% unless current_page?(edit_profile_path) %>
+        <%= render "layouts/authenticated_top_nav" %>
         <%= render 'shared/flash_message' %>
       <% end %>
       <main>
