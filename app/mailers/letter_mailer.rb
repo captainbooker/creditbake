@@ -1,0 +1,2 @@
+class LetterMailer < ApplicationMailer
+end

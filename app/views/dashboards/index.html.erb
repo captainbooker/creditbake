@@ -58,7 +58,7 @@
               <div class="text-3xl font-semibold text-gray-900"><%= @accounts.count %></div>
             </div>
             <div class="mt-4 pb-6">
-              <%= link_to 'Take Action', letters_path, class: "px-6 py-3 font-medium rounded-lg transition duration-300 #{ 'bg-gray-400 text-white cursor-not-allowed' if @accounts.count.zero? } #{ 'custom-blue text-white hover:bg-blue-700' unless @accounts.count.zero? }", disabled: @accounts.count.zero? %>
+              <%= link_to 'Take Action', letters_path, class: "px-6 py-3 font-medium rounded-lg transition duration-300 border-2 #{ 'border-custom-blue-button text-custom-blue-button bg-white cursor-not-allowed' if @accounts.count.zero? } #{ 'border-custom-blue text-custom-blue-button bg-white hover:bg-custom-blue-button hover:text-white' unless @accounts.count.zero? }", disabled: @accounts.count.zero? %>
             </div>
           </div>
 
@@ -68,7 +68,7 @@
               <div class="text-3xl font-semibold text-red-500"><%= @inquiries.count %></div>
             </div>
             <div class="mt-4 pb-6">
-              <%= link_to 'Take Action', letters_path, class: "px-6 py-3 font-medium rounded-lg transition duration-300 #{ 'bg-gray-400 text-white cursor-not-allowed' if @inquiries.count.zero? } #{ 'custom-blue text-white hover:bg-blue-700' unless @inquiries.count.zero? }", disabled: @inquiries.count.zero? %>
+              <%= link_to 'Take Action', letters_path, class: "px-6 py-3 font-medium rounded-lg transition duration-300 border-2 #{ 'border-custom-blue-button text-custom-blue-button bg-white cursor-not-allowed' if @accounts.count.zero? } #{ 'border-custom-blue text-custom-blue-button bg-white hover:bg-custom-blue-button hover:text-white' unless @accounts.count.zero? }", disabled: @accounts.count.zero? %>
             </div>
           </div>
 
@@ -78,7 +78,7 @@
               <div class="text-3xl font-semibold text-red-500"><%= @negative_accounts.count %></div>
             </div>
             <div class="mt-4 pb-6">
-              <%= link_to 'Take Action', letters_path, class: "px-6 py-3 font-medium rounded-lg transition duration-300 #{ 'bg-gray-400 text-white cursor-not-allowed' if @negative_accounts.count.zero? } #{ 'custom-blue text-white hover:bg-blue-700' unless @negative_accounts.count.zero? }", disabled: @negative_accounts.count.zero? %>
+              <%= link_to 'Take Action', letters_path, class: "px-6 py-3 font-medium rounded-lg transition duration-300 border-2 #{ 'border-custom-blue-button text-custom-blue-button bg-white cursor-not-allowed' if @accounts.count.zero? } #{ 'border-custom-blue text-custom-blue-button bg-white hover:bg-custom-blue-button hover:text-white' unless @accounts.count.zero? }", disabled: @accounts.count.zero? %>
             </div>
           </div>
         </div>

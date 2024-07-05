@@ -4,7 +4,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>You've spent credits</title>
+    <title>Mailing receipt</title>
     <style type="text/css">
       #outlook a {
         padding: 0;
@@ -75,7 +75,7 @@
   </head>
   <body style="background-color: #ffffff;">
     <div style="display: none; font-size: 1px; color: #ffffff; line-height: 1px; max-height: 0px; max-width: 0px; opacity: 0; overflow: hidden;">
-      You've spent credits
+      It's been 32 days since you generated your letters
     </div>
     <div style="background-color: #ffffff;">
       <div style="margin: 0px auto; max-width: 600px;">
@@ -157,7 +157,7 @@
                                 font-weight: bold;
                               "
                             >
-                              Thank you for using our service, <%= @user.first_name %>!
+                              Let's get some updates, <%= @user.first_name %>!
                             </h1>
                           </div>
                         </td>
@@ -220,7 +220,7 @@
                             "
                           >
                             <p style="margin: 0;">
-                              This is a notification for the following credits spent:
+                              This is a reminder to let you know to re-import your credit score:
                             </p>
                           </div>
                         </td>
@@ -240,51 +240,8 @@
                               color: #434245;
                             "
                           >
-                            <li><strong>Amount:</strong> <%= number_to_currency(@spending.amount) %></li>
-                            <li>Description:</strong> <%= @spending.description %></li>
+                            Make sure your credit monitoring account is up to date. Re-import your credit report to see your changes and create another round of attacks.
                           </ul>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td
-                          align="left"
-                          style="font-size: 0px; padding: 10px 25px; word-break: break-word;"
-                        >
-                          <div
-                            style="
-                              font-family: Helvetica, Arial, sans-serif;
-                              font-size: 18px;
-                              font-weight: 400;
-                              line-height: 24px;
-                              text-align: left;
-                              color: #434245;
-                            "
-                          >
-                            <p style="margin: 0;">
-                              Once the letters are sent off, the credit bureaus have 30 days to respond to the dispute.
-                            </p>
-                          </div>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td
-                          align="left"
-                          style="font-size: 0px; padding: 10px 25px; word-break: break-word;"
-                        >
-                          <div
-                            style="
-                              font-family: Helvetica, Arial, sans-serif;
-                              font-size: 18px;
-                              font-weight: 400;
-                              line-height: 24px;
-                              text-align: left;
-                              color: #434245;
-                            "
-                          >
-                            <p style="margin: 0;">
-                              If you opt out of our mailing service, we recommend sending each letter via certified mail to receive tracking information. This is important because it provides proof that your letters were delivered successfully.
-                            </p>
-                          </div>
                         </td>
                       </tr>
                       <tr>

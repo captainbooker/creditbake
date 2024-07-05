@@ -2017,3 +2017,16 @@ body {
 .highlight-text {
   color: green;
 }
+
+.custom-blue-button {
+  color: #059DE2;
+  border-color: #059DE2;
+}
+
+.hover\:bg-custom-blue-button:hover {
+  background-color: #059DE2;
+}
+
+.hover\:text-white:hover {
+  color: #ffffff;
+}

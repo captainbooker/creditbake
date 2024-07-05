@@ -2,6 +2,6 @@ class ApplicationMailer < ActionMailer::Base
   require 'sendgrid-ruby'
   include SendGrid
 
-  default from: 'support@creditbake.com'
+  default from: "CreditBake <support@creditbake.com>"
   layout 'mailer'
 end
