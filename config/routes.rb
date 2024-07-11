@@ -36,11 +36,19 @@ Rails.application.routes.draw do
   # Routes for disputes
   resources :disputes, only: [:index, :show]
   resource :user, only: [:update]
+  resources :clients do
+    member do
+      get 'dashboard'
+      get 'credit_report'
+    end
+  end
   get 'settings', to: 'users#settings', as: 'user_settings'
   delete 'users/:id/delete_id_document', to: 'users#delete_id_document', as: 'delete_id_document_user'
   delete 'users/:id/delete_utility_bill', to: 'users#delete_utility_bill', as: 'delete_utility_bill_user'
 
   get 'challenge', to: 'dashboards#disputing', as: 'challenge'
+  get 'upgrade_plan', to: 'dashboards#upgrade_plan', as: 'upgrade_plan'
+  post 'plan_purchased', to: 'dashboards#plan_purchased', as: 'plan_purchased'
   get 'letters', to: 'dashboards#letters', as: 'letters'
   get 'credit_report', to: 'credit_reports#credit_report', as: 'credit_report'
   get 'create_attack', to: 'dashboards#create_attack', as: 'create_attack'

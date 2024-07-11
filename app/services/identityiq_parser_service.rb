@@ -8,7 +8,8 @@ class IdentityiqParserService
   def extract_content
     {
       inquiries: extract_inquiries,
-      accounts: extract_accounts
+      accounts: extract_accounts,
+      personal_information: extract_personal_information
     }
   end
 
@@ -78,6 +79,9 @@ class IdentityiqParserService
             accounts << account
           end
 
+          remarks = tradeline['Remark']
+          comments = remarks.is_a?(Array) ? remarks.map { |remark| remark.dig('RemarkCode', '@description') }.join(', ') : nil
+
           account[:bureau_details][bureau.downcase.to_sym] = {
             credit_limit: tradeline.dig('GrantedTrade', 'CreditLimit', '$'),
             high_balance: tradeline['@highBalance'],
@@ -85,11 +89,76 @@ class IdentityiqParserService
             past_due_amount: tradeline.dig('GrantedTrade', '@amountPastDue'),
             payment_status: tradeline.dig('PayStatus', '@description'),
             date_opened: tradeline['@dateOpened'],
-            date_of_last_payment: tradeline.dig('GrantedTrade', '@dateLastPayment')
+            date_of_last_payment: tradeline.dig('GrantedTrade', '@dateLastPayment'),
+            comment: comments,
+            monthly_payment: tradeline.dig('GrantedTrade', '@monthlyPayment')
           }
         end
       end
     end
     accounts
+  end
+
+  def extract_personal_information
+    personal_info_component = @content.dig('BundleComponents', 'BundleComponent').find do |component|
+      component.dig('TrueLinkCreditReportType', 'Borrower')
+    end
+
+    return {} unless personal_info_component
+
+    borrower = personal_info_component.dig('TrueLinkCreditReportType', 'Borrower')
+    {
+      name: extract_borrower_names(borrower['BorrowerName']),
+      date_of_birth: extract_borrower_births(borrower['Birth']),
+      current_addresses: extract_addresses(borrower['BorrowerAddress']),
+      previous_addresses: extract_addresses(borrower['PreviousAddress']),
+      employers: extract_employers(borrower['Employer'])
+    }
+  end
+
+  def extract_borrower_names(names)
+    names.map do |name|
+      {
+        first: name.dig('Name', '@first'),
+        middle: name.dig('Name', '@middle'),
+        last: name.dig('Name', '@last'),
+        type: name.dig('NameType', '@description'),
+        bureau: name.dig('Source', 'Bureau', '@description')
+      }
+    end
+  end
+
+  def extract_borrower_births(births)
+    births.map do |birth|
+      {
+        date: birth.dig('BirthDate', '@year'),
+        month: birth.dig('BirthDate', '@month'),
+        day: birth.dig('BirthDate', '@day'),
+        bureau: birth.dig('Source', 'Bureau', '@description')
+      }
+    end
+  end
+
+  def extract_addresses(addresses)
+    addresses.map do |address|
+      {
+        street: address.dig('CreditAddress', '@unparsedStreet') || "#{address.dig('CreditAddress', '@houseNumber')} #{address.dig('CreditAddress', '@streetName')} #{address.dig('CreditAddress', '@streetType')}",
+        city: address.dig('CreditAddress', '@city'),
+        state: address.dig('CreditAddress', '@stateCode'),
+        postal_code: address.dig('CreditAddress', '@postalCode'),
+        bureau: address.dig('Source', 'Bureau', '@description')
+      }
+    end
+  end
+
+  def extract_employers(employers)
+    employers.map do |employer|
+      {
+        name: employer['@name'],
+        date_reported: employer['@dateReported'],
+        date_updated: employer['@dateUpdated'],
+        bureau: employer.dig('Source', 'Bureau', '@description')
+      }
+    end
   end
 end

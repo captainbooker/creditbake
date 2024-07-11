@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2024_07_03_185122) do
+ActiveRecord::Schema.define(version: 2024_07_10_182213) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -23,10 +23,12 @@ ActiveRecord::Schema.define(version: 2024_07_03_185122) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.boolean "challenge", default: false, null: false
-    t.bigint "user_id", null: false
+    t.bigint "user_id"
     t.string "creditor_name"
     t.string "name"
     t.string "reason"
+    t.bigint "client_id"
+    t.index ["client_id"], name: "index_accounts_on_client_id"
     t.index ["user_id"], name: "index_accounts_on_user_id"
   end
 
@@ -185,6 +187,9 @@ ActiveRecord::Schema.define(version: 2024_07_03_185122) do
     t.string "court"
     t.string "liability"
     t.string "exempt_amount"
+    t.string "comment"
+    t.string "monthly_payment"
+    t.json "two_year_payment_history"
     t.index ["account_id"], name: "index_bureau_details_on_account_id"
     t.index ["public_record_id"], name: "index_bureau_details_on_public_record_id"
   end
@@ -213,6 +218,23 @@ ActiveRecord::Schema.define(version: 2024_07_03_185122) do
     t.bigint "user_id", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.string "email", default: "", null: false
+    t.string "phone_number"
+    t.string "first_name"
+    t.string "last_name"
+    t.string "street_address"
+    t.string "city"
+    t.string "state"
+    t.string "postal_code"
+    t.string "country"
+    t.string "ssn_last4"
+    t.string "encrypted_ssn_last4"
+    t.string "encrypted_ssn_last4_iv"
+    t.string "ssn_last4_bidx"
+    t.string "slug"
+    t.text "signature"
+    t.boolean "agreement"
+    t.index ["email"], name: "index_clients_on_email", unique: true
     t.index ["user_id"], name: "index_clients_on_user_id"
   end
 
@@ -296,8 +318,10 @@ ActiveRecord::Schema.define(version: 2024_07_03_185122) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.boolean "challenge", default: false, null: false
-    t.bigint "user_id", null: false
+    t.bigint "user_id"
     t.string "address"
+    t.bigint "client_id"
+    t.index ["client_id"], name: "index_inquiries_on_client_id"
     t.index ["user_id"], name: "index_inquiries_on_user_id"
   end
 
@@ -316,19 +340,37 @@ ActiveRecord::Schema.define(version: 2024_07_03_185122) do
     t.string "transunion_tracking_number"
     t.string "equifax_tracking_number"
     t.text "bankruptcy_document"
+    t.bigint "client_id"
+    t.index ["client_id"], name: "index_letters_on_client_id"
     t.index ["user_id"], name: "index_letters_on_user_id"
   end
 
   create_table "mailings", force: :cascade do |t|
-    t.bigint "user_id", null: false
+    t.bigint "user_id"
     t.bigint "letter_id", null: false
     t.integer "pages"
     t.boolean "color"
     t.decimal "cost"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.bigint "client_id"
+    t.index ["client_id"], name: "index_mailings_on_client_id"
     t.index ["letter_id"], name: "index_mailings_on_letter_id"
     t.index ["user_id"], name: "index_mailings_on_user_id"
+  end
+
+  create_table "personal_informations", force: :cascade do |t|
+    t.string "name"
+    t.string "date_of_birth"
+    t.string "current_addresses"
+    t.string "previous_addresses"
+    t.string "employers"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.string "bureau"
+    t.integer "user_id"
+    t.bigint "client_id"
+    t.index ["client_id"], name: "index_personal_informations_on_client_id"
   end
 
   create_table "post_categories", force: :cascade do |t|
@@ -354,10 +396,12 @@ ActiveRecord::Schema.define(version: 2024_07_03_185122) do
     t.string "public_record_type"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.bigint "user_id", null: false
+    t.bigint "user_id"
     t.boolean "challenge", default: false
     t.string "reason"
     t.string "reference_number"
+    t.bigint "client_id"
+    t.index ["client_id"], name: "index_public_records_on_client_id"
     t.index ["user_id"], name: "index_public_records_on_user_id"
   end
 
@@ -372,14 +416,25 @@ ActiveRecord::Schema.define(version: 2024_07_03_185122) do
   end
 
   create_table "spendings", force: :cascade do |t|
-    t.bigint "user_id", null: false
+    t.bigint "user_id"
     t.decimal "amount", precision: 10, scale: 2, null: false
     t.string "description"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.string "token"
     t.string "transactional_id"
+    t.bigint "client_id"
+    t.index ["client_id"], name: "index_spendings_on_client_id"
     t.index ["user_id"], name: "index_spendings_on_user_id"
+  end
+
+  create_table "subscriptions", force: :cascade do |t|
+    t.string "name"
+    t.text "description"
+    t.decimal "price"
+    t.integer "duration"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
   end
 
   create_table "users", force: :cascade do |t|
@@ -409,6 +464,10 @@ ActiveRecord::Schema.define(version: 2024_07_03_185122) do
     t.integer "free_attack", default: 0
     t.string "provider"
     t.string "uid"
+    t.string "maverick_customer_id"
+    t.string "maverick_customer_token"
+    t.string "maverick_hosted_form_url"
+    t.string "maverick_card_id"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
     t.index ["slug"], name: "index_users_on_slug", unique: true
@@ -423,6 +482,7 @@ ActiveRecord::Schema.define(version: 2024_07_03_185122) do
     t.index ["user_id"], name: "index_users_roles_on_user_id"
   end
 
+  add_foreign_key "accounts", "clients"
   add_foreign_key "accounts", "users", on_delete: :cascade
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
@@ -434,12 +494,18 @@ ActiveRecord::Schema.define(version: 2024_07_03_185122) do
   add_foreign_key "credit_reports", "users", on_delete: :cascade
   add_foreign_key "disputes", "clients"
   add_foreign_key "disputes", "credit_reports"
+  add_foreign_key "inquiries", "clients"
   add_foreign_key "inquiries", "users", on_delete: :cascade
+  add_foreign_key "letters", "clients"
+  add_foreign_key "mailings", "clients"
   add_foreign_key "mailings", "letters"
   add_foreign_key "mailings", "users"
+  add_foreign_key "personal_informations", "clients"
   add_foreign_key "post_categories", "categories"
   add_foreign_key "post_categories", "posts"
   add_foreign_key "posts", "users"
+  add_foreign_key "public_records", "clients"
   add_foreign_key "public_records", "users", on_delete: :cascade
+  add_foreign_key "spendings", "clients"
   add_foreign_key "spendings", "users", on_delete: :cascade
 end

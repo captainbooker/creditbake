@@ -1,0 +1,169 @@
+<div class="mx-auto max-w-screen-3xl p-4 md:p-6 2xl:p-10">
+  <div class="mx-auto max-w-270">
+    <div class="flex items-center justify-between mb-6">
+      <h1 class="text-2xl font-bold">Import Credit Report</h1>
+      <%= link_to 'Create Attack', letters_path, class: "bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-700" %>
+    </div>
+    <div class="border border-gray-300 rounded-lg p-6 shadow-md mb-8 custom-background-color">
+      <%= form_with url: import_credit_report_path, method: :post, local: true, html: { id: 'credit-report-form' } do |f| %>
+        <div class="mb-12 text-xl mt-4">
+          <h3 class="font-normal text-black">Credit Monitoring Credentials</h3>
+        </div>
+        <%= f.hidden_field :client_id, value: @client.id %>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+          <div>
+            <%= f.label :service, "Credit Monitoring Service", class: "block text-sm font-medium text-gray-700 mb-1" %>
+            <%= f.select :service, options_for_select([['IdentityIQ', 'identityiq'], ["SmartCredit", 'smartcredit']]), {}, class: "w-full mt-1 p-3 border rounded-lg border-gray-800 text-gray-500" %>
+          </div>
+          <div>
+            <%= f.label :username, "User Name", class: "block text-sm font-medium text-gray-700 mb-1" %>
+            <%= f.text_field :username, placeholder: "Enter Your Username", class: "w-full mt-1 p-3 border rounded-lg border-gray-800 text-gray-500" %>
+          </div>
+          <div>
+            <%= f.label :security_question, "Security Question", class: "block text-sm font-medium text-gray-700 mb-1" %>
+            <%= f.text_field :security_question, placeholder: "Enter Security Question Answer", class: "w-full mt-1 p-3 border rounded-lg border-gray-800 text-gray-500" %>
+          </div>
+          <div>
+            <%= f.label :password, "Password", class: "block text-sm font-medium text-gray-700 mb-1" %>
+            <div class="relative">
+              <%= f.password_field :password, id: "password", placeholder: "Enter Your Password", class: "w-full mt-1 p-3 border rounded-lg border-gray-800 text-gray-500 pr-10" %>
+              <button type="button" id="toggle_password_visibility" class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-500">
+                <svg id="eye_icon_password" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#000000">
+                  <path d="M480.18-353.85q60.97 0 103.47-42.68t42.5-103.65q0-60.97-42.68-103.47t-103.65-42.5q-60.97 0-103.47 42.68t-42.5 103.65q0 60.97 42.68 103.47t103.65 42.5ZM480-392q-45 0-76.5-31.5T372-500q0-45 31.5-76.5T480-608q45 0 76.5 31.5T588-500q0 45-31.5 76.5T480-392Zm.11 152q-129.96 0-236.88-70.73Q136.31-381.46 83.08-500q53.23-118.54 160.04-189.27T479.89-760q129.96 0 236.88 70.73Q823.69-618.54 876.92-500q-53.23 118.54-160.04 189.27T480.11-240ZM480-500Zm0 220q113 0 207.5-59.5T832-500q-50-101-144.5-160.5T480-720q-113 0-207.5 59.5T128-500q50 101 144.5 160.5T480-280Z"/>
+                </svg>
+                <svg id="eye_off_icon_password" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 hidden" viewBox="0 -960 960 960" fill="#000000">
+                  <path d="M617.85-454.15 586-486q9-52.38-29.69-90.69Q517.62-615 466-606l-31.85-31.85q10.08-4.15 21.04-6.23 10.96-2.07 24.81-2.07 61.15 0 103.65 42.5 42.5 42.5 42.5 103.65 0 13.85-2.07 25.58-2.08 11.73-6.23 20.27Zm126.46 122.92L714-358q38-29 67.5-63.5T832-500q-50-101-144.5-160.5T480-720q-29 0-57 4t-55 12l-31.23-31.23q34.85-13.15 70.92-18.96Q443.77-760 480-760q130.23 0 238.23 71.58 108 71.57 158.69 188.42-21.46 48.23-54.34 90.65-32.89 42.43-78.27 78.12Zm44.61 216.77L633.23-269.69q-26.54 11.77-65.88 20.73Q528-240 480-240q-131 0-238.23-71.58Q134.54-383.15 83.08-500q23.3-53 61.46-99.27 38.15-46.27 81.46-77.65l-111.54-112 28.31-28.31 674.46 674.46-28.31 28.31ZM254.31-648.62q-34.39 24.47-70.31 64.31-35.92 39.85-56 84.31 50 101 143.5 160.5T480-280q34.62 0 69.77-6.73t52.85-13.58L537.38-366q-9.46 5.31-26.38 8.73-16.92 3.42-31 3.42-61.15 0-103.65-42.5-42.5-42.5-42.5-103.65 0-13.31 3.42-29.85 3.42-16.53 8.73-27.53l-91.69-91.24ZM541-531Zm-112.54 56.54Z"/>
+                </svg>
+              </button>
+            </div>
+          </div>
+          <div class="text-center md:col-span-2">
+            <%= f.submit "Import Credit Report", class: "px-6 py-3 font-medium rounded-lg transition duration-300  bg-blue-500 hover:bg-blue-600 text-white" %>
+          </div>
+        </div>
+      <% end %>
+
+      <div class="mb-12 mt-4">
+        <h3 class="font-semibold text-black text-xl">Don't Have an Account?</h3>
+        <p class="text-gray-700 mt-2 text-lg">We are partners with IdentityIQ and SmartCredit. If you don't have an account yet, click on the links below to sign up. After signing up, come back and enter your credentials to import your credit report into our system.</p>
+      </div>
+
+      <div class="flex flex-col sm:flex-row justify-center mb-8 space-y-4 sm:space-y-0 sm:space-x-4">
+        <div class="border border-gray-300 rounded-lg p-6 shadow-md bg-white text-center sm:w-1/2">
+          <h4 class="text-lg font-semibold text-black mb-2">SmartCredit</h4>
+          <p class="text-gray-700">Get your credit report from SmartCredit.</p>
+          <p class="text-gray-700 mb-4">Trial Period</p>
+          <a href="https://www.smartcredit.com/CreditBake" target="_blank" class="smartcredit-button">Sign Up for SmartCredit</a>
+
+          <p class="text-gray-500 mt-4">Best for general credit report information + Bankruptcy</p>
+        </div>
+
+        <div class="border border-gray-300 rounded-lg p-6 shadow-md bg-white text-center sm:w-1/2">
+          <h4 class="text-lg font-semibold text-black mb-2">IdentityIQ</h4>
+          <p class="text-gray-700">Get your credit report from IdentityIQ.</p>
+          <p class="text-gray-700 mb-4">Trial Period</p>
+          <a href="https://www.identityiq.com/sc-securepreferred.aspx?offercode=431287GJ" target="_blank" class="smartcredit-button">Sign Up for IdentityIQ</a>
+          <p class="text-gray-500 mt-4">Best for general credit report information</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="flex flex-col md:flex-row gap-6">
+      <!-- Previous Credit Reports Section -->
+      <div class="flex-1 p-6 mb-8">
+        <div class="mb-8 text-xl">
+          <h3 class="font-semibold text-black">Credit Reports</h3>
+        </div>
+        <% if @credit_reports.empty? %>
+          <p>No past credit reports</p>
+        <% end %>
+        <% @credit_reports.each do |report| %>
+          <div class="border rounded-lg p-4 mb-2 bg-white">
+            <div class="flex justify-between items-center">
+              <div>
+                <p class="font-semibold text-black"><%= report.created_at.strftime("%B %d, %Y") %> Credit Report</p>
+                <p class="text-gray-500">Added On <%= report.created_at.strftime("%B %d, %Y") %></p>
+              </div>
+            </div>
+          </div>
+        <% end %>
+      </div>
+
+      <!-- Tips Section -->
+      <div class="flex-1 border border-gray-300 rounded-lg p-6 shadow-md mb-8 tip-layout">
+        <div class="flex items-center mb-4">
+          <%= image_tag "ooui_notice.png", class: "h-5 w-5 mr-2" %>
+          <h3 class="font-normal text-black">Tips to Improve Credit Report</h3>
+        </div>
+        <ul class="list-disc list-inside text-gray-700">
+          <li>Reduce Credit Card Balances</li>
+          <li>Maintain Older Accounts</li>
+          <li>Check Your Credit Report</li>
+          <li>Pay Bills on Time</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="loading-overlay" class="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50 z-50 hidden">
+  <div class="text-center">
+    <div class="loader mb-4"></div>
+    <p class="text-white text-lg">This might take a few minutes. Importing your credit report, please do not close the browser.</p>
+  </div>
+</div>
+
+<script>
+document.addEventListener("turbolinks:load", function() {
+  initializePasswordToggle();
+  initializeFormSubmission();
+});
+
+function initializePasswordToggle() {
+  const passwordField = document.getElementById("password");
+  const togglePasswordButton = document.getElementById("toggle_password_visibility");
+  const eyeIconPassword = document.getElementById("eye_icon_password");
+  const eyeOffIconPassword = document.getElementById("eye_off_icon_password");
+
+  function togglePasswordVisibility() {
+    if (passwordField.type === "password") {
+      passwordField.type = "text";
+      eyeIconPassword.classList.remove("hidden");
+      eyeOffIconPassword.classList.add("hidden");
+    } else {
+      passwordField.type = "password";
+      eyeIconPassword.classList.add("hidden");
+      eyeOffIconPassword.classList.remove("hidden");
+    }
+  }
+
+  if (togglePasswordButton) {
+    togglePasswordButton.addEventListener("click", togglePasswordVisibility);
+  }
+}
+
+function initializeFormSubmission() {
+  const form = document.getElementById("credit-report-form");
+  function showLoadingOverlay() {
+    document.getElementById("loading-overlay").classList.add("show");
+  }
+
+  if (form) {
+    form.addEventListener("submit", showLoadingOverlay);
+  }
+}
+
+document.addEventListener("turbolinks:before-cache", function() {
+  const togglePasswordButton = document.getElementById("toggle_password_visibility");
+  const form = document.getElementById("credit-report-form");
+
+  if (togglePasswordButton) {
+    togglePasswordButton.removeEventListener("click", togglePasswordVisibility);
+  }
+
+  if (form) {
+    form.removeEventListener("submit", showLoadingOverlay);
+  }
+});
+
+</script>

@@ -25,7 +25,11 @@ class DashboardsController < ApplicationController
   end
 
   def scores
-    credit_report = CreditReport.where(user_id: current_user.id).order(created_at: :desc).first
+    if params[:client_id].present?
+      credit_report = CreditReport.where(client_id: params[:client_id]).order(created_at: :desc).first
+    else
+      credit_report = CreditReport.where(user_id: current_user.id).order(created_at: :desc).first
+    end
     render json: {
       experian_score: credit_report&.experian_score,
       transunion_score: credit_report&.transunion_score,
@@ -54,16 +58,14 @@ class DashboardsController < ApplicationController
     if params[:account_ids].present?
       selected_accounts = params[:account_ids].select { |_, v| v == 'true' }.keys
       selected_accounts.each do |account_id|
-        reason = params[:account_reasons][account_id]
-        Account.where(id: account_id, user_id: current_user.id).update_all(challenge: true, reason: reason)
+        Account.where(id: account_id, user_id: current_user.id).update_all(challenge: true)
       end
     end
 
     if params[:public_record_ids].present?
       selected_public_records = params[:public_record_ids].select { |_, v| v == 'true' }.keys
       selected_public_records.each do |public_record_id|
-        reason = params[:public_record_reasons][public_record_id]
-        PublicRecord.where(id: public_record_id, user_id: current_user.id).update_all(challenge: true, reason: reason)
+        PublicRecord.where(id: public_record_id, user_id: current_user.id).update_all(challenge: true)
       end
     end
   
@@ -101,6 +103,22 @@ class DashboardsController < ApplicationController
     else
       redirect_to maverick_payment_form_url, alert: "You don't have enough credits to generate an attack letter. Please add credits."
     end
+  end
+
+  def upgrade_plan
+    customer_id = params[:customerId]
+    card_id = params[:cardId]
+    status = params[:status]
+
+    user = User.find_by(maverick_customer_id: customer_id)
+
+    if user && status == 'Success'
+      user.update(maverick_card_id: card_id)
+      flash[:notice] = 'Plan upgraded successfully!'
+    end
+  end
+
+  def plan_purchased
   end
 
   private

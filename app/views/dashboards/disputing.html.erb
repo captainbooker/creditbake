@@ -108,27 +108,11 @@
                         <span class="float-right font-semibold text-white"><%= account.bureau_details.first&.date_of_last_payment %></span>
                       </p>
                     </div>
-                    <div class="px-4 pt-2">
+                    <div class="px-4 pt-2 pb-8">
                       <p class="text-white">
                         Payment Status
                         <span class="float-right <%= account.bureau_details.first&.payment_status&.downcase == 'current' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700' %> px-2 py-1 rounded-full"><%= account.bureau_details.first&.payment_status %></span>
                       </p>
-                    </div>
-                    
-                    <div class="px-4 pb-6">
-                      <p>Dispute Reason</p>
-                      <select id="reason_<%= account.id %>" name="account_reasons[<%= account.id %>]" class="w-full text-black rounded">
-                        <option value="Inaccurate Account Info">Inaccurate Account Information</option>
-                        <option value="Duplicate Accounts">Duplicate Accounts</option>
-                        <option value="Fraudulent Activity">Fraudulent Activity/Identity Theft</option>
-                        <option value="Outdated Information">Outdated Information</option>
-                        <option value="Inaccurate Collection Accounts">Inaccurate Collection Account</option>
-                        <option value="Incorrect Account Ownership">Account does not belong to me</option>
-                        <option value="Incorrect Account Closure">Incorrect Account Closure</option>
-                        <option value="Incorrect Late Payments">Incorrect late payments</option>
-                        <option value="Incorrect Balance">Incorrect balance</option>
-                        <option value="Incorrect Status">Incorrect status</option>
-                      </select>
                     </div>
                   </div>
                 </div>

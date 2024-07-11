@@ -12,6 +12,8 @@ class User < ApplicationRecord
   has_many :mailings
   has_many :public_records
   has_many :posts, dependent: :destroy
+  has_many :personal_informations
+  belongs_to :subscription, optional: true
 
   has_one_attached :id_document
   has_one_attached :utility_bill

@@ -1,48 +1,38 @@
-<h1>Clients</h1>
-
-<table>
-  <thead>
-    <tr>
-      <th>Name</th>
-      <th colspan="3"></th>
-    </tr>
-  </thead>
-
-  <tbody>
-    <% @clients.each do |client| %>
-      <tr>
-        <td><%= client.name %></td>
-        <td><%= link_to 'Show', client %></td>
-        <td><%= link_to 'Edit', edit_client_path(client) %></td>
-        <td><%= link_to 'Destroy', client, method: :delete, data: { confirm: 'Are you sure?' } %></td>
-      </tr>
-    <% end %>
-  </tbody>
-</table>
-
-<%= link_to 'New Client', new_client_path %>
-
-
 <div class="mx-auto max-w-screen-2xl p-4 md:p-6 2xl:p-10">
-  <!-- Breadcrumb Start -->
-  <div
-    class="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between"
-  >
-    <h2 class="text-title-md2 font-bold text-black dark:text-white">
-      Tables
-    </h2>
-
-    <nav>
-      <ol class="flex items-center gap-2">
-        <li>
-          <a class="font-medium" href="index.html">Dashboard /</a>
-        </li>
-        <li class="font-medium text-primary">Tables</li>
-      </ol>
-    </nav>
+  <div class="flex items-center justify-between mb-6">
+    <h1 class="text-2xl font-bold">Clients</h1>
+    <%= link_to 'Create Client', new_client_path, class: "bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-700" %>
   </div>
 
-  <div class="flex flex-col gap-10">
-    <%= render "table" %>
+  <div class="mt-8 flow-root">
+    <div class="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
+      <div class="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
+        <div class="overflow-hidden shadow ring-1 ring-black ring-opacity-5 sm:rounded-lg">
+          <table class="min-w-full divide-y divide-gray-300">
+            <thead class="custom-blue md:bg-gray-50 rounded-t-lg shadow-lg">
+              <tr>
+                <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-white md:text-gray-900 sm:pl-6">Name</th>
+                <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-white md:text-gray-900">Status</th>
+                <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-white md:text-gray-900">Date Added</th>
+                <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-white md:text-gray-900">Action</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-200 bg-white">
+              <% @clients.each do |client| %>
+                <tr>
+                  <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6"><%= client.full_name %></td>
+                  <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">Active</td>
+                  <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500"><%= client.created_at.strftime("%m/%d/%Y") %></td>
+                  <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500"> <%= link_to 'View', client_path(client.id), class: "bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-700" %></td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+          <div class="px-4 py-3 bg-gray-50 text-right sm:px-6">
+            <%= paginate @clients %>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </div>

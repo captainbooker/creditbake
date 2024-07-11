@@ -1,5 +1,6 @@
 class Spending < ApplicationRecord
-  belongs_to :user
+  belongs_to :client, optional: true
+  belongs_to :user, optional: true
 
   before_create :generate_token
 

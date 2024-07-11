@@ -8,9 +8,9 @@ module ImportCreditReports
     username = params[:username]
     password = params[:password]
     security_question = params[:security_question]
+    client_id = params[:client_id]
     
-    
-    FetchCreditReportJob.perform_later(username, password, security_question, service, current_user.id, :chrome, request.user_agent, user_agent_request)
+    FetchCreditReportJob.perform_later(username, password, security_question, service, current_user.id, :chrome, request.user_agent, user_agent_request, client_id)
     redirect_to authenticated_root_path, notice: 'We are importing your credit report. This process should only take a few minutes. You will receive an email once the import is finished, or you can check the "Challenge" page for updates.'
     return
   end  

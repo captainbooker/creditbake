@@ -24,8 +24,12 @@
             <%= link_to 'Import Credit Report', credit_report_path, class: "py-2 px-4 rounded-lg #{'bg-white custom-blue-text' if current_page?(credit_report_path)} hover:bg-white hover:custom-blue-text transition duration-300" %>
             <%= link_to 'Create Attack', letters_path, class: "py-2 px-4 rounded-lg #{'bg-white custom-blue-text' if current_page?(letters_path)} hover:bg-white hover:custom-blue-text transition duration-300" %>
             <%= link_to 'Challenge', challenge_path, class: "py-2 px-4 rounded-lg #{'bg-white custom-blue-text' if current_page?(challenge_path)} hover:bg-white hover:custom-blue-text transition duration-300" %>
+            <%= link_to 'Clients', clients_path, class: "py-2 px-4 rounded-lg #{'bg-white custom-blue-text' if current_page?(clients_path)} hover:bg-white hover:custom-blue-text transition duration-300" %>
           </div>
         </div>
+      </div>
+      <div class="absolute inset-y-0 right-0 flex items-center">
+        <%= link_to 'Upgrade Plan', upgrade_plan_path, class: "py-2 px-4 rounded-lg bg-custom-blue text-white hover:bg-blue-700 transition duration-300" %>
       </div>
     </div>
   </div>
@@ -36,6 +40,7 @@
       <%= link_to 'Import Credit Report', credit_report_path, class: "block py-2 px-4 rounded-lg #{'bg-white custom-blue-text' if current_page?(credit_report_path)} hover:bg-white hover:custom-blue-text transition duration-300" %>
       <%= link_to 'Create Attack', letters_path, class: "block py-2 px-4 rounded-lg #{'bg-white custom-blue-text' if current_page?(letters_path)} hover:bg-white hover:custom-blue-text transition duration-300" %>
       <%= link_to 'Challenge', challenge_path, class: "block py-2 px-4 rounded-lg #{'bg-white custom-blue-text' if current_page?(challenge_path)} hover:bg-white hover:custom-blue-text transition duration-300" %>
+      <%= link_to 'Upgrade Plan', upgrade_plan_path, class: "block py-2 px-4 rounded-lg bg-custom-blue text-white hover:bg-blue-700 transition duration-300" %>
     </div>
   </div>
 </nav>
