@@ -128,8 +128,12 @@ class ClientsController < ApplicationController
   private
 
   def set_client
-    @client = Client.find(params[:id])
+    @client = current_user.clients.find_by(id: params[:id])
+    unless @client
+      redirect_to clients_path, alert: "You don't have access to this client."
+    end
   end
+  
 
   def client_params
     params.require(:client).permit(:email, :signature_data, :first_name, :last_name, :phone_number, :street_address, :city, :state, :postal_code, :country, :ssn_last4, :id_document, :utility_bill, :additional_document1, :additional_document2, :free_attack, :signature)

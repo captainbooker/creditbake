@@ -248,7 +248,7 @@ class DashboardsController < ApplicationController
   def handle_attack_cost(attack_cost, round)
     if current_user.free_attack > 0
       current_user.decrement!(:free_attack)
-      Spending.create!(user: current_user, amount: 0, description: "Free Letter Generated / #{Date.today.strftime("%B %d, %Y")}")
+      Spending.create!(user: current_user, amount: 0, description: "Letter Generated / #{Date.today.strftime("%B %d, %Y")}")
     else
       current_user.decrement!(:credits, attack_cost)
       Spending.create!(user: current_user, amount: attack_cost, description: "Letter Generated / #{Date.today.strftime("%B %d, %Y")}")
