@@ -1,6 +1,8 @@
 class ClientsController < ApplicationController
-  before_action :authenticate_user!
-  before_action :set_client, only: [:edit, :dashboard, :credit_report]
+  before_action :authenticate_user!, except: [:new_with_token, :create_with_token]
+  before_action :set_client, only: [:edit, :dashboard, :credit_report, :challenge, :letters, :edit]
+
+  layout :determine_layout
 
   def index
     @clients = current_user.clients.order(created_at: :desc)
@@ -13,7 +15,7 @@ class ClientsController < ApplicationController
   end
 
   def new
-    @client = Client.new
+    @new_client = Client.new
   end
 
   def create
@@ -26,13 +28,12 @@ class ClientsController < ApplicationController
   end
 
   def edit
-    @client = Client.find(params[:id])
   end
 
   def update
     @client = current_user.clients.find(params[:id])
     if @client.update(client_params)
-      redirect_to @client, notice: 'Client was successfully updated.'
+      redirect_to dashboard_client_path, notice: 'Client was successfully updated.'
     else
       render :edit
     end
@@ -68,6 +69,62 @@ class ClientsController < ApplicationController
     @credit_reports = @client.credit_reports
   end
 
+  def challenge
+    @inquiries = @client.inquiries.order(created_at: :desc)
+    @accounts = @client.accounts.includes(:bureau_details).order(created_at: :desc)
+    @public_records = @client.public_records.includes(:bureau_details).order(created_at: :desc)
+  end
+
+  def letters
+    @letters = @client.letters
+                           .includes(
+                             creditor_dispute_attachment: :blob,
+                             experian_pdf_attachment: :blob,
+                             transunion_pdf_attachment: :blob,
+                             equifax_pdf_attachment: :blob,
+                             bankruptcy_pdf_attachment: :blob
+                           )
+                           .order(created_at: :desc)
+                           .page(params[:page])
+                           .per(10)
+  end
+
+  def send_invite
+    invite = current_user.client_invites.create!(email: params[:email], expires_at: 2.days.from_now)
+    ClientMailer.with(invite: invite).send_invite_email.deliver_now
+    redirect_to clients_path, notice: 'Invite link has been sent to the client.'
+  end
+
+  def new_with_token
+    @invite = ClientInvite.find_by(token: params[:token])
+    @user = @invite.user
+
+    if @invite && @invite.expires_at > Time.current
+      @client = Client.new
+      @token_valid = true
+      render :new_with_token
+    else
+      redirect_to root_path, alert: 'The invite link has expired or is invalid.'
+    end
+  end
+
+  def create_with_token
+    @invite = ClientInvite.find_by(token: params[:client][:token])
+
+    if @invite && @invite.expires_at > Time.current
+      @client = @invite.user.clients.build(client_params)
+
+      if @client.save
+        @invite.destroy
+        redirect_to @client, notice: 'Client was successfully created.'
+      else
+        render :new_with_token
+      end
+    else
+      redirect_to root_path, alert: 'The invite link has expired or is invalid.'
+    end
+  end
+
   private
 
   def set_client
@@ -75,6 +132,10 @@ class ClientsController < ApplicationController
   end
 
   def client_params
-    params.require(:client).permit(:email, :signature_data, :first_name, :last_name, :phone_number, :street_address, :city, :state, :postal_code, :country, :ssn_last4, :id_document, :utility_bill, :additional_document1, :additional_document2, :free_attack)
+    params.require(:client).permit(:email, :signature_data, :first_name, :last_name, :phone_number, :street_address, :city, :state, :postal_code, :country, :ssn_last4, :id_document, :utility_bill, :additional_document1, :additional_document2, :free_attack, :signature)
+  end
+
+  def determine_layout
+    action_name == 'new_with_token' ? 'invitation' : 'authenticated'
   end
 end

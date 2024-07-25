@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2024_07_10_182213) do
+ActiveRecord::Schema.define(version: 2024_07_22_234731) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -200,6 +200,16 @@ ActiveRecord::Schema.define(version: 2024_07_10_182213) do
     t.datetime "updated_at", precision: 6, null: false
   end
 
+  create_table "client_invites", force: :cascade do |t|
+    t.string "token"
+    t.bigint "user_id", null: false
+    t.datetime "expires_at"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.string "email", null: false
+    t.index ["user_id"], name: "index_client_invites_on_user_id"
+  end
+
   create_table "client_profiles", force: :cascade do |t|
     t.string "first_name"
     t.string "middle_name"
@@ -234,7 +244,7 @@ ActiveRecord::Schema.define(version: 2024_07_10_182213) do
     t.string "slug"
     t.text "signature"
     t.boolean "agreement"
-    t.index ["email"], name: "index_clients_on_email", unique: true
+    t.index ["email"], name: "index_clients_on_email"
     t.index ["user_id"], name: "index_clients_on_user_id"
   end
 
@@ -313,7 +323,7 @@ ActiveRecord::Schema.define(version: 2024_07_10_182213) do
   create_table "inquiries", force: :cascade do |t|
     t.string "inquiry_name", null: false
     t.string "type_of_business"
-    t.date "inquiry_date"
+    t.string "inquiry_date"
     t.string "credit_bureau"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
@@ -435,6 +445,7 @@ ActiveRecord::Schema.define(version: 2024_07_10_182213) do
     t.integer "duration"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.integer "attacks"
   end
 
   create_table "users", force: :cascade do |t|
@@ -468,9 +479,14 @@ ActiveRecord::Schema.define(version: 2024_07_10_182213) do
     t.string "maverick_customer_token"
     t.string "maverick_hosted_form_url"
     t.string "maverick_card_id"
+    t.bigint "subscription_id"
+    t.string "maverick_card_token"
+    t.string "maverick_recurring_id"
+    t.string "business_name"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
     t.index ["slug"], name: "index_users_on_slug", unique: true
+    t.index ["subscription_id"], name: "index_users_on_subscription_id"
     t.index ["uid", "provider"], name: "index_users_on_uid_and_provider", unique: true
   end
 
@@ -488,6 +504,7 @@ ActiveRecord::Schema.define(version: 2024_07_10_182213) do
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "bureau_details", "accounts", on_delete: :cascade
   add_foreign_key "bureau_details", "public_records"
+  add_foreign_key "client_invites", "users"
   add_foreign_key "client_profiles", "clients"
   add_foreign_key "clients", "users"
   add_foreign_key "credit_reports", "clients"
@@ -508,4 +525,5 @@ ActiveRecord::Schema.define(version: 2024_07_10_182213) do
   add_foreign_key "public_records", "users", on_delete: :cascade
   add_foreign_key "spendings", "clients"
   add_foreign_key "spendings", "users", on_delete: :cascade
+  add_foreign_key "users", "subscriptions"
 end

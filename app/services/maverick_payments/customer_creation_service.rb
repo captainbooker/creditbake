@@ -9,7 +9,7 @@ class MaverickPayments::CustomerCreationService
     @attributes = attributes
     @options = {
       headers: {
-        'Authorization' => "Bearer #{ENV['MAVERICK_TOKEN_ACCESS']}",
+        'Authorization' => "Bearer #{ENV["MAVERICK_TOKEN_ACCESS"]}",
         'Content-Type' => 'application/json'
       },
       body: @attributes.to_json

@@ -64,64 +64,37 @@
                   <%= form.text_field :city, placeholder: "Enter Your City", class: "w-full mt-1 p-3 border rounded-lg border-gray-800 text-gray-500" %>
                 </div>
                 <div>
-                  <%= form.label :ssn_last4, "*Last 4 SSN", class: "block text-sm font-medium text-gray-700 mb-1" %>
-                  <div class="relative">
-                    <% if @user.ssn_last4.present? %>
-                      <%= form.password_field :ssn_last4, id: "ssn_last4", placeholder: "Last 4 SSN", class: "w-full mt-1 p-3 border rounded-lg border-gray-800 text-gray-500", value: "****" + @user.ssn_last4[-4..] %>
-                    <% else %>
-                      <%= form.password_field :ssn_last4, id: "ssn_last4", placeholder: "Last 4 SSN", class: "w-full mt-1 p-3 border rounded-lg border-gray-800 text-gray-500" %>
-                    <% end %>
-                    <button type="button" id="toggle_ssn_visibility" class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-500">
-                      <svg id="eye_icon" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#000000">
-                        <path d="M480.18-353.85q60.97 0 103.47-42.68t42.5-103.65q0-60.97-42.68-103.47t-103.65-42.5q-60.97 0-103.47 42.68t-42.5 103.65q0 60.97 42.68 103.47t103.65 42.5ZM480-392q-45 0-76.5-31.5T372-500q0-45 31.5-76.5T480-608q45 0 76.5 31.5T588-500q0 45-31.5 76.5T480-392Zm.11 152q-129.96 0-236.88-70.73Q136.31-381.46 83.08-500q53.23-118.54 160.04-189.27T479.89-760q129.96 0 236.88 70.73Q823.69-618.54 876.92-500q-53.23 118.54-160.04 189.27T480.11-240ZM480-500Zm0 220q113 0 207.5-59.5T832-500q-50-101-144.5-160.5T480-720q-113 0-207.5 59.5T128-500q50 101 144.5 160.5T480-280Z"/>
-                      </svg>
-                      <svg id="eye_off_icon" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 hidden" viewBox="0 -960 960 960" fill="#000000">
-                        <path d="M617.85-454.15 586-486q9-52.38-29.69-90.69Q517.62-615 466-606l-31.85-31.85q10.08-4.15 21.04-6.23 10.96-2.07 24.81-2.07 61.15 0 103.65 42.5 42.5 42.5 42.5 103.65 0 13.85-2.07 25.58-2.08 11.73-6.23 20.27Zm126.46 122.92L714-358q38-29 67.5-63.5T832-500q-50-101-143.5-160.5T480-720q-29 0-57 4t-55 12l-31.23-31.23q34.85-13.15 70.92-18.96Q443.77-760 480-760q130.23 0 238.23 71.58 108 71.57 158.69 188.42-21.46 48.23-54.34 90.65-32.89 42.43-78.27 78.12Zm44.61 216.77L633.23-269.69q-26.54 11.77-65.88 20.73Q528-240 480-240q-131 0-238.23-71.58Q134.54-383.15 83.08-500q23.3-53 61.46-99.27 38.15-46.27 81.46-77.65l-111.54-112 28.31-28.31 674.46 674.46-28.31 28.31ZM254.31-648.62q-34.39 24.47-70.31 64.31-35.92 39.85-56 84.31 50 101 143.5 160.5T480-280q34.62 0 69.77-6.73t52.85-13.58L537.38-366q-9.46 5.31-26.38 8.73-16.92 3.42-31 3.42-61.15 0-103.65-42.5-42.5-42.5-42.5-103.65 0-13.31 3.42-29.85 3.42-16.53 8.73-27.53l-91.69-91.24ZM541-531Zm-112.54 56.54Z"/>
-                      </svg>
-                    </button>
-                  </div>
-                  <div class="flex items-center mt-1 text-xs text-gray-500">
-                    <span class="material-icons text-gray-500 mr-2">info</span>
-                    <p>Your SSN is protected with advanced encryption techniques to ensure its safety.</p>
-                  </div>
+                  <%= form.label :business_name, "Business Name", class: "block text-sm font-medium text-gray-700 mb-1" %>
+                  <%= form.text_field :business_name, placeholder: "Enter Your Business Name", class: "w-full mt-1 p-3 border rounded-lg border-gray-800 text-gray-500" %>
                 </div>
-
               </div>
               <div class="mt-6">
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                  <% ["id_document", "utility_bill", "additional_document1", "additional_document2"].each do |doc| %>
-                    <div class="flex flex-col items-center justify-between border p-4 rounded-lg shadow-md bg-white">
-                      <div class="flex flex-col items-center">
-                        <% if doc == "id_document" || doc == "utility_bill" %>
-                          <div class="text-sm font-medium text-gray-700 capitalize">*<%= doc.humanize %></div>
+                <div class="flex flex-col items-center justify-between border p-4 rounded-lg shadow-md bg-white">
+                  <div class="flex flex-col items-center">
+                    <div class="text-sm font-medium text-gray-700 capitalize">*Business Logo</div>
+                    <% if @user.business_logo.attached? %>
+                      <span class="text-gray-500 mb-2"><%= @user.business_logo.filename.to_s %></span>
+                      <div class="mb-2">
+                        <% if @user.business_logo.content_type.starts_with?('image/') %>
+                          <%= image_tag url_for(@user.business_logo), class: "h-24 w-24 object-cover rounded-lg shadow-sm" %>
                         <% else %>
-                          <div class="text-sm font-medium text-gray-700 capitalize"><%= doc.humanize %></div>
-                        <% end %>
-                        <% if @user.send(doc).attached? %>
-                          <span class="text-gray-500 mb-2"><%= @user.send(doc).filename.to_s %></span>
-                          <div class="mb-2">
-                            <% if @user.send(doc).content_type.starts_with?('image/') %>
-                              <%= image_tag url_for(@user.send(doc)), class: "h-24 w-24 object-cover rounded-lg shadow-sm" %>
-                            <% else %>
-                              <%= link_to "View Document", url_for(@user.send(doc)), target: "_blank", class: "text-blue-500 underline" %>
-                            <% end %>
-                          </div>
+                          <%= link_to "View Document", url_for(@user.business_logo), target: "_blank", class: "text-blue-500 underline" %>
                         <% end %>
                       </div>
-                      <div class="flex items-center justify-center w-full mt-4">
-                        <label for="<%= doc %>-dropzone-file" class="flex flex-col items-center justify-center w-full h-64 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100">
-                          <div class="flex flex-col items-center justify-center pt-5 pb-6">
-                            <svg class="w-8 h-8 mb-4 text-gray-500" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 16">
-                              <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"/>
-                            </svg>
-                            <p class="mb-2 text-sm text-gray-500"><span class="font-semibold">Click to upload</span> or drag and drop</p>
-                            <p class="text-xs text-gray-500">SVG, PNG, JPG or GIF (MAX. 800x400px)</p>
-                          </div>
-                          <%= form.file_field doc, id: "#{doc}-dropzone-file", class: "hidden", accept: 'application/pdf,image/jpeg,image/jpg,image/png' %>
-                        </label>
+                    <% end %>
+                  </div>
+                  <div class="flex items-center justify-center w-full mt-4">
+                    <label for="business_logo-dropzone-file" class="flex flex-col items-center justify-center w-full h-64 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100">
+                      <div class="flex flex-col items-center justify-center pt-5 pb-6">
+                        <svg class="w-8 h-8 mb-4 text-gray-500" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 16">
+                          <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 13h3a3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"/>
+                        </svg>
+                        <p class="mb-2 text-sm text-gray-500"><span class="font-semibold">Click to upload</span> or drag and drop</p>
+                        <p class="text-xs text-gray-500">SVG, PNG, JPG (MAX. 800x400px)</p>
                       </div>
-                    </div>
-                  <% end %>
+                      <%= form.file_field :business_logo, id: "business_logo-dropzone-file", class: "hidden", accept: 'application/pdf,image/jpeg,image/jpg,image/png' %>
+                    </label>
+                  </div>
                 </div>
               </div>
               <div class="flex justify-end gap-4.5 mt-6">
@@ -134,109 +107,5 @@
         </div>
       </div>
     </div>
-    <!-- ====== Settings Section End ====== -->
-
-    <div class="max-w-7xl mx-auto p-6">
-      <section class="mb-8">
-        <h2 class="text-2xl font-bold mb-4">Why Attach the Last 4 of SSN, ID, Utility Bill, and Other Supporting Documents to a Disputing Letter?</h2>
-        <p class="mb-2">
-          When disputing items on your credit report, it is crucial to provide sufficient verification documents to support your case. The last 4 digits of your SSN, a valid ID, a utility bill, and other supporting documents help verify your identity and residency, ensuring the credit bureaus can accurately process your dispute. These documents prevent delays and improve the chances of successfully correcting inaccuracies on your credit report.
-        </p>
-      </section>
-
-      <section class="mb-8">
-        <h2 class="text-2xl font-bold mb-4">What Can Be Submitted as ID?</h2>
-        <p class="mb-2">
-          You can submit one of the following documents as proof of identification:
-        </p>
-        <ul class="list-disc list-inside mb-2">
-          <li>Driver's License</li>
-          <li>State Issued Identification Card</li>
-          <li>Passport</li>
-          <li>Military ID</li>
-          <li>Permanent Resident Card</li>
-        </ul>
-      </section>
-
-      <section class="mb-8">
-        <h2 class="text-2xl font-bold mb-4">What Can Be Submitted as a Utility Bill?</h2>
-        <p class="mb-2">
-          A utility bill can be used to verify your residency. Acceptable utility bills include:
-        </p>
-        <ul class="list-disc list-inside mb-2">
-          <li>Electricity Bill</li>
-          <li>Water Bill</li>
-          <li>Gas Bill</li>
-          <li>Internet or Cable Bill</li>
-          <li>Phone Bill</li>
-          <li>Bank Statement with Address</li>
-        </ul>
-        <p class="mb-2">
-          Ensure the utility bill is recent (within the last 2-3 months) and includes your name and address.
-        </p>
-      </section>
-
-      <section>
-        <h2 class="text-2xl font-bold mb-4">Other Supporting Documents for Verification</h2>
-        <p class="mb-2">
-          Additional documents that can be used to support your identity and residency verification include:
-        </p>
-        <ul class="list-disc list-inside mb-2">
-          <li>Social Security Card</li>
-          <li>Birth Certificate</li>
-          <li>Lease or Rental Agreement</li>
-          <li>Insurance Card or Policy Document</li>
-          <li>Voter Registration Card</li>
-          <li>Pay Stub with Address</li>
-          <li>Tax Return Document</li>
-        </ul>
-        <p class="mb-2">
-          Providing these documents helps establish your identity and address, reducing the likelihood of disputes being delayed or rejected due to insufficient verification.
-        </p>
-      </section>
-    </div>
   </div>
 </div>
-
-<script>
-document.addEventListener("turbolinks:load", function() {
-  const ssnField = document.getElementById("ssn_last4");
-  const toggleButton = document.getElementById("toggle_ssn_visibility");
-  const eyeIcon = document.getElementById("eye_icon");
-  const eyeOffIcon = document.getElementById("eye_off_icon");
-
-  toggleButton.addEventListener("click", function() {
-    if (ssnField.type === "password") {
-      ssnField.type = "text";
-      eyeIcon.classList.add("hidden");
-      eyeOffIcon.classList.remove("hidden");
-    } else {
-      ssnField.type = "password";
-      eyeOffIcon.classList.add("hidden");
-      eyeIcon.classList.remove("hidden");
-    }
-  });
-
-  document.querySelectorAll("input[type='file']").forEach(input => {
-    input.addEventListener("change", function(event) {
-      const fileInput = event.target;
-      const file = fileInput.files[0];
-      const previewContainer = fileInput.closest("div").previousElementSibling;
-
-      if (file) {
-        const reader = new FileReader();
-        reader.onload = function(e) {
-          if (file.type.startsWith("image/")) {
-            previewContainer.innerHTML = `<img src="${e.target.result}" class="h-24 w-24 object-cover rounded-lg shadow-sm" />`;
-          } else {
-            previewContainer.innerHTML = `<a href="${e.target.result}" target="_blank" class="text-blue-500 underline">View Document</a>`;
-          }
-        };
-        reader.readAsDataURL(file);
-      } else {
-        previewContainer.innerHTML = "";
-      }
-    });
-  });
-});
-</script>

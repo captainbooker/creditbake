@@ -2,7 +2,7 @@
   <div class="mx-auto max-w-270">
     <div class="flex items-center justify-between mb-6">
       <h1 class="text-2xl font-bold">Import Credit Report</h1>
-      <%= link_to 'Create Attack', letters_path, class: "bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-700" %>
+      <%= link_to 'Create Attack', letters_client_path(@client), class: "bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-700" %>
     </div>
     <div class="border border-gray-300 rounded-lg p-6 shadow-md mb-8 custom-background-color">
       <%= form_with url: import_credit_report_path, method: :post, local: true, html: { id: 'credit-report-form' } do |f| %>

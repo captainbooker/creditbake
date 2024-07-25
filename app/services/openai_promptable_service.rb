@@ -62,24 +62,27 @@ class OpenaiPromptableService
 
   def inquiries_all_in(inquiries, accounts, public_record, bureau)
     <<-PROMPT
+    Ensure the final output does not include special characters like ``` or ###.
+
+    - Requirements:
+      - Generate a unique, Inquiry removal summary
+      - Summarize my rights(consumer) under relevant laws.
+      - Cite relevant laws and Metro 2 codes for support.
+      - Request for investigation in compliance per CDIA and Metro 2 compliance, FCRA 
+      - Emphasize the urgency and importance of resolving the dispute.
 
     - Additional Requirements:
-        - Include relevant legal references, such as the CDIA and Metro 2 Compliance and other pertinent federal or state laws.
-        - Maintain a professional, assertive, and clear tone, emphasizing the consumer's legal rights.
-        - Reference any necessary supporting documentation, though actual documents are not provided.
+      - Include relevant legal references, such as the CDIA and Metro 2 Compliance and other pertinent federal or state laws.
+      - Maintain a professional, assertive, and clear tone, emphasizing the consumer's legal rights.
+      - Reference any necessary supporting documentation, though actual documents are not provided.
   
-      - Structure:
-        - **Consumer Rights Overview**: Summarize the consumer's rights under relevant laws.
-        - **Legal References**: Cite relevant laws and Metro 2 codes for support.
-        - **Request for Action**: Request for investigation in compliance per CDIA and Metro 2 compliance, FCRA 
-        - **Demand Results**: Emphasize the urgency and importance of resolving the dispute.
-  
-      - Tone and Style:
-        - Professional and assertive
-        - Detailed and thorough
-        - Legally informed and compliant
 
-      - Important: Avoid special characters like ``` or ###.
+    - Tone and Style:
+      - Professional and assertive
+      - Detailed and thorough
+      - Legally informed and compliant
+
+    - Important: Avoid special characters like ``` or ### and complimentary close.
 
     PROMPT
   end
@@ -94,7 +97,7 @@ class OpenaiPromptableService
         - Reference any necessary supporting documentation, though actual documents are not provided.
   
       - Structure:
-        - **Consumer Rights Overview**: Summarize the consumer's rights under relevant laws.
+        - **Consumer Rights Overview**: Summarize my rights(consumer) under relevant laws.
         - **Legal References**: Cite relevant laws and Metro 2 codes for support.
         - **Request for Action**: Request for investigation in compliance per CDIA and Metro 2 compliance, FCRA 
         - **Demand Results**: Emphasize the urgency and importance of resolving the dispute.
@@ -119,7 +122,7 @@ class OpenaiPromptableService
         - Reference any necessary supporting documentation, though actual documents are not provided.
   
       - Structure:
-        - **Consumer Rights Overview**: Summarize the consumer's rights under relevant laws.
+        - **Consumer Rights Overview**: Summarize my rights(consumer) under relevant laws.
         - **Legal References**: Cite relevant laws and Metro 2 codes for support.
         - **Request for Action**: Request for investigation in compliance per CDIA and Metro 2 compliance, FCRA 
         - **Demand Results**: Emphasize the urgency and importance of resolving the dispute.
@@ -144,7 +147,8 @@ class OpenaiPromptableService
         - Reference any necessary supporting documentation, though actual documents are not provided.
   
       - Structure:
-        - **Consumer Rights Overview**: Summarize the consumer's rights under relevant laws.
+        - 
+        - **Consumer Rights Overview**: Summarize my rights(consumer) under relevant laws.
         - **Legal References**: Cite relevant laws and Metro 2 codes for support.
         - **Request for Action**: Request for investigation in compliance per CDIA and Metro 2 compliance, FCRA 
         - **Demand Results**: Emphasize the urgency and importance of resolving the dispute.
@@ -169,7 +173,7 @@ class OpenaiPromptableService
         - Reference any necessary supporting documentation, though actual documents are not provided.
   
       - Structure:
-        - **Consumer Rights Overview**: Summarize the consumer's rights under relevant laws.
+        - **Consumer Rights Overview**: Summarize my rights(consumer) under relevant laws.
         - **Legal References**: Cite relevant laws and Metro 2 codes for support.
         - **Request for Action**: Request for investigation in compliance per CDIA and Metro 2 compliance, FCRA 
         - **Demand Results**: Emphasize the urgency and importance of resolving the dispute.
@@ -194,7 +198,7 @@ class OpenaiPromptableService
         - Reference any necessary supporting documentation, though actual documents are not provided.
   
       - Structure:
-        - **Consumer Rights Overview**: Summarize the consumer's rights under relevant laws.
+        - **Consumer Rights Overview**: Summarize my rights(consumer) under relevant laws.
         - **Legal References**: Cite relevant laws and Metro 2 codes for support.
         - **Request for Action**: Request for investigation in compliance per CDIA and Metro 2 compliance, FCRA 
         - **Demand Results**: Emphasize the urgency and importance of resolving the dispute.
@@ -218,7 +222,7 @@ class OpenaiPromptableService
         - Reference any necessary supporting documentation, though actual documents are not provided.
   
       - Structure:
-        - **Consumer Rights Overview**: Summarize the consumer's rights under relevant laws.
+        - **Consumer Rights Overview**: Summarize my rights(consumer) under relevant laws.
         - **Legal References**: Cite relevant laws and Metro 2 codes for support.
         - **Request for Action**: Request for investigation in compliance per CDIA and Metro 2 compliance, FCRA 
         - **Demand Results**: Emphasize the urgency and importance of resolving the dispute.
@@ -242,7 +246,7 @@ class OpenaiPromptableService
         - Reference any necessary supporting documentation, though actual documents are not provided.
   
       - Structure:
-        - **Consumer Rights Overview**: Summarize the consumer's rights under relevant laws.
+        - **Consumer Rights Overview**: Summarize my rights(consumer) under relevant laws.
         - **Legal References**: Cite relevant laws and Metro 2 codes for support.
         - **Request for Action**: Request for investigation in compliance per CDIA and Metro 2 compliance, FCRA 
         - **Demand Results**: Emphasize the urgency and importance of resolving the dispute.
@@ -266,7 +270,7 @@ class OpenaiPromptableService
         - Reference any necessary supporting documentation, though actual documents are not provided.
   
       - Structure:
-        - **Consumer Rights Overview**: Summarize the consumer's rights under relevant laws.
+        - **Consumer Rights Overview**: Summarize my rights(consumer) under relevant laws.
         - **Legal References**: Cite relevant laws and Metro 2 codes for support.
         - **Request for Action**: Request for investigation in compliance per CDIA and Metro 2 compliance, FCRA 
         - **Demand Results**: Emphasize the urgency and importance of resolving the dispute.
@@ -290,7 +294,7 @@ class OpenaiPromptableService
         - Reference any necessary supporting documentation, though actual documents are not provided.
   
       - Structure:
-        - **Consumer Rights Overview**: Summarize the consumer's rights under relevant laws.
+        - **Consumer Rights Overview**: Summarize my rights(consumer) under relevant laws.
         - **Legal References**: Cite relevant laws and Metro 2 codes for support.
         - **Request for Action**: Request for investigation in compliance per CDIA and Metro 2 compliance, FCRA 
         - **Demand Results**: Emphasize the urgency and importance of resolving the dispute.

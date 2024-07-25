@@ -13,14 +13,7 @@ class Users::RegistrationsController < Devise::RegistrationsController
   def update_profile
     current_user.assign_attributes(profile_params)
     
-    if params[:signature_data].present?
-      signature_io = decode_base64_image(params[:signature_data])
-      current_user.signature.attach(io: signature_io, filename: 'signature.png', content_type: 'image/png')
-    end
-    
-    if missing_required_fields? || current_user.signature.blank?
-      redirect_to edit_profile_path, alert: 'Profile could not be updated. Please ensure all fields are filled out and a signature is provided.'
-    elsif current_user.save
+    if current_user.save!
       maverick_customer_creation(current_user)
       create_customer_vault_card_form(current_user)
       redirect_to authenticated_root_path, notice: 'Thanks for completing registration. A few more steps and we are ready to roll!'
@@ -32,7 +25,7 @@ class Users::RegistrationsController < Devise::RegistrationsController
   protected
 
   def profile_params
-    params.require(:user).permit(:first_name, :last_name, :phone_number, :street_address, :city, :state, :postal_code, :country, :ssn_last4)
+    params.require(:user).permit(:first_name, :last_name, :phone_number, :street_address, :city, :state, :postal_code, :business_name, :business_logo)
   end
 
   def after_sign_up_path_for(resource)
@@ -73,7 +66,7 @@ class Users::RegistrationsController < Devise::RegistrationsController
   end
   
   def create_customer_vault_card_form(user)
-    return_url = Rails.env.development? ? "https://5cc6-2600-8801-3890-6f00-f467-74b0-b97b-ebd9.ngrok-free.app/upgrade_plan?status=<status>&customerId=<customerId>&cardId=<cardId>" : "https://www.creditbake.com/upgrade_plan?status=<status>&customerId=<customerId>&cardId=<cardId>"
+    return_url = Rails.env.development? ? "https://a61b-70-170-77-185.ngrok-free.app/upgrade_plan?status=<status>&customerId=<customerId>&cardId=<cardId>" : "https://www.creditbake.com/upgrade_plan?status=<status>&customerId=<customerId>&cardId=<cardId>"
     card_form_params = {
       "dba": {
         "id": "190265"

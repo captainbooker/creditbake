@@ -2,7 +2,7 @@
   <div class="max-w-7xl mx-auto p-6">
     <div class="flex items-center justify-between mb-6">
       <h1 class="text-2xl font-bold">Credit Scores</h1>
-      <%= link_to 'Create Attack', letters_path, class: "bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-700" %>
+      <%= link_to 'Create Attack', letters_client_path(@client), class: "bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-700" %>
     </div>
     <hr class="mb-6">
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -57,7 +57,7 @@
             <div class="text-3xl font-semibold text-gray-900"><%= @accounts.count %></div>
           </div>
           <div class="mt-4 pb-6">
-            <%= link_to 'Take Action', letters_path, class: "px-6 py-3 font-medium rounded-lg transition duration-300 border-2 #{ 'border-custom-blue-button text-custom-blue-button bg-white cursor-not-allowed' if @accounts.count.zero? } #{ 'border-custom-blue text-custom-blue-button bg-white hover:bg-custom-blue-button hover:text-white' unless @accounts.count.zero? }", disabled: @accounts.count.zero? %>
+            <%= link_to 'Take Action', letters_client_path(@client), class: "px-6 py-3 font-medium rounded-lg transition duration-300 border-2 #{ 'border-custom-blue-button text-custom-blue-button bg-white cursor-not-allowed' if @accounts.count.zero? } #{ 'border-custom-blue text-custom-blue-button bg-white hover:bg-custom-blue-button hover:text-white' unless @accounts.count.zero? }" %>
           </div>
         </div>
 
@@ -67,7 +67,7 @@
             <div class="text-3xl font-semibold text-red-500"><%= @inquiries.count %></div>
           </div>
           <div class="mt-4 pb-6">
-            <%= link_to 'Take Action', letters_path, class: "px-6 py-3 font-medium rounded-lg transition duration-300 border-2 #{ 'border-custom-blue-button text-custom-blue-button bg-white cursor-not-allowed' if @accounts.count.zero? } #{ 'border-custom-blue text-custom-blue-button bg-white hover:bg-custom-blue-button hover:text-white' unless @accounts.count.zero? }", disabled: @accounts.count.zero? %>
+            <%= link_to 'Take Action', letters_client_path(@client), class: "px-6 py-3 font-medium rounded-lg transition duration-300 border-2 #{ 'border-custom-blue-button text-custom-blue-button bg-white cursor-not-allowed' if @accounts.count.zero? } #{ 'border-custom-blue text-custom-blue-button bg-white hover:bg-custom-blue-button hover:text-white' unless @accounts.count.zero? }" %>
           </div>
         </div>
 
@@ -77,7 +77,7 @@
             <div class="text-3xl font-semibold text-red-500"><%= @negative_accounts.count %></div>
           </div>
           <div class="mt-4 pb-6">
-            <%= link_to 'Take Action', letters_path, class: "px-6 py-3 font-medium rounded-lg transition duration-300 border-2 #{ 'border-custom-blue-button text-custom-blue-button bg-white cursor-not-allowed' if @accounts.count.zero? } #{ 'border-custom-blue text-custom-blue-button bg-white hover:bg-custom-blue-button hover:text-white' unless @accounts.count.zero? }", disabled: @accounts.count.zero? %>
+            <%= link_to 'Take Action', letters_client_path(@client), class: "px-6 py-3 font-medium rounded-lg transition duration-300 border-2 #{ 'border-custom-blue-button text-custom-blue-button bg-white cursor-not-allowed' if @accounts.count.zero? } #{ 'border-custom-blue text-custom-blue-button bg-white hover:bg-custom-blue-button hover:text-white' unless @accounts.count.zero? }" %>
           </div>
         </div>
       </div>

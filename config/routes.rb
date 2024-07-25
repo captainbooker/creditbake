@@ -18,7 +18,7 @@ Rails.application.routes.draw do
 
   devise_scope :user do
     authenticated :user do
-      root 'dashboards#index', as: :authenticated_root
+      root 'clients#index', as: :authenticated_root
       get 'complete_registration', to: 'users/registrations#edit_profile', as: :edit_profile
       patch 'profile/update', to: 'users/registrations#update_profile', as: :users_update_profile
     end
@@ -40,16 +40,25 @@ Rails.application.routes.draw do
     member do
       get 'dashboard'
       get 'credit_report'
+      get 'challenge'
+      get 'letters'
+    end
+  
+    collection do
+      post :send_invite
+      get 'new/:token', to: 'clients#new_with_token', as: 'new_with_token'
+      post 'create_with_token', to: 'clients#create_with_token', as: 'create_with_token'
     end
   end
+  
   get 'settings', to: 'users#settings', as: 'user_settings'
   delete 'users/:id/delete_id_document', to: 'users#delete_id_document', as: 'delete_id_document_user'
   delete 'users/:id/delete_utility_bill', to: 'users#delete_utility_bill', as: 'delete_utility_bill_user'
 
-  get 'challenge', to: 'dashboards#disputing', as: 'challenge'
   get 'upgrade_plan', to: 'dashboards#upgrade_plan', as: 'upgrade_plan'
   post 'plan_purchased', to: 'dashboards#plan_purchased', as: 'plan_purchased'
-  get 'letters', to: 'dashboards#letters', as: 'letters'
+  post 'cancel_subscription', to: 'dashboards#cancel_subscription', as: 'cancel_subscription'
+  post 'resubscribe', to: 'dashboards#resubscribe', as: 'resubscribe'
   get 'credit_report', to: 'credit_reports#credit_report', as: 'credit_report'
   get 'create_attack', to: 'dashboards#create_attack', as: 'create_attack'
   patch 'disputing/save_challenges', to: 'dashboards#save_challenges', as: 'save_challenges'
@@ -62,7 +71,6 @@ Rails.application.routes.draw do
 
   get '/spending-activity', to: 'payments#index', as: 'payment'
   post '/payment', to: 'payments#create'
-  get 'credit_reports', to: 'dashboards#index'
   get 'credit_reports/scores', to: 'dashboards#scores'
   get 'webhooks/maverick', to: 'incoming_payments#maverick'
   get 'privacy_policy', to: 'pages#privacy_policy', as: 'privacy_policy'

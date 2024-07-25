@@ -19,39 +19,71 @@
         <div class="flex-shrink-0 block sm:hidden">
           <%= image_tag "creditbake-logo.png", alt: "CreditBake Logo", class: "h-8 w-auto" %>
         </div>
-        <div class="hidden sm:block sm:ml-6">
-          <div class="flex space-x-4">
-            <%= link_to 'Import Credit Report', credit_report_path, class: "py-2 px-4 rounded-lg #{'bg-white custom-blue-text' if current_page?(credit_report_path)} hover:bg-white hover:custom-blue-text transition duration-300" %>
-            <%= link_to 'Create Attack', letters_path, class: "py-2 px-4 rounded-lg #{'bg-white custom-blue-text' if current_page?(letters_path)} hover:bg-white hover:custom-blue-text transition duration-300" %>
-            <%= link_to 'Challenge', challenge_path, class: "py-2 px-4 rounded-lg #{'bg-white custom-blue-text' if current_page?(challenge_path)} hover:bg-white hover:custom-blue-text transition duration-300" %>
-            <%= link_to 'Clients', clients_path, class: "py-2 px-4 rounded-lg #{'bg-white custom-blue-text' if current_page?(clients_path)} hover:bg-white hover:custom-blue-text transition duration-300" %>
+        <% if @client.present? %>
+          <div class="hidden sm:block sm:ml-6">
+            <div class="flex space-x-4">
+              <%= link_to 'Dashboard', dashboard_client_path(@client), class: "py-2 px-4 rounded-lg #{'bg-white custom-blue-text' if current_page?(dashboard_client_path)} hover:bg-white hover:custom-blue-text transition duration-300" %>
+              <%= link_to 'Profile', edit_client_path(@client), class: "py-2 px-4 rounded-lg #{'bg-white custom-blue-text' if current_page?(edit_client_path)} hover:bg-white hover:custom-blue-text transition duration-300" %>
+              <%= link_to 'Import Credit Report', credit_report_client_path(@client), class: "py-2 px-4 rounded-lg #{'bg-white custom-blue-text' if current_page?(credit_report_client_path)} hover:bg-white hover:custom-blue-text transition duration-300" %>
+              <%= link_to 'Create Attack', letters_client_path(@client), class: "py-2 px-4 rounded-lg #{'bg-white custom-blue-text' if current_page?(letters_client_path)} hover:bg-white hover:custom-blue-text transition duration-300" %>
+              <%= link_to 'Challenge', challenge_client_path(@client), class: "py-2 px-4 rounded-lg #{'bg-white custom-blue-text' if current_page?(challenge_client_path)} hover:bg-white hover:custom-blue-text transition duration-300" %>
+            </div>
           </div>
-        </div>
+        <% end %>
       </div>
-      <div class="absolute inset-y-0 right-0 flex items-center">
-        <%= link_to 'Upgrade Plan', upgrade_plan_path, class: "py-2 px-4 rounded-lg bg-custom-blue text-white hover:bg-blue-700 transition duration-300" %>
+      <div class="hidden sm:flex items-center">
+        <%= link_to 'Upgrade Plan', upgrade_plan_path, class: "upgrade-button py-2 px-4 rounded-lg text-white transition duration-300" %>
       </div>
     </div>
   </div>
 
   <!-- Mobile menu, show/hide based on menu state. -->
   <div id="mobile-menu" class="sm:hidden hidden">
-    <div class="px-2 pt-2 pb-3 space-y-1">
-      <%= link_to 'Import Credit Report', credit_report_path, class: "block py-2 px-4 rounded-lg #{'bg-white custom-blue-text' if current_page?(credit_report_path)} hover:bg-white hover:custom-blue-text transition duration-300" %>
-      <%= link_to 'Create Attack', letters_path, class: "block py-2 px-4 rounded-lg #{'bg-white custom-blue-text' if current_page?(letters_path)} hover:bg-white hover:custom-blue-text transition duration-300" %>
-      <%= link_to 'Challenge', challenge_path, class: "block py-2 px-4 rounded-lg #{'bg-white custom-blue-text' if current_page?(challenge_path)} hover:bg-white hover:custom-blue-text transition duration-300" %>
-      <%= link_to 'Upgrade Plan', upgrade_plan_path, class: "block py-2 px-4 rounded-lg bg-custom-blue text-white hover:bg-blue-700 transition duration-300" %>
-    </div>
+    <% if @client.present? %>
+      <div class="px-2 pt-2 pb-3 space-y-1">
+        <%= link_to 'Dashboard', dashboard_client_path(@client), class: "block py-2 px-4 rounded-lg #{'bg-white custom-blue-text' if current_page?(dashboard_client_path)} hover:bg-white hover:custom-blue-text transition duration-300" %>
+        <%= link_to 'Profile', edit_client_path(@client), class: "block py-2 px-4 rounded-lg #{'bg-white custom-blue-text' if current_page?(edit_client_path)} hover:bg-white hover:custom-blue-text transition duration-300" %>
+        <%= link_to 'Import Credit Report', credit_report_client_path(@client), class: "block py-2 px-4 rounded-lg #{'bg-white custom-blue-text' if current_page?(credit_report_client_path)} hover:bg-white hover:custom-blue-text transition duration-300" %>
+        <%= link_to 'Create Attack', letters_client_path(@client), class: "block py-2 px-4 rounded-lg #{'bg-white custom-blue-text' if current_page?(letters_client_path)} hover:bg-white hover:custom-blue-text transition duration-300" %>
+        <%= link_to 'Challenge', challenge_client_path(@client), class: "block py-2 px-4 rounded-lg #{'bg-white custom-blue-text' if current_page?(challenge_client_path)} hover:bg-white hover:custom-blue-text transition duration-300" %>
+        <%= link_to 'Upgrade Plan', upgrade_plan_path, class: "block upgrade-button py-2 px-4 rounded-lg text-white transition duration-300" %>
+      </div>
+    <% end %>
   </div>
 </nav>
 
 <script>
-  document.addEventListener('turbolinks:load', () => {
+  document.addEventListener('turbolinks:load', function() {
+    Turbolinks.clearCache();
+    initializeMobileMenu();
+  });
+
+  function initializeMobileMenu() {
     const mobileMenuButton = document.getElementById('mobile-menu-button');
     const mobileMenu = document.getElementById('mobile-menu');
 
-    mobileMenuButton?.addEventListener('click', () => {
+    if (mobileMenuButton && mobileMenu) {
+      // Remove previous event listeners to prevent duplicates
+      mobileMenuButton.removeEventListener('click', toggleMenu);
+
+      // Add the new event listener
+      mobileMenuButton.addEventListener('click', toggleMenu);
+    }
+  }
+
+  // Define the function to toggle menu visibility
+  function toggleMenu() {
+    const mobileMenu = document.getElementById('mobile-menu');
+    if (mobileMenu) {
       mobileMenu.classList.toggle('hidden');
-    });
+    }
+  }
+
+  document.addEventListener('turbolinks:before-cache', function() {
+    const mobileMenuButton = document.getElementById('mobile-menu-button');
+    if (mobileMenuButton) {
+      mobileMenuButton.removeEventListener('click', toggleMenu);
+    }
   });
 </script>
+

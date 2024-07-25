@@ -161,7 +161,9 @@ class FetchCreditReportJob < ApplicationJob
           past_due_amount: details[:past_due_amount],
           payment_status: details[:payment_status],
           date_opened: details[:date_opened],
-          date_of_last_payment: details[:date_of_last_payment]
+          date_of_last_payment: details[:date_of_last_payment],
+          comment: details[:comment],
+          monthly_payment: details[:monthly_payment]
         )
       end
     end

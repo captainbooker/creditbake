@@ -326,7 +326,6 @@ class SmartCreditService
     inquiries.each do |inquiry_attrs|
       inquiry = Inquiry.new(inquiry_attrs)
       
-      binding.pry
       if type.is_a?(Client)
         inquiry.client = type
       else
@@ -406,6 +405,8 @@ class SmartCreditService
         payment_status: details["Payment Status:"],
         date_opened: details["Date Opened:"],
         date_of_last_payment: details["Last Payment:"],
+        comment: details["Creditor Remarks:"],
+        monthly_payment: details["Payment Amount:"],
         public_record_id: nil
       )
     end
@@ -485,5 +486,4 @@ class SmartCreditService
       )
     end
   end
-  
 end

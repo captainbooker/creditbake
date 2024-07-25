@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>CreditBake</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <%= csrf_meta_tags %>
+  <%= csp_meta_tag %>
+
+  <%= stylesheet_link_tag 'custom_layout', media: 'all', 'data-turbolinks-track': 'reload' %>
+  <%= javascript_pack_tag 'application', 'data-turbolinks-track': 'reload' %>
+  <script src="https://unpkg.com/alpinejs" defer></script>
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/signature_pad@4.1.7/dist/signature_pad.umd.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/js-confetti@latest/dist/js-confetti.browser.js"></script>
+  <%= display_meta_tags site: "CreditBake" %>
+  <%= favicon_link_tag asset_path('favicon.ico') %>
+  <link rel="icon" href="<%= asset_path 'favicon.ico' %>" type="image/x-icon">
+  <link rel="shortcut icon" href="<%= asset_path 'favicon.ico' %>" type="image/x-icon">
+  <link rel="apple-touch-icon" sizes="180x180" href="<%= asset_path 'apple-touch-icon.png' %>">
+  <link rel="icon" type="image/png" sizes="32x32" href="<%= asset_path 'favicon-32x32.png' %>">
+  <link rel="icon" type="image/png" sizes="16x16" href="<%= asset_path 'favicon-16x16.png' %>">
+  <link rel="manifest" href="<%= asset_path 'site.webmanifest' %>">
+  <link rel="icon" type="image/png" sizes="192x192" href="<%= asset_path 'android-chrome-192x192.png' %>">
+  <link rel="icon" type="image/png" sizes="512x512" href="<%= asset_path 'android-chrome-512x512.png' %>">
+  <% if Rails.env.production? %>
+    <script defer src="https://cloud.umami.is/script.js" data-website-id="aa10b2e9-c485-4fc9-9637-c23ab21c2631"></script>
+  <% end %>
+</head>
+<body class="body-background-color">
+  <div class="flex h-screen overflow-hidden">
+    <div class="relative flex flex-1 flex-col overflow-y-auto overflow-x-hidden">
+      <main>
+        <%= yield %>
+      </main>
+    </div>
+  </div>
+</body>
+</html>
