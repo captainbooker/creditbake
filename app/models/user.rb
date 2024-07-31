@@ -12,6 +12,9 @@ class User < ApplicationRecord
   has_many :mailings
   has_many :public_records
   has_many :posts, dependent: :destroy
+  has_many :personal_informations
+  has_many :client_invites
+  belongs_to :subscription, optional: true
 
   has_one_attached :id_document
   has_one_attached :utility_bill
@@ -19,6 +22,7 @@ class User < ApplicationRecord
   has_one_attached :additional_document2
   has_one_attached :signature
   has_one_attached :avatar
+  has_one_attached :business_logo
 
   accepts_nested_attributes_for :accounts, allow_destroy: true, update_only: true
   accepts_nested_attributes_for :clients, allow_destroy: true, update_only: true
@@ -73,6 +77,10 @@ class User < ApplicationRecord
 
   def free_attack
     self[:free_attack] || 0
+  end
+
+  def has_basic_subscription?
+    subscription&.name == "Basic"
   end
 
   def profile_complete?

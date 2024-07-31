@@ -1,5 +1,6 @@
 class Mailing < ApplicationRecord
-  belongs_to :user
+  belongs_to :client, optional: true
+  belongs_to :user, optional: true
   belongs_to :letter
 
   def self.ransackable_attributes(auth_object = nil)

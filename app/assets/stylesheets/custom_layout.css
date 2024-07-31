@@ -1883,6 +1883,10 @@ body {
   display: flex;
 }
 
+#loading-overlay.active {
+  display: flex; /* Show the overlay */
+}
+
 .signature-pad {
   border: 1px solid #000;
   background-color: #FFFFFF;
@@ -2030,3 +2034,18 @@ body {
 .hover\:text-white:hover {
   color: #ffffff;
 }
+
+.upgrade-button {
+  background: linear-gradient(90deg, #ff7e5f, #feb47b);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  font-weight: bold;
+  border: none;
+  transition: all 0.3s ease-in-out;
+}
+
+.upgrade-button:hover {
+  background: linear-gradient(90deg, #feb47b, #ff7e5f);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+  transform: scale(1.05);
+}
+

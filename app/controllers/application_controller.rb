@@ -69,8 +69,19 @@ class ApplicationController < ActionController::Base
   def ensure_required_documents
     if current_user.ssn_last4.blank? || !current_user.id_document.attached? || !current_user.utility_bill.attached?
       redirect_to user_settings_path, alert: "Please upload the required fields and documents before proceeding (SSN, ID & Utility Bill)"
+      return false
     end
+    true
   end
+  
+  def ensure_required_documents_for_client(client)
+    if client.ssn_last4.blank? || !client.id_document.attached? || !client.utility_bill.attached?
+      redirect_to edit_client_path(client), alert: "Please upload the required fields and documents before proceeding (SSN, ID & Utility Bill)"
+      return false
+    end
+    true
+  end
+  
 
   def detect_browser(user_agent)
     browser = Browser.new(user_agent)

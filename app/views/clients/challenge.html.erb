@@ -1,0 +1,282 @@
+<div class="mx-auto max-w-screen-3xl p-4 md:p-6 2xl:p-10">
+  <div class="mx-auto max-w-270">
+    <div class="flex items-center justify-between mb-6">
+      <h1 class="text-2xl font-bold">Challenge</h1>
+    </div>
+    <%= form_with url: save_challenges_path, method: :patch do %>
+      <%= hidden_field_tag :authenticity_token, form_authenticity_token %>
+      <%= hidden_field_tag :client_id, @client.id %>
+      <!-- Inquiries Section Start -->
+      <div class="rounded-lg border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark mb-8">
+        <div class="p-7 custom-background-color">
+          <div class="mb-12 mt-4">
+            <h3 class="font-semibold text-black text-xl">Inquiries</h3>
+            <p>Select all the inquiries you would like to attack 👊</p>
+          </div>
+          <div class="inquiry_container grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4" data-tabs-target="content">
+            <% @inquiries.each do |inquiry| %>
+              <div class="relative border rounded transform transition-transform duration-300 ease-in-out hover:scale-105 hover:shadow-lg inquiry-item">
+                <input type="hidden" name="inquiry_ids[<%= inquiry.id %>]" value="false">
+                <input type="checkbox" name="inquiry_ids[<%= inquiry.id %>]" value="true" class="form-checkbox h-4 w-4 hidden peer" id="inquiry_<%= inquiry.id %>" <%= 'checked' if inquiry.challenge %>>
+                <label for="inquiry_<%= inquiry.id %>">
+                  <div class="flex-grow content p-4 text-gray-800">
+                    <p class="font-small ml-2 font-normal peer-checked:font-semibold peer-checked:text-white"><%= inquiry.inquiry_name %></p>
+                    <div class="flex items-center mt-1 ml-2 peer-checked:text-white">
+                      <%= image_tag "calendar.svg", class: "peer-checked:invert peer-checked:filter-white" %>
+                      <span class="ml-2 text-sm"><%= inquiry.inquiry_date %></span>
+                    </div>
+                  </div>
+                </label>
+              </div>
+            <% end %>
+          </div>
+        </div>
+      </div>
+
+      <!-- Inquiries Section End -->
+
+      <!-- Accounts Section Start -->
+      <div class="rounded-lg border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark mb-8">
+        <div class="p-7 custom-background-color">
+          <div class="mb-12 mt-4">
+            <h3 class="font-semibold text-black text-xl">Accounts</h3>
+            <p>Select all the accounts you would like to attack 👊</p>
+          </div>
+          <div class="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" data-tabs-target="content">
+            <% @accounts.each do |account| %>
+              <label for="account_<%= account.id %>" class="account-card flex flex-col relative transform transition-transform duration-300 ease-in-out hover:scale-105 hover:shadow-lg border rounded cursor-pointer bg-white">
+                <input type="hidden" name="account_ids[<%= account.id %>]" value="false">
+                <input type="checkbox" id="account_<%= account.id %>" name="account_ids[<%= account.id %>]" value="true" class="form-checkbox hidden peer" <%= 'checked' if account.challenge %>>
+                <div class="flex-grow min-h-full">
+                  <div class="flex justify-between px-4 pt-2">
+                    <p class="font-semibold text-gray-800 peer-checked:text-white"><%= account.name %></p>
+                  </div>
+
+                  <div class="px-4 pt-2">
+                    <p class="text-gray-800 peer-checked:text-white">
+                      Account Number
+                      <span class="float-right font-semibold text-black peer-checked:text-white"><%= account.account_number %></span>
+                    </p>
+                  </div>
+                  <div class="px-4 pt-2">
+                    <p class="text-gray-800 peer-checked:text-white">
+                      Account Type
+                      <span class="float-right font-semibold text-black peer-checked:text-white"><%= account.account_type %></span>
+                    </p>
+                  </div>
+                  <p class="mt-4 font-semibold text-black peer-checked:text-white p-4">Account Type Details</p>
+                  <div class="px-4 pt-2">
+                    <p class="text-gray-800 peer-checked:text-white">
+                      Account Status
+                      <span class="float-right font-semibold text-black peer-checked:text-white"><%= account.account_status %></span>
+                    </p>
+                  </div>
+                  <div class="px-4 pt-2">
+                    <p class="text-gray-800 peer-checked:text-white">
+                      Balance Owed
+                      <span class="float-right font-semibold text-black peer-checked:text-white"><%= account.bureau_details.first&.balance_owed %></span>
+                    </p>
+                  </div>
+                  <div class="px-4 pt-2">
+                    <p class="text-gray-800 peer-checked:text-white">
+                      High Credit
+                      <span class="float-right font-semibold text-black peer-checked:text-white"><%= account.bureau_details.first&.high_credit %></span>
+                    </p>
+                  </div>
+                  <div class="px-4 pt-2">
+                    <p class="text-gray-800 peer-checked:text-white">
+                      Credit Limit
+                      <span class="float-right font-semibold text-black peer-checked:text-white"><%= account.bureau_details.first&.credit_limit %></span>
+                    </p>
+                  </div>
+                  <div class="px-4 pt-2">
+                    <p class="text-gray-800 peer-checked:text-white">
+                      Past Due Amount
+                      <span class="float-right font-semibold text-black peer-checked:text-white"><%= account.bureau_details.first&.past_due_amount %></span>
+                    </p>
+                  </div>
+                  <div class="custom-blue text-white rounded-b-md peer-checked:bg-blue-600">
+                    <div class="px-4 pt-2">
+                      <p class="text-white">
+                        Date Opened
+                        <span class="float-right font-semibold text-white"><%= account.bureau_details.first&.date_opened %></span>
+                      </p>
+                    </div>
+                    <div class="px-4 pt-2">
+                      <p class="text-white">
+                        Last Payment Date
+                        <span class="float-right font-semibold text-white"><%= account.bureau_details.first&.date_of_last_payment %></span>
+                      </p>
+                    </div>
+                    <div class="px-4 pt-2 pb-8">
+                      <p class="text-white">
+                        Payment Status
+                        <span class="float-right <%= account.bureau_details.first&.payment_status&.downcase == 'current' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700' %> px-2 py-1 rounded-full"><%= account.bureau_details.first&.payment_status %></span>
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </label>
+            <% end %>
+          </div>
+        </div>
+      </div>
+
+      <!-- Accounts Section End -->
+
+      <!-- Public Information Section Start -->
+      <div class="rounded-lg border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark mb-8">
+        <div class="p-7 custom-background-color">
+          <div class="mb-12 mt-4">
+            <h3 class="font-semibold text-black text-xl">Public Information</h3>
+            <p>Select all the public information records you would like to attack 👊</p>
+          </div>
+          <div class="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" data-tabs-target="content">
+            <% @public_records.each do |public_record| %>
+              <label for="public_record_<%= public_record.id %>" class="account-card flex flex-col relative transform transition-transform duration-300 ease-in-out hover:scale-105 hover:shadow-lg border rounded cursor-pointer bg-white">
+                <input type="hidden" name="public_record_ids[<%= public_record.id %>]" value="false">
+                <input type="checkbox" id="public_record_<%= public_record.id %>" name="public_record_ids[<%= public_record.id %>]" value="true" class="form-checkbox hidden peer" <%= 'checked' if public_record.challenge %>>
+                <div class="flex-grow min-h-full">
+                  <div class="flex justify-between px-4 pt-2">
+                    <p class="font-semibold text-gray-800 peer-checked:text-white"><%= public_record.public_record_type %></p>
+                  </div>
+                  <div class="px-4 pt-2">
+                    <p class="text-gray-800 peer-checked:text-white">
+                      Reference Number
+                      <span class="float-right font-semibold text-black peer-checked:text-white"><%= public_record.reference_number %></span>
+                    </p>
+                  </div>
+                  <p class="mt-4 font-semibold text-black peer-checked:text-white p-4">Public Record Details</p>
+                  <div class="px-4 pt-2">
+                    <p class="text-gray-800 peer-checked:text-white">
+                      Status
+                      <span class="float-right font-semibold text-black peer-checked:text-white"><%= public_record.bureau_details.first&.status %></span>
+                    </p>
+                  </div>
+                  <div class="px-4 pt-2">
+                    <p class="text-gray-800 peer-checked:text-white">
+                      Date Filed/Reported
+                      <span class="float-right font-semibold text-black peer-checked:text-white"><%= public_record.bureau_details.first&.date_filed_reported %></span>
+                    </p>
+                  </div>
+                  <div class="px-4 pt-2">
+                    <p class="text-gray-800 peer-checked:text-white">
+                      Closing Date
+                      <span class="float-right font-semibold text-black peer-checked:text-white"><%= public_record.bureau_details.first&.closing_date %></span>
+                    </p>
+                  </div>
+                  <div class="px-4 pt-2">
+                    <p class="text-gray-800 peer-checked:text-white">
+                      Asset Amount
+                      <span class="float-right font-semibold text-black peer-checked:text-white"><%= public_record.bureau_details.first&.asset_amount %></span>
+                    </p>
+                  </div>
+                  <div class="px-4 pt-2">
+                    <p class="text-gray-800 peer-checked:text-white">
+                      Court
+                      <span class="float-right font-semibold text-black peer-checked:text-white"><%= public_record.bureau_details.first&.court %></span>
+                    </p>
+                  </div>
+                  <div class="px-4 pt-2">
+                    <p class="text-gray-800 peer-checked:text-white">
+                      Liability
+                      <span class="float-right font-semibold text-black peer-checked:text-white"><%= public_record.bureau_details.first&.liability %></span>
+                    </p>
+                  </div>
+                  <div class="px-4 pt-2">
+                    <p class="text-gray-800 peer-checked:text-white">
+                      Exempt Amount
+                      <span class="float-right font-semibold text-black peer-checked:text-white"><%= public_record.bureau_details.first&.exempt_amount %></span>
+                    </p>
+                  </div>
+                  <div class="custom-blue text-white rounded-b-md peer-checked:bg-blue-600">
+                    <div class="px-4 pb-6">
+                      <p>Dispute Reason</p>
+                      <select id="reason_<%= public_record.id %>" name="public_record_reasons[<%= public_record.id %>]" class="w-full text-black rounded">
+                        <option value="Inaccurate Information">Inaccurate Information</option>
+                        <option value="Duplicate Records">Duplicate Records</option>
+                        <option value="Outdated Information">Outdated Information</option>
+                        <option value="Incorrect Ownership">Incorrect Ownership</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+              </label>
+            <% end %>
+          </div>
+        </div>
+      </div>
+
+      <!-- Public Information Section End -->
+
+      <!-- Next Button -->
+      <div class="flex justify-end mt-6">
+        <button type="submit" class="px-6 py-2 font-medium text-white bg-primary rounded hover:bg-opacity-90">Next</button>
+      </div>
+    <% end %>
+    <!-- Disputes Form End -->
+  </div>
+</div>
+
+<script>
+document.addEventListener("turbolinks:load", function() {
+  function addEventListeners() {
+    document.querySelectorAll('.account-card').forEach(card => {
+      const checkbox = card.querySelector('input[type="checkbox"]');
+      
+      // Apply styles on page load if checkbox is checked
+      if (checkbox.checked) {
+        card.classList.add('bg-indigo-50', 'text-indigo-900', 'ring-indigo-200');
+      } else {
+        card.classList.remove('bg-indigo-50', 'text-indigo-900', 'ring-indigo-200');
+      }
+
+      card.addEventListener('click', function(event) {
+        if (event.target !== checkbox && event.target.tagName !== 'SELECT') {
+          // Prevent default label behavior to avoid double triggering
+          event.preventDefault();
+
+          // Toggle the checkbox state
+          checkbox.checked = !checkbox.checked;
+
+          // Apply styles and log based on the new state
+          if (checkbox.checked) {
+            console.log("Checkbox is now checked");
+            card.classList.add('bg-indigo-50', 'text-indigo-900', 'ring-indigo-200');
+          } else {
+            console.log("Checkbox is now unchecked");
+            card.classList.remove('bg-indigo-50', 'text-indigo-900', 'ring-indigo-200');
+          }
+        }
+      });
+    });
+  }
+
+  // Call the function to add event listeners
+  addEventListeners();
+
+  const inquiryContainer = document.querySelector('.inquiry_container');
+
+  if (inquiryContainer) {
+    inquiryContainer.addEventListener('change', function(event) {
+      const checkbox = event.target;
+      if (checkbox.classList.contains('peer')) {
+        const inquiryItem = checkbox.closest('.inquiry-item');
+        if (checkbox.checked) {
+          inquiryItem.classList.add('selected');
+        } else {
+          inquiryItem.classList.remove('selected');
+        }
+      }
+    });
+
+    // Initialize the state for any pre-checked checkboxes
+    const checkboxes = inquiryContainer.querySelectorAll('.peer');
+    checkboxes.forEach(checkbox => {
+      if (checkbox.checked) {
+        checkbox.closest('.inquiry-item').classList.add('selected');
+      }
+    });
+  }
+});
+</script>

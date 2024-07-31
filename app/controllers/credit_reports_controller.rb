@@ -20,13 +20,25 @@ class CreditReportsController < ApplicationController
   end
 
   def create
-    @credit_report = current_user.credit_reports.build(credit_report_params)
+    if params[:client_id].present?
+      client = Client.find(params[:client_id])
+      @credit_report = client.credit_reports.build(credit_report_params)
 
-    if @credit_report.save
-      parse_credit_report(@credit_report)
-      redirect_to authenticated_root_path, notice: 'Credit report successfully uploaded and parsed.'
+      if @credit_report.save
+        parse_credit_report(@credit_report)
+        redirect_to authenticated_root_path, notice: 'Credit report successfully uploaded and parsed.'
+      else
+        render :new
+      end
     else
-      render :new
+      @credit_report = current_user.credit_reports.build(credit_report_params)
+
+      if @credit_report.save
+        parse_credit_report(@credit_report)
+        redirect_to authenticated_root_path, notice: 'Credit report successfully uploaded and parsed.'
+      else
+        render :new
+      end
     end
   end
 

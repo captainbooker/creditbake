@@ -7,11 +7,12 @@ class SmartCreditService
   attr_reader :username, :password, :service, :current_user
   attr_accessor :experian_score, :transunion_score, :equifax_score
 
-  def initialize(user_agent_request, username, password, current_user, browser: :chrome, mobile: false)
+  def initialize(client, user_agent_request, username, password, user, browser: :chrome, mobile: false)
     @username = username
     @password = password
-    @current_user = current_user
     @browser = browser
+    @current_user = user
+    @client = client
     @mobile = mobile
     @user_agent_request = user_agent_request
 
@@ -78,13 +79,15 @@ class SmartCreditService
     scores = parse_scores
     public_records = parse_public_records
     inquiries = parse_inquiries
+    personal_information = parse_personal_information
 
     report = {
       "CreditReport" => {
         "Scores" => scores,
         "Accounts" => accounts,
         "PublicRecords" => public_records,
-        "Inquiries" => inquiries
+        "Inquiries" => inquiries,
+        "Personal Information" => personal_information
       }
     }
 
@@ -188,6 +191,55 @@ class SmartCreditService
     inquiries
   end
 
+  def parse_personal_information
+    personal_information_sections = @driver.find_elements(css: 'section.mt-5')
+    personal_information = []
+  
+    personal_information_sections.each do |section|
+      next unless section.find_element(css: 'h5.fw-bold').text.strip == 'Personal Information'
+  
+      personal_information << extract_personal_information(section, 'transunion')
+      personal_information << extract_personal_information(section, 'experian')
+      personal_information << extract_personal_information(section, 'equifax')
+    end
+  
+    personal_information.flatten
+  end
+  
+  def extract_personal_information(section, bureau)
+    bureau_selector = case bureau
+                      when 'transunion' then '.bg-transunion'
+                      when 'experian' then '.bg-experian'
+                      when 'equifax' then '.bg-equifax'
+                      else ''
+                      end
+  
+    bureau_element = section.find_element(css: "p#{bureau_selector}")
+    return [] unless bureau_element
+  
+    {
+      bureau: bureau.capitalize,
+      name: find_element_text(section, bureau, 3),
+      date_of_birth: find_element_text(section, bureau, 4),
+      current_address: find_element_text(section, bureau, 5),
+      previous_address: find_element_text(section, bureau, 6),
+      employer: find_element_text(section, bureau, 7)
+    }
+  end
+  
+  def find_element_text(section, bureau, row)
+    bureau_column = case bureau
+                    when 'transunion' then 2
+                    when 'experian' then 3
+                    when 'equifax' then 4
+                    else 1
+                    end
+    section.find_element(css: ".grid-cell.col-start-#{bureau_column}.row-start-#{row}").text.strip
+  rescue Selenium::WebDriver::Error::NoSuchElementError
+    ''
+  end
+  
+
   def format_public_record_data(labels, values, bureau)
     data = { "Bureau" => bureau }
     labels.each_with_index do |label, index|
@@ -233,54 +285,116 @@ class SmartCreditService
     inquiries = content.dig("CreditReport", "Inquiries")
     accounts = content.dig("CreditReport", "Accounts")
     public_records = content.dig("CreditReport", "PublicRecords")
+    personal_information = content.dig("CreditReport", "Personal Information")
 
     ActiveRecord::Base.transaction do
       clear_existing_records
 
-      create_inquiries(inquiries)
-      create_accounts(accounts)
-      create_public_records(public_records)
+      if @client.present?
+        create_inquiries(inquiries, @client)
+        create_accounts(accounts, @client)
+        create_public_records(public_records, @client)
+        create_personal_information(personal_information, @client)
+      else
+        create_inquiries(inquiries, @current_user)
+        create_accounts(accounts, @current_user)
+        create_public_records(public_records, @current_user)
+        create_personal_information(personal_information, @current_user)
+      end
     end
   end
 
   def clear_existing_records
-    user_id = @current_user.id
-    ActiveRecord::Base.connection.execute("DELETE FROM inquiries WHERE user_id = #{user_id}")
-    BureauDetail.where(account_id: @current_user.accounts.ids).delete_all
-    ActiveRecord::Base.connection.execute("DELETE FROM accounts WHERE user_id = #{user_id}")
-    BureauDetail.where(public_record_id: @current_user.public_records.ids).delete_all
-    ActiveRecord::Base.connection.execute("DELETE FROM public_records WHERE user_id = #{user_id}")
-  end
-
-  def create_inquiries(inquiries)
-    inquiries.each do |inquiry_attrs|
-      inquiry_attrs[:user_id] = @current_user.id
-      Inquiry.create!(inquiry_attrs)
+    if @client.present?
+      @client.inquiries.delete_all
+      BureauDetail.where(account_id: @client.accounts.pluck(:id)).delete_all
+      @client.accounts.delete_all
+      BureauDetail.where(public_record_id: @client.public_records.pluck(:id)).delete_all
+      @client.public_records.delete_all
+      @client.personal_informations.delete_all
+    else
+      @current_user.inquiries.delete_all
+      BureauDetail.where(account_id: @current_user.accounts.pluck(:id)).delete_all
+      @current_user.accounts.delete_all
+      BureauDetail.where(public_record_id: @current_user.public_records.pluck(:id)).delete_all
+      @current_user.public_records.delete_all
+      @current_user.personal_informations.delete_all
     end
   end
 
-  def create_accounts(accounts)
-    accounts.each do |account_attrs|
-      next if account_attrs.dig("Transunion", "Account #").nil? || account_attrs.dig("Transunion", "Account #") == "--"
-
-      account = Account.find_or_create_by!(
-        account_number: account_attrs.dig("Transunion", "Account #"),
-        user_id: @current_user.id
-      ) do |acc|
-        acc.account_type = account_attrs.dig("Transunion", "Account Type")
-        acc.account_status = account_attrs.dig("Transunion", "Account Status")
-        acc.name = account_attrs["Creditor"]
+  def create_inquiries(inquiries, type)
+    inquiries.each do |inquiry_attrs|
+      inquiry = Inquiry.new(inquiry_attrs)
+      
+      if type.is_a?(Client)
+        inquiry.client = type
+      else
+        inquiry.user = type
       end
+  
+      inquiry.save!
+    end
+  end
+  
 
+  def create_accounts(accounts, type)
+    accounts.each do |account_attrs|
+
+      account_number = nil
+      ["Transunion", "Experian", "Equifax"].each do |bureau|
+        num = account_attrs.dig(bureau, "Account #")
+        if num.present? && num != "--"
+          account_number = num
+          break
+        end
+      end
+  
+      next if account_number.nil?
+      account_type = account_attrs.dig("Transunion", "Account Type:") ||
+                     account_attrs.dig("Experian", "Account Type:") ||
+                     account_attrs.dig("Equifax", "Account Type:") ||
+                     'Unknown'
+  
+      account_status = account_attrs.dig("Transunion", "Account Status:") ||
+                       account_attrs.dig("Experian", "Account Status:") ||
+                       account_attrs.dig("Equifax", "Account Status:") ||
+                       'Unknown'
+  
+      account_data = {
+        account_number: account_number,
+        account_type: account_type,
+        account_status: account_status,
+        name: account_attrs["Creditor"] || 'Unknown',
+        creditor_name: account_attrs["Creditor"] || 'Unknown'
+      }
+  
+      if type.is_a?(Client)
+        account_data[:client_id] = type.id
+      else
+        account_data[:user_id] = type.id
+      end
+  
+      account = Account.find_or_create_by!(
+        account_number: account_number,
+        client_id: type.is_a?(Client) ? type.id : nil,
+        user_id: type.is_a?(User) ? type.id : nil
+      ) do |acc|
+        acc.assign_attributes(account_data)
+      end
+  
       create_bureau_details(account, account_attrs)
     end
   end
+  
+  
 
   def create_bureau_details(account, account_attrs)
     ["Transunion", "Experian", "Equifax"].each do |bureau|
       details = account_attrs[bureau]
       next unless details
-
+  
+      next if details["Date Opened:"] == "--"
+  
       BureauDetail.create!(
         account: account,
         bureau: bureau.downcase.to_sym,
@@ -291,39 +405,85 @@ class SmartCreditService
         payment_status: details["Payment Status:"],
         date_opened: details["Date Opened:"],
         date_of_last_payment: details["Last Payment:"],
+        comment: details["Creditor Remarks:"],
+        monthly_payment: details["Payment Amount:"],
         public_record_id: nil
       )
     end
-  end
+  end  
 
-  def create_public_records(public_records)
-    public_records.each do |public_attrs|
-      next if public_attrs.dig("Type") == "--" || public_attrs.dig("Type") == ""
-
-      public_record = PublicRecord.find_or_create_by!(
-        public_record_type: public_attrs.dig("Type"),
-        user_id: @current_user.id
-      ) do |public|
-        public.reference_number = public_attrs.dig("Reference#")
-      end
-
-      ["Transunion", "Experian", "Equifax"].each do |bureau|
-        details = public_attrs[bureau]
-        next unless details
-
-        BureauDetail.find_or_create_by!(
-          public_record: public_record,
-          bureau: bureau.downcase.to_sym,
-          status: public_attrs.dig("Status"),
-          date_filed_reported: public_attrs.dig("Date Filed/Reported"),
-          closing_date: public_attrs.dig("Closing Date"),
-          asset_amount: public_attrs.dig("Asset Amount"),
-          court: public_attrs.dig("Court"),
-          liability: public_attrs.dig("Liability"),
-          exempt_amount: public_attrs.dig("Exempt Amount"),
-          account_id: nil
+  def create_personal_information(personal_information, type)
+    if type.is_a?(Client)
+      personal_information.each do |pi|
+        PersonalInformation.create!(
+          client_id: type.id,
+          bureau: pi['bureau'],
+          name: pi['name'],
+          date_of_birth: pi['date_of_birth'],
+          current_addresses: pi['current_address'],
+          previous_addresses: pi['previous_address'],
+          employers: pi['employer']
         )
       end
+    else
+      personal_information.each do |pi|
+        PersonalInformation.create!(
+          user_id: type.id,
+          bureau: pi['bureau'],
+          name: pi['name'],
+          date_of_birth: pi['date_of_birth'],
+          current_addresses: pi['current_address'],
+          previous_addresses: pi['previous_address'],
+          employers: pi['employer']
+        )
+      end
+    end
+  end
+
+  def create_public_records(public_records, type)
+    public_records.each do |public_attrs|
+      next if public_attrs.dig("Type").nil? || public_attrs.dig("Type") == "--" || public_attrs.dig("Type") == ""
+  
+      public_record_data = {
+        public_record_type: public_attrs.dig("Type"),
+        reference_number: public_attrs.dig("Reference#")
+      }
+  
+      if type.is_a?(Client)
+        public_record_data[:client_id] = type.id
+      else
+        public_record_data[:user_id] = type.id
+      end
+  
+      public_record = PublicRecord.find_or_create_by!(
+        public_record_type: public_record_data[:public_record_type],
+        client_id: public_record_data[:client_id],
+        user_id: public_record_data[:user_id]
+      ) do |public|
+        public.reference_number = public_record_data[:reference_number]
+      end
+
+      create_bureau_details_for_public_record(public_record, public_attrs)
+    end
+  end
+  
+  def create_bureau_details_for_public_record(public_record, public_attrs)
+    ["Transunion", "Experian", "Equifax"].each do |bureau|
+      details = public_attrs["Bureau"][bureau]
+      next unless details
+      
+      BureauDetail.find_or_create_by!(
+        public_record: public_record,
+        bureau: bureau.downcase.to_sym,
+        status: public_attrs.dig("Status"),
+        date_filed_reported: public_attrs.dig("Date Filed/Reported"),
+        closing_date: public_attrs.dig("Closing Date"),
+        asset_amount: public_attrs.dig("Asset Amount"),
+        court: public_attrs.dig("Court"),
+        liability: public_attrs.dig("Liability"),
+        exempt_amount: public_attrs.dig("Exempt Amount"),
+        account_id: nil
+      )
     end
   end
 end

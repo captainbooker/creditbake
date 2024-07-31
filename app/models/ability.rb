@@ -4,16 +4,7 @@ class Ability
   def initialize(user)
     user ||= User.new # guest user (not logged in)
 
-    if user.has_role?(:admin)
-      can :manage, :all
-    else
-      can :read, :all
-
-      if user.has_role?(:user)
-        can :create, Client
-        can :update, Client, user_id: user.id
-        can :destroy, Client, user_id: user.id
-      end
-    end
+    can [:new_with_token, :create_with_token], Client
+    can :manage, Client, user_id: user.id if user.subscription.present?
   end
 end

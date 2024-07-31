@@ -37,6 +37,7 @@ gem 'blind_index'
 gem 'pdf-reader'
 gem "ruby-openai"
 gem 'prawn'
+gem 'prawn-table'
 gem 'mini_magick'
 gem 'selenium-webdriver', '~> 4.4'
 gem 'activeadmin'
@@ -61,6 +62,9 @@ gem 'omniauth'
 gem 'omniauth-google-oauth2'
 gem "omniauth-rails_csrf_protection"
 
+
+gem 'pry'
+gem 'pry-byebug'
 
 gem 'dotenv', groups: [:development, :test]
 group :development, :test do

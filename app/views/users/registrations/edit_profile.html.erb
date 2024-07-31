@@ -13,54 +13,84 @@
           <%= hidden_field_tag :authenticity_token, form_authenticity_token %>
           <%= hidden_field_tag :signature_data, '', id: 'signature-data' %>
           <div>
-            <label for="first_name" class="block text-sm font-medium leading-6 text-gray-900">First Name</label>
+            <label for="first_name" class="block text-sm font-medium leading-6 text-gray-900">* First Name</label>
             <div class="mt-2">
               <%= f.text_field :first_name, id: "first_name", required: true, class: "block w-full rounded-md border-0 py-1.5 pl-3 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" %>
             </div>
           </div>
           <div class="mt-6">
-            <label for="last_name" class="block text-sm font-medium leading-6 text-gray-900">Last Name</label>
+            <label for="last_name" class="block text-sm font-medium leading-6 text-gray-900">* Last Name</label>
             <div class="mt-2">
               <%= f.text_field :last_name, id: "last_name", required: true, class: "block w-full rounded-md border-0 py-1.5 pl-3 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" %>
             </div>
           </div>
           <div class="mt-6">
-            <label for="phone_number" class="block text-sm font-medium leading-6 text-gray-900">Phone Number</label>
+            <label for="phone_number" class="block text-sm font-medium leading-6 text-gray-900">* Phone Number</label>
             <div class="mt-2">
               <%= f.text_field :phone_number, id: "phone_number", required: true, class: "block w-full rounded-md border-0 py-1.5 pl-3 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" %>
             </div>
           </div>
           <div class="mt-6">
-            <label for="street_address" class="block text-sm font-medium leading-6 text-gray-900">Street Address</label>
+            <label for="street_address" class="block text-sm font-medium leading-6 text-gray-900">* Street Address</label>
             <div class="mt-2">
               <%= f.text_field :street_address, id: "street_address", required: true, class: "block w-full rounded-md border-0 py-1.5 pl-3 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" %>
             </div>
           </div>
           <div class="mt-6">
-            <label for="city" class="block text-sm font-medium leading-6 text-gray-900">City</label>
+            <label for="city" class="block text-sm font-medium leading-6 text-gray-900">* City</label>
             <div class="mt-2">
               <%= f.text_field :city, id: "city", required: true, class: "block w-full rounded-md border-0 py-1.5 pl-3 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" %>
             </div>
           </div>
           <div class="mt-6">
-            <label for="state" class="block text-sm font-medium leading-6 text-gray-900">State</label>
+            <label for="state" class="block text-sm font-medium leading-6 text-gray-900">* State</label>
             <div class="mt-2">
               <%= f.select :state, options_for_select(us_states, current_user.state), { include_blank: 'Select State' }, class: "block w-full rounded-md border-0 py-1.5 pl-3 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" %>
             </div>
           </div>
           <div class="mt-6">
-            <label for="postal_code" class="block text-sm font-medium leading-6 text-gray-900">Postal Code</label>
+            <label for="postal_code" class="block text-sm font-medium leading-6 text-gray-900">* Postal Code</label>
             <div class="mt-2">
               <%= f.text_field :postal_code, id: "postal_code", required: true, class: "block w-full rounded-md border-0 py-1.5 pl-3 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" %>
             </div>
           </div>
           <div class="mt-6">
-            <label for="signature-pad" class="block text-sm font-medium leading-6 text-gray-900">Signature</label>
-            <canvas id="signature-pad" class="signature-pad border"></canvas>
-            <button type="button" id="clear" class="mt-2 bg-gray-800 text-white px-4 py-2 rounded">Clear</button>
+            <label for="business_name" class="block text-sm font-medium leading-6 text-gray-900">Business Name (optional)</label>
+            <div class="mt-2">
+              <%= f.text_field :business_name, id: "business_name", required: true, class: "block w-full rounded-md border-0 py-1.5 pl-3 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" %>
+            </div>
           </div>
           <div class="mt-6">
-            <%= f.submit "Complete Profile", id: "submit_button", class: "flex w-full justify-center rounded-md custom-blue px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm" %>
+            <div class="flex flex-col items-center justify-between border p-4 rounded-lg shadow-md bg-white">
+              <div class="flex flex-col items-center">
+                <div class="text-sm font-medium text-gray-700 capitalize">Business Logo</div>
+                <% if current_user.business_logo.attached? %>
+                  <span class="text-gray-500 mb-2"><%= current_user.business_logo.filename.to_s %></span>
+                  <div class="mb-2">
+                    <% if current_user.business_logo.content_type.starts_with?('image/') %>
+                      <%= image_tag url_for(current_user.business_logo), class: "h-24 w-24 object-cover rounded-lg shadow-sm" %>
+                    <% else %>
+                      <%= link_to "View Document", url_for(current_user.business_logo), target: "_blank", class: "text-blue-500 underline" %>
+                    <% end %>
+                  </div>
+                <% end %>
+              </div>
+              <div class="flex items-center justify-center w-full mt-4">
+                <label for="business_logo-dropzone-file" class="flex flex-col items-center justify-center w-full h-64 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100">
+                  <div class="flex flex-col items-center justify-center pt-5 pb-6">
+                    <svg class="w-8 h-8 mb-4 text-gray-500" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 16">
+                      <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 13h3a3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"/>
+                    </svg>
+                    <p class="mb-2 text-sm text-gray-500"><span class="font-semibold">Click to upload</span> or drag and drop</p>
+                    <p class="text-xs text-gray-500">SVG, PNG, JPG or GIF (MAX. 800x400px)</p>
+                  </div>
+                  <%= f.file_field :business_logo, id: "business_logo-dropzone-file", class: "hidden", accept: 'application/pdf,image/jpeg,image/jpg,image/png' %>
+                </label>
+              </div>
+            </div>
+          </div>
+          <div class="mt-6">
+            <%= f.submit "Complete Account", id: "submit_button", class: "flex w-full justify-center rounded-md custom-blue px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm" %>
           </div>
         <% end %>
       </div>
@@ -75,9 +105,6 @@
 <script>
 document.addEventListener("turbolinks:load", function() {
   const submitButton = document.getElementById("submit_button");
-  const requiredFields = document.querySelectorAll("input[required], select[required]");
-  const signaturePadElement = document.getElementById('signature-pad');
-  const signaturePad = new SignaturePad(document.getElementById('signature-pad'));
 
   // Confetti celebration function
   function triggerConfetti() {
@@ -97,16 +124,5 @@ document.addEventListener("turbolinks:load", function() {
 
   // Trigger confetti on page load
   triggerConfetti();
-
-  document.getElementById('clear').addEventListener('click', function () {
-    signaturePad.clear();
-  });
-
-  submitButton.addEventListener('click', function () {
-    if (!signaturePad.isEmpty()) {
-      const dataURL = signaturePad.toDataURL();
-      document.getElementById('signature-data').value = dataURL;
-    }
-  });
 });
 </script>
