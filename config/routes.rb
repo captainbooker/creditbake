@@ -55,6 +55,9 @@ Rails.application.routes.draw do
   delete 'users/:id/delete_id_document', to: 'users#delete_id_document', as: 'delete_id_document_user'
   delete 'users/:id/delete_utility_bill', to: 'users#delete_utility_bill', as: 'delete_utility_bill_user'
 
+  get 'challenge', to: 'dashboards#disputing', as: 'challenge'
+  get 'letters', to: 'dashboards#letters', as: 'letters'
+  get 'credit_reports', to: 'dashboards#index'
   get 'upgrade_plan', to: 'dashboards#upgrade_plan', as: 'upgrade_plan'
   post 'plan_purchased', to: 'dashboards#plan_purchased', as: 'plan_purchased'
   post 'cancel_subscription', to: 'dashboards#cancel_subscription', as: 'cancel_subscription'

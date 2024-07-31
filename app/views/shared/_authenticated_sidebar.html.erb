@@ -20,11 +20,13 @@
     </div>
     <div class="space-y-2 flex-grow overflow-y-auto">
       <%= link_to clients_path, class: "flex items-center space-x-3 py-2 px-4 text-white rounded-lg #{'bg-white' if current_page?(clients_path)} hover:bg-white hover:text-black transition duration-300" do %>
-          <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="<%= current_page?(clients_path) ? '#000000'  : '#ffffff' %>">
-            <path d="M536.92-590.77V-800H800v209.23H536.92ZM160-483.08V-800h263.08v316.92H160ZM536.92-160v-316.92H800V-160H536.92ZM160-160v-209.23h263.08V-160H160Zm33.85-356.92h195.38v-249.23H193.85v249.23Zm376.92 323.07h195.38v-249.23H570.77v249.23Zm0-430.77h195.38v-141.53H570.77v141.53ZM193.85-193.85h195.38v-141.53H193.85v141.53Zm195.38-323.07Zm181.54-107.7Zm0 181.54Zm-181.54 107.7Z"/>
-          </svg>
-          <span class="font-medium <%= 'text-black' if current_page?(clients_path) %>">Clients</span>
-        <% end %>
+        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="<%= current_page?(clients_path) ? '#000000'  : '#ffffff' %>">
+          <path d="M536.92-590.77V-800H800v209.23H536.92ZM160-483.08V-800h263.08v316.92H160ZM536.92-160v-316.92H800V-160H536.92ZM160-160v-209.23h263.08V-160H160Zm33.85-356.92h195.38v-249.23H193.85v249.23Zm376.92 323.07h195.38v-249.23H570.77v249.23Zm0-430.77h195.38v-141.53H570.77v141.53ZM193.85-193.85h195.38v-141.53H193.85v141.53Zm195.38-323.07Zm181.54-107.7Zm0 181.54Zm-181.54 107.7Z"/>
+        </svg>
+        <span class="font-medium <%= 'text-black' if current_page?(clients_path) %>">
+          <%= current_user.subscription.present? ? "Clients" : "Profile" %>
+        </span>
+      <% end %>
       <%= link_to payment_path, class: "flex items-center space-x-3 py-2 px-4 text-white rounded-lg #{'bg-white' if current_page?(payment_path)} hover:bg-white hover:text-black transition duration-300" do %>
         <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="<%= current_page?(payment_path) ? '#000000'  : '#ffffff' %>">
           <path d="M840-695.38v430.76q0 27.62-18.5 46.12Q803-200 775.38-200H184.62q-27.62 0-46.12-18.5Q120-237 120-264.62v-430.76q0-27.62 18.5-46.12Q157-760 184.62-760h590.76q27.62 0 46.12 18.5Q840-723 840-695.38Zm-680 87.69h640v-87.69q0-9.24-7.69-16.93-7.69-7.69-16.93-7.69H184.62q-9.24 0-16.93 7.69-7.69 7.69-7.69 16.93v87.69Zm0 95.38v247.69q0 9.24 7.69 16.93 7.69 7.69 16.93 7.69h590.76q9.24 0 16.93-7.69 7.69-7.69 7.69-16.93v-247.69H160ZM160-240v-480 480Z"/>

@@ -48,6 +48,7 @@ class CreateAttackJob < ApplicationJob
         end
       }
     end
+
     personal_information_details = resource.personal_informations
 
     openai = OpenaiPromptableService.new(resource)
@@ -291,7 +292,7 @@ class CreateAttackJob < ApplicationJob
         pdf.move_down 20
     
     
-        if personal_information_details.any?
+        if personal_information_details.any? { |detail| detail[:bureau].casecmp(bureau_name).zero? }
           pdf.text "Personal Information:", size: 10
         
           fields = [
@@ -306,24 +307,21 @@ class CreateAttackJob < ApplicationJob
             pdf.text "<u><b># Delete Immediately any Unjust and Harmful Elements of Your Report:</b></u>", inline_format: true, size: 10
             pdf.text "#{field[:display]}", size: 10, inline_format: true
         
-            transunion_info = personal_information_details.find { |pi| pi.bureau.downcase == 'transunion' && pi.send(field[:name]).present? }&.send(field[:name]) || ""
-            equifax_info = personal_information_details.find { |pi| pi.bureau.downcase == 'equifax' && pi.send(field[:name]).present? }&.send(field[:name]) || ""
-            experian_info = personal_information_details.find { |pi| pi.bureau.downcase == 'experian' && pi.send(field[:name]).present? }&.send(field[:name]) || ""
+            # Find the information for the specified bureau
+            bureau_info = personal_information_details.find { |pi| pi.bureau.casecmp(bureau_name).zero? && pi.send(field[:name]).present? }&.send(field[:name]) || ""
         
             table_data = [
-              ["Bureau", "Transunion", "Equifax", "Experian"],
+              ["Bureau", bureau_name.capitalize],
               [
                 field[:display],
-                "#{transunion_info} <color rgb='ff0000'>#{compliance_codes.sample}</color>",
-                "#{equifax_info} <color rgb='ff0000'>#{compliance_codes.sample}</color>",
-                "#{experian_info} <color rgb='ff0000'>#{compliance_codes.sample}</color>"
+                "#{bureau_info} <color rgb='ff0000'>#{compliance_codes.sample}</color>"
               ]
             ]
         
             pdf.table(table_data, header: true, row_colors: ['F0F0F0', 'FFFFFF'], cell_style: { inline_format: true, size: 10 })
             pdf.move_down 10
         
-            text_content = "REMOVE the display reported #{field[:display].split(' ').first.upcase}(s) of #{transunion_info} #{'and' if transunion_info.present?} #{equifax_info} #{'and' if equifax_info.present?} #{experian_info}. I DO NOT AUTHORIZE you to retain nor report any not proven true correct valid and required reported personal identifier information that is not in exact agreement with my submitted FACTUALLY CORRECT CURRENT PERSONAL IDENTIFIERS as indicated."
+            text_content = "REMOVE the display reported #{field[:display].split(' ').first.upcase}(s) of #{bureau_info}. I DO NOT AUTHORIZE you to retain nor report any not proven true correct valid and required reported personal identifier information that is not in exact agreement with my submitted FACTUALLY CORRECT CURRENT PERSONAL IDENTIFIERS as indicated."
         
             box_height = pdf.height_of(text_content, size: 10, width: pdf.bounds.width)
             padding = 10
@@ -349,12 +347,14 @@ class CreateAttackJob < ApplicationJob
             pdf.move_down box_height - padding
             pdf.move_down 10
           end
-        end        
+        end              
     
-        if inquiry_details.any?
+        if inquiry_details.any? { |inquiry| inquiry[:bureau].casecmp(bureau_name).zero? }
           pdf.text "Inquiries:", size: 14
-    
-          inquiry_details.each_with_index do |inquiry, index|
+          
+          filtered_inquiries = inquiry_details.select { |inquiry| inquiry[:bureau].casecmp(bureau_name).zero? }
+
+          filtered_inquiries.each_with_index do |inquiry, index|
             count = index + 1
             pdf.text "<u><b> ##{count}) REMOVE FROM REPORTING NOW ANY OF THE INJURIOUS ASPECTS OF ALLEGATIONS for any item BELOW NOTED:</b></u>", inline_format: true, size: 10
             bureau_key = bureau_mapping.key(inquiry[:bureau].downcase)
@@ -400,30 +400,32 @@ class CreateAttackJob < ApplicationJob
           ]
     
           account_details.each do |account|
-            pdf.text "<u><b># Delete Immediately any Unjust and Harmful Elements of Your Report:</b></u>", inline_format: true, size: 10
-            pdf.text "Account Name: #{account[:name]} <color rgb='ff0000'>* #{Letter::METRO_2_COMPLIANCE_CODES.key('creditor_name') if account[:name].present?}</color>", inline_format: true, size: 8
-            pdf.text "Account Number: #{account[:number]} <color rgb='ff0000'>* #{Letter::METRO_2_COMPLIANCE_CODES.key('account_number') if account[:number].present?}</color>", background_color: "E8DE5E", inline_format: true, size: 8
-            pdf.move_down 10
-    
-            bureau_table_data = [vertical_headers]
-    
-            account[:bureau_details].each do |detail|
-              bureau_key = bureau_mapping.key(detail[:bureau].downcase)
-              bureau_data = [
-                { content: "#{detail[:bureau] || "--"} <color rgb='ff0000'>#{bureau_key}</color>", background_color: bureau_colors[bureau_mapping[bureau_key]] || 'FFFFFF' },
-                "#{detail[:balance_owed] || "--"} <color rgb='ff0000'>#{compliance_codes.sample}</color>",
-                "#{detail[:high_credit] || "--"} <color rgb='ff0000'>#{compliance_codes.sample}</color>",
-                "#{detail[:credit_limit] || "--"} <color rgb='ff0000'>#{compliance_codes.sample}</color>",
-                "#{detail[:past_due_amount] || "--"} <color rgb='ff0000'>#{compliance_codes.sample}</color>",
-                "#{detail[:payment_status] || "--"} <color rgb='ff0000'>#{compliance_codes.sample}</color>",
-                "#{detail[:date_opened] || "--"} <color rgb='ff0000'>#{compliance_codes.sample}</color>",
-                "#{detail[:date_of_last_payment] || "--"} <color rgb='ff0000'>#{compliance_codes.sample}</color>",
-                "#{detail[:last_reported] || "--"} <color rgb='ff0000'>#{compliance_codes.sample}</color>",
-                "#{detail[:comment] || "--"} <color rgb='ff0000'>#{compliance_codes.sample}</color>",
-                "#{detail[:monthly_payment] || "--"} <color rgb='ff0000'>#{compliance_codes.sample}</color>"
-              ]
-    
-              bureau_table_data << bureau_data
+            if account[:bureau_details].none? { |detail| detail[:bureau].casecmp(bureau_name).zero? }
+              pdf.text "<u><b># Delete Immediately any Unjust and Harmful Elements of Your Report:</b></u>", inline_format: true, size: 10
+              pdf.text "Account Name: #{account[:name]} <color rgb='ff0000'>* #{Letter::METRO_2_COMPLIANCE_CODES.key('creditor_name') if account[:name].present?}</color>", inline_format: true, size: 8
+              pdf.text "Account Number: #{account[:number]} <color rgb='ff0000'>* #{Letter::METRO_2_COMPLIANCE_CODES.key('account_number') if account[:number].present?}</color>", background_color: "E8DE5E", inline_format: true, size: 8
+              pdf.move_down 10
+      
+              bureau_table_data = [vertical_headers]
+      
+              account[:bureau_details].each do |detail|
+                bureau_key = bureau_mapping.key(detail[:bureau].downcase)
+                bureau_data = [
+                  { content: "#{detail[:bureau] || "--"} <color rgb='ff0000'>#{bureau_key}</color>", background_color: bureau_colors[bureau_mapping[bureau_key]] || 'FFFFFF' },
+                  "#{detail[:balance_owed] || "--"} <color rgb='ff0000'>#{compliance_codes.sample}</color>",
+                  "#{detail[:high_credit] || "--"} <color rgb='ff0000'>#{compliance_codes.sample}</color>",
+                  "#{detail[:credit_limit] || "--"} <color rgb='ff0000'>#{compliance_codes.sample}</color>",
+                  "#{detail[:past_due_amount] || "--"} <color rgb='ff0000'>#{compliance_codes.sample}</color>",
+                  "#{detail[:payment_status] || "--"} <color rgb='ff0000'>#{compliance_codes.sample}</color>",
+                  "#{detail[:date_opened] || "--"} <color rgb='ff0000'>#{compliance_codes.sample}</color>",
+                  "#{detail[:date_of_last_payment] || "--"} <color rgb='ff0000'>#{compliance_codes.sample}</color>",
+                  "#{detail[:last_reported] || "--"} <color rgb='ff0000'>#{compliance_codes.sample}</color>",
+                  "#{detail[:comment] || "--"} <color rgb='ff0000'>#{compliance_codes.sample}</color>",
+                  "#{detail[:monthly_payment] || "--"} <color rgb='ff0000'>#{compliance_codes.sample}</color>"
+                ]
+      
+                bureau_table_data << bureau_data
+              end
             end
     
             # Transpose the table to make headers vertical
@@ -437,11 +439,15 @@ class CreateAttackJob < ApplicationJob
           end
         end
 
-        if public_records.any?
+        if public_records.any? { |record| record.bureau_details.any? { |detail| detail[:bureau].casecmp(bureau_name).zero? } }
           pdf.text "Public Records:", size: 14
           pdf.move_down 5
 
-          public_records.each_with_index do |pr, index|
+          filtered_public_records = public_records.select do |record|
+            record.bureau_details.any? { |detail| detail[:bureau].casecmp(bureau_name).zero? }
+          end
+
+          filtered_public_records.each_with_index do |pr, index|
             count = index + 1
             pdf.text "<u><b> ##{count}) REMOVE FROM REPORTING NOW ANY OF THE INJURIOUS ASPECTS OF ALLEGATIONS for any item BELOW NOTED:</b></u>", inline_format: true, size: 10
             pdf.move_down 4

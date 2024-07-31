@@ -23,10 +23,10 @@
           <div class="hidden sm:block sm:ml-6">
             <div class="flex space-x-4">
               <%= link_to 'Dashboard', dashboard_client_path(@client), class: "py-2 px-4 rounded-lg #{'bg-white custom-blue-text' if current_page?(dashboard_client_path)} hover:bg-white hover:custom-blue-text transition duration-300" %>
-              <%= link_to 'Profile', edit_client_path(@client), class: "py-2 px-4 rounded-lg #{'bg-white custom-blue-text' if current_page?(edit_client_path)} hover:bg-white hover:custom-blue-text transition duration-300" %>
               <%= link_to 'Import Credit Report', credit_report_client_path(@client), class: "py-2 px-4 rounded-lg #{'bg-white custom-blue-text' if current_page?(credit_report_client_path)} hover:bg-white hover:custom-blue-text transition duration-300" %>
               <%= link_to 'Create Attack', letters_client_path(@client), class: "py-2 px-4 rounded-lg #{'bg-white custom-blue-text' if current_page?(letters_client_path)} hover:bg-white hover:custom-blue-text transition duration-300" %>
               <%= link_to 'Challenge', challenge_client_path(@client), class: "py-2 px-4 rounded-lg #{'bg-white custom-blue-text' if current_page?(challenge_client_path)} hover:bg-white hover:custom-blue-text transition duration-300" %>
+              <%= link_to 'Settings', edit_client_path(@client), class: "py-2 px-4 rounded-lg #{'bg-white custom-blue-text' if current_page?(edit_client_path)} hover:bg-white hover:custom-blue-text transition duration-300" %>
             </div>
           </div>
         <% end %>
@@ -42,10 +42,10 @@
     <% if @client.present? %>
       <div class="px-2 pt-2 pb-3 space-y-1">
         <%= link_to 'Dashboard', dashboard_client_path(@client), class: "block py-2 px-4 rounded-lg #{'bg-white custom-blue-text' if current_page?(dashboard_client_path)} hover:bg-white hover:custom-blue-text transition duration-300" %>
-        <%= link_to 'Profile', edit_client_path(@client), class: "block py-2 px-4 rounded-lg #{'bg-white custom-blue-text' if current_page?(edit_client_path)} hover:bg-white hover:custom-blue-text transition duration-300" %>
         <%= link_to 'Import Credit Report', credit_report_client_path(@client), class: "block py-2 px-4 rounded-lg #{'bg-white custom-blue-text' if current_page?(credit_report_client_path)} hover:bg-white hover:custom-blue-text transition duration-300" %>
         <%= link_to 'Create Attack', letters_client_path(@client), class: "block py-2 px-4 rounded-lg #{'bg-white custom-blue-text' if current_page?(letters_client_path)} hover:bg-white hover:custom-blue-text transition duration-300" %>
         <%= link_to 'Challenge', challenge_client_path(@client), class: "block py-2 px-4 rounded-lg #{'bg-white custom-blue-text' if current_page?(challenge_client_path)} hover:bg-white hover:custom-blue-text transition duration-300" %>
+        <%= link_to 'Settings', edit_client_path(@client), class: "block py-2 px-4 rounded-lg #{'bg-white custom-blue-text' if current_page?(edit_client_path)} hover:bg-white hover:custom-blue-text transition duration-300" %>
         <%= link_to 'Upgrade Plan', upgrade_plan_path, class: "block upgrade-button py-2 px-4 rounded-lg text-white transition duration-300" %>
       </div>
     <% end %>
